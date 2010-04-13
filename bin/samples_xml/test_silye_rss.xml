@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE rdf:RDF [
+<!ENTITY % HTMLlat1 PUBLIC
+ "-//W3C//ENTITIES Latin 1 for XHTML//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent">
+%HTMLlat1;
+]>
+
+<rdf:RDF 
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+  xmlns="http://purl.org/rss/1.0/"
+> 
+
+  <channel rdf:about="http://meerkat.oreillynet.com/">
+    <title>Meerkat: An Open Wire Service</title>   
+    <link>http://meerkat.oreillynet.com/</link>                                 
+    <description>Meerkat is a Web-based syndicated content reader providing
+      a simple interface to RSS stories.  While maintaining the original 
+      association of a story with a channel, Meerkat's focus is on 
+      chronological order -- the latest stories float to the top, regardless 
+      of their source.</description>                 
+    <sy:updatePeriod>hourly</sy:updatePeriod>
+    <sy:updateFrequency>2</sy:updateFrequency>
+    <sy:updateBase>2000-01-01T12:00+00:00</sy:updateBase>
+
+    <image rdf:resource="http://meerkat.oreillynet.com/icons/meerkat-powered.jpg" />
+
+    <items>
+      <rdf:Seq>
+        <rdf:li rdf:resource="http://linuxtoday.com/news_story.php3?ltsn=2004-06-23-033-26-OP-DT-SW" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11084" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11085" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11086" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11087" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11088" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11089" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11090" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11091" />
+        <rdf:li rdf:resource="http://www.geeknews.net/index.php?id=11092" />
+        <rdf:li rdf:resource="http://www.xml.com/pub/a/2004/06/23/standards.html" />
+        <rdf:li rdf:resource="http://www.xml.com/pub/a/2004/06/23/kowari.html" />
+        <rdf:li rdf:resource="http://www.xml.com/pub/a/2004/06/23/genx.html" />
+        <rdf:li rdf:resource="http://slashdot.org/article.pl?sid=04/06/23/2144214" />
+        <rdf:li rdf:resource="http://www.onjava.com/pub/a/onjava/2004/06/23/mdbjca.html" />
+      </rdf:Seq>
+    </items>
+  
+    <textinput rdf:resource="http://meerkat.oreillynet.com/" />
+
+  </channel>
+
+  <image rdf:about="http://meerkat.oreillynet.com/icons/meerkat-powered.jpg">
+    <title>Meerkat Powered!</title>
+    <url>http://meerkat.oreillynet.com/icons/meerkat-powered.jpg</url>
+    <link>http://meerkat.oreillynet.com</link>
+  </image>
+
+  <item rdf:about="http://linuxtoday.com/news_story.php3?ltsn=2004-06-23-033-26-OP-DT-SW">
+    <title>WebReference: Browser Wars v.2004: Parts 1 &amp;amp; 2</title>
+    <link>http://linuxtoday.com/news_story.php3?ltsn=2004-06-23-033-26-OP-DT-SW</link>
+    <description>&quot;I don't believe the browser manufacturers are deliberately trying to cause problems for the Web developers...&quot; A review and comparison of the current IE/Mozilla offerings.</description>
+    <dc:source>Linux Today</dc:source>
+    <dc:subject>OS: Linux</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11084">
+    <title>Comdex Cancels 2004 Show</title>
+    <link>http://www.geeknews.net/index.php?id=11084</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11085">
+    <title>GameSpot's new weekly Webcast kicking off with Madden NFL 2005 [Xbox]</title>
+    <link>http://www.geeknews.net/index.php?id=11085</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11086">
+    <title>Microsoft Boosts Storage Capacity in Email War</title>
+    <link>http://www.geeknews.net/index.php?id=11086</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11087">
+    <title>Senate Bill Targets Internet Song-Swapping</title>
+    <link>http://www.geeknews.net/index.php?id=11087</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11088">
+    <title>Microsoft Christens Cut-Rate Windows as 'XP Starter Edition'</title>
+    <link>http://www.geeknews.net/index.php?id=11088</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11089">
+    <title>Hotmail to offer 250MB of free storage</title>
+    <link>http://www.geeknews.net/index.php?id=11089</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11090">
+    <title>Briefly: AMD offers fix for chip glitch</title>
+    <link>http://www.geeknews.net/index.php?id=11090</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11091">
+    <title>Cisco the target of wireless lawsuit</title>
+    <link>http://www.geeknews.net/index.php?id=11091</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.geeknews.net/index.php?id=11092">
+    <title>Start-up promises bendy solar cells</title>
+    <link>http://www.geeknews.net/index.php?id=11092</link>
+    <dc:source>geeknews</dc:source>
+    <dc:subject>General</dc:subject>
+  </item>
+
+  <item rdf:about="http://www.xml.com/pub/a/2004/06/23/standards.html">
+    <title>Standards Lowdown: Standards Selection is Vendor Selection</title>
+    <link>http://www.xml.com/pub/a/2004/06/23/standards.html</link>
+    <description>
+    Just as the open source movement has changed attitudes to software and software vendors, so phenomena like RSS may be changing attitudes to the creation and maintenance of industry standards.
+   </description>
+    <dc:source>XML.com</dc:source>
+    <dc:creator>Jo Rabin</dc:creator>
+    <dc:subject>Web, Specifications</dc:subject>
+    <dc:publisher>O'Reilly Media, Inc.</dc:publisher>
+    <dc:date>2004-06-23</dc:date>
+    <dc:type>Standards Lowdown</dc:type>
+    <dc:format>text/html</dc:format>
+    <dc:language>en-us</dc:language>
+    <dc:rights>Copyright 2004, O'Reilly Media, Inc.</dc:rights>
+  </item>
+
+  <item rdf:about="http://www.xml.com/pub/a/2004/06/23/kowari.html">
+    <title>Features: A First Look at the Kowari Triplestore</title>
+    <link>http://www.xml.com/pub/a/2004/06/23/kowari.html</link>
+    <description>
+    An introduction to the Kowari open source RDF store.
+   </description>
+    <dc:source>XML.com</dc:source>
+    <dc:creator>Paul Ford</dc:creator>
+    <dc:subject>Metadata, Tools, Programming</dc:subject>
+    <dc:publisher>O'Reilly Media, Inc.</dc:publisher>
+    <dc:date>2004-06-23</dc:date>
+    <dc:type>Features</dc:type>
+    <dc:format>text/html</dc:format>
+    <dc:language>en-us</dc:language>
+    <dc:rights>Copyright 2004, O'Reilly Media, Inc.</dc:rights>
+  </item>
+
+  <item rdf:about="http://www.xml.com/pub/a/2004/06/23/genx.html">
+    <title>Features: Creating XML with Genx</title>
+    <link>http://www.xml.com/pub/a/2004/06/23/genx.html</link>
+    <description>
+    GenX is an easy-to-use C library for generating well-formed XML output. Learn how to use it in our introduction.
+   </description>
+    <dc:source>XML.com</dc:source>
+    <dc:creator>Michael Fitzgerald</dc:creator>
+    <dc:subject>Programming, Programming</dc:subject>
+    <dc:publisher>O'Reilly Media, Inc.</dc:publisher>
+    <dc:date>2004-06-23</dc:date>
+    <dc:type>Features</dc:type>
+    <dc:format>text/html</dc:format>
+    <dc:language>en-us</dc:language>
+    <dc:rights>Copyright 2004, O'Reilly Media, Inc.</dc:rights>
+  </item>
+
+  <item rdf:about="http://slashdot.org/article.pl?sid=04/06/23/2144214">
+    <title>Xgrid Agent for Unix</title>
+    <link>http://slashdot.org/article.pl?sid=04/06/23/2144214</link>
+    <description>mac-diddy writes &quot;Someone on Apple's mailing list for Xgrid, Apple's clustering software, just announced an 'Xgrid agent for Linux and other Unix platforms' ...</description>
+    <dc:source>Slashdot Org latest news headlines</dc:source>
+    <dc:creator>pudge</dc:creator>
+    <dc:subject>unix</dc:subject>
+    <dc:date>2004-06-23T23:22:00+00:00</dc:date>
+  </item>
+
+  <item rdf:about="http://www.onjava.com/pub/a/onjava/2004/06/23/mdbjca.html">
+    <title>Using a JMS Provider with MDBs via the J2EE Connector Architecture</title>
+    <link>http://www.onjava.com/pub/a/onjava/2004/06/23/mdbjca.html</link>
+    <description>
+    Message-Driven Beans (MDBs) get a big boost in J2EE 1.4 via integration with the J2EE Connector Architecture (JCA), which opens up interesting possibilities to use messaging to and from legacy systems. Debu Panda shows how this can be accomplished.
+   </description>
+    <dc:source>ONJava.com</dc:source>
+    <dc:creator>Debu Panda</dc:creator>
+    <dc:subject>Java, Java 2EE (Enterprise)</dc:subject>
+    <dc:publisher>O'Reilly Media, Inc.</dc:publisher>
+    <dc:date>2004-06-23</dc:date>
+    <dc:format>text/html</dc:format>
+    <dc:language>en-us</dc:language>
+    <dc:rights>Copyright 2004, O'Reilly Media, Inc.</dc:rights>
+  </item>
+
+
+  <textinput rdf:about="http://meerkat.oreillynet.com/">
+    <title>Search</title>
+    <description>Search Meerkat...</description>
+    <name>s</name>
+    <link>http://meerkat.oreillynet.com/</link>
+  </textinput>
+
+</rdf:RDF>

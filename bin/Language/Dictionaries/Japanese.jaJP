@@ -1,0 +1,107 @@
+# Language file for fRiSS 0.5
+# 
+# Note: all strings have to be quoted!
+#
+# Format: "source/english" "target/japanese"
+# 
+
+# Meta Information
+	"FL:Translator"		"KiM (bem@jcom.home.ne.jp)"
+	"FL:Language"		"Japanese"
+	"FL:Version"		"1"
+
+
+# General
+	"Ok"				"Ok"
+	"Cancel"			"キャンセル"
+	"Thankyou"		"ありがとう"
+
+
+# FV-Popup
+	"Information"		"情報"
+	"Refresh"			"再読込"
+	"Next Feed"			"次の Feed"
+	"Previous Feed"		"前の Feed"
+	"Select Feed"		"Feed を指定"
+	"Preferences" 		"環境設定"
+	"Language"			"言語"
+	"About fRiSS" 		"fRiSS について"
+	"About" 			"バージョン情報"
+
+# FV-Information
+	"Title"							"タイトル"
+	"Desc"							"要約"
+	"Link"							"リンク"
+	"<no description available>"	"<要約は利用できません>"
+	"<no link available>"			"<リンクは利用できません>"
+
+
+# FV-Fehler
+	"An error occured while loading this feed."					"この Feed の読込中にエラーが発生しました。"
+	"Error: Please add some feeds in the Preferences Window!"	"エラー: 環境設定ウィンドウより、いくつか Feed を追加してください!"
+	"Error: Fortune failed to load."							"エラー: 読込に失敗しました。"
+	"Warning: FeedLoader is still busy..."						"警告: FeedLader はビジーのため静止しています..."
+	"Error: The browser could not be started :-("				"エラー: ブラウザを起動できません :-("
+
+# FV-Status
+	"Loading..." 		"読込中..."
+	"Loading done" 		"読込完了"
+
+# PrefView
+	"Feeds"				"Feed"
+	"Colours"			"カラー"
+	"Misc" 				"その他"
+	"URL"				"URL"
+
+# PV - Popup
+	"Collapse"			"折り畳む"
+	"Expand"			"展開する"
+	"Rename"			"名前の変更"
+	"New Item..."		"新規項目..."
+	"Duplicate"			"複製"
+	"Edit"				"編集"
+	"Edit..."			"編集..."
+	"Remove"			"削除"
+	"Add Subfolder..."	"サブフォルダを追加..."
+	"Import..."			"インポート..."
+	"Export..."			"エクスポート..."
+	"Add new Item..."	"新規項目の追加..."
+	"Add new Folder..."	"新規フォルダの追加..."
+
+
+# PV - Tab Colour
+	"Background"							"背景色"
+	"Transparent background"				"透明な背景色"
+	"Adapt to Desktop background colour"	"デスクトップの背景色と同色"
+	"Custom background colour:"				"カスタム背景色:"
+	"Text Colour"							"文字色"
+	"Adapt colour to background"			"背景に色を適応させる"
+	"(black on bright/white on dark)"		"(黒なら明るく/白なら暗く)"
+	"Custom text colour:"					"カスタム文字色:"
+
+# PV - Tab Misc
+	"Refresh interval (min)"				"再読込までの時間 (分)"
+	"Load next feed instead of current"		"次の Feed の読込"
+	"Show scrollbar"						"スクロールバー表示"
+	"Automatic"								"自動"
+	"Show always"							"常に表示"
+	"Hide always"							"常に隠す"
+	"Custom"								"カスタム"
+	"Browser MIME-Type"						"ブラウザの MIME-Type"
+
+# PV - Error
+	"One of the required fields is empty!"	"要求された欄のうちの1つが空です!"
+	"Your feed list must not be empty!"		"あなたの Feed リストが空ではなりません!"
+
+# FPrefEditWindow
+	"Edit Item"								"編集項目"
+	"Add Description to title"				"タイトルへ要約を追加"
+	"Browser for this feed"					"Feed を表示するブラウザ"
+	"Default"								"デフォルト"
+	"Custom"								"カスタム"
+	"Revert to Original"					"元の状態に戻す"
+	"Save and Close"						"保存して閉じる"
+
+# LOAD_NET - Error
+	"Error: Timeout! Server did not respond." "エラー: タイムアウトしました! サーバーから応答がありません。"
+

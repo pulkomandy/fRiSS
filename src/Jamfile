@@ -1,0 +1,33 @@
+
+Main friss :
+	frissconfig.cpp
+	
+	fr_feedloader.cpp
+	load_file.cpp
+	load_fortune.cpp
+	load_net.cpp
+	
+	nlang.cpp
+	
+	parse_atom.cpp
+	parse_ics.cpp
+	parse_rss.cpp
+	
+	fr_pref.cpp
+	fr_prefeditwindow.cpp
+	fr_preflistview.cpp
+	
+	xmlnode.cpp
+	
+	fr_app.cpp
+	fr_flistview.cpp
+	fr_fstringitem.cpp
+	fr_ftextview.cpp
+	fr_view.cpp
+	;
+
+BELIBS = -lbe -lnetapi -ltracker -lzeta -ltextencoding ;
+
+LINKLIBS on friss = $(BELIBS) ;
+
+File ../bin/friss : friss ;

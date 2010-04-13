@@ -1,0 +1,103 @@
+# Language file for fRiSS 0.5
+# 
+# Note: all strings have to be quoted!
+
+# Meta Information
+	"FL:Translator"		"0033 (http://www.studio-33.tk)"
+	"FL:Language"		"Nederlands"
+	"FL:Version"		"1"
+
+
+# General
+	"Ok"				"Ok"
+	"Cancel"			"Annuleren"
+
+
+# FV-Popup
+	"Information"		"Informatie"
+	"Refresh"			"Verversen"
+	"Next Feed"			"Volgende Feed"
+	"Previous Feed"		"Vorige Feed"
+	"Select Feed"		"Feed selecteren"
+	"Preferences" 		"Instellingen"
+	"Language"			"Taal"
+	"About fRiSS" 		"Over fRiSS"
+	"About" 			"Over"
+
+# FV-Information
+	"Title"							"Titel"
+	"Desc"							"Beschrijving"
+	"Link"							"Link"
+	"<no description available>"	"<geen beschrijving beschikbaar>"
+	"<no link available>"			"<geen link beschikbaar>"
+
+
+# FV-Fehler
+	"An error occured while loading this feed."					"Er heeft zich een probleem voorgedaan tijdens het laden van deze feed."
+	"Error: Please add some feeds in the Preferences Window!"	"Probleem: Voeg feeds toe in het instellingen-menu!"
+	"Error: Fortune failed to load."							"Probleem: Fortune kan niet geladen worden."
+	"Warning: FeedLoader is still busy..."						"Waarschuwing: FeedLoader is nog bezig..."
+	"Error: The browser could not be started :-("				"Probleem: De browser kan niet gestart worden :-("
+
+# FV-Status
+	"Loading..." 		"Laden..."
+	"Loading done" 		"Klaar met laden."
+
+# PrefView
+	"Feeds"				"Feeds"
+	"Colours"			"Kleuren"
+	"Misc" 				"Overig"
+	"URL"				"URL"
+
+# PV - Popup
+	"Collapse"			"Minimaliseren"
+	"Expand"			"Maximaliseren"
+	"Rename"			"Naam veranderen"
+	"New Item..."		"Nieuw Item..."
+	"Duplicate"			"Dupliceren"
+	"Edit"				"Bewerken"
+	"Edit..."			"Bewerken..."
+	"Remove"			"Verwijderen"
+	"Add Subfolder..."	"Sub-map toevoegen..."
+	"Import..."			"Importeren..."
+	"Export..."			"Exporteren..."
+	"Add new Item..."	"Nieuw Item toevoegen..."
+	"Add new Folder..."	"Nieuwe map toevoegen..."
+
+
+# PV - Tab Colour
+	"Background"							"Achtergrond"
+	"Transparent background"				"Transparante achtergrond"
+	"Adapt to Desktop background colour"	"Aanpassen aan de achtergrondkleur van het bureaublad"
+	"Custom background colour:"				"Persoonlijke achtergrondkleur"
+	"Text Colour"							"Textkleur"
+	"Adapt colour to background"			"Kleur aanpassen aan achtergrond"
+	"(black on bright/white on dark)"		"(Zwart op licht / wit op donker)"
+	"Custom text colour:"					"Persoonlijke textkleur:"
+
+# PV - Tab Misc
+	"Refresh interval (min)"				"Verversen: (min)"
+	"Load next feed instead of current"		"Volgende feed laden in plaats van huidige"
+	"Show scrollbar"						"Scrollbalken tonen"
+	"Automatic"								"Automatisch"
+	"Show always"							"Altijd tonen"
+	"Hide always"							"Altijd verbergen"
+	"Custom"								"Andere:"
+	"Browser MIME-Type"						"Browser MIME-Type"
+
+# PV - Error
+	"One of the required fields is empty!"	"Een van de verplichte velden is leeg!"
+	"Your feed list must not be empty!"		"De feed lijst mag niet leeg zijn!"
+
+# FPrefEditWindow
+	"Edit Item"								"Item bewerken"
+	"Add Description to title"				"Beschrijving aan titel toevoegen"
+	"Browser for this feed"					"Browser voor deze feed"
+	"Default"								"Standaard"
+	"Custom"								"Anders n.l.:"
+	"Revert to Original"					"Terug naar de standaard instellingen"
+	"Save and Close"						"Opslaan en sluiten"
+
+# LOAD_NET - Error
+	"Error: Timeout! Server did not respond." "Probleem: Time-out omdat de server niet reageert."
+

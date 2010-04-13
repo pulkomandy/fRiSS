@@ -1,0 +1,279 @@
+# All strings in alphabetical ordering
+# Best viewed with Swis721 BT at 10 pt.
+# This language file still misses translations: "Date", "Help", "Moving", "Show" and "With"
+
+# ALL YOUR BASE(FILE) ARE BELONG TO US
+
+# Date format This is the exact format as used by strftime()
+"B:Locale:DateFormat"		"%D"
+
+# Keymap to use for this locale. This is one of the maps located in beos/etc/Keymap/
+"B:Locale:Keymap"			"German"
+
+# Font settings. Some locales may have special font needs, if so, they would go here, thusly:
+"B:Locale:PlainFont"   			"Bitstream Vera Sans/Roman"
+"B:Locale:BoldFont"				"Bitstream Vera Sans/Bold"
+"B:Locale:SerifFont"	       	"Bitstream Vera Serif/Roman"
+"B:Locale:FixedFont"   			"Monospac821 BT/Roman"
+
+# Money and numbers
+"B:Locale:MoneySymbol"			""
+"B:Locale:DecimalSymbol"		","
+"B:Locale:ThousandsSeparator"	"."
+
+
+#MISC
+one							"Eins"
+two							"Zwei"
+three						"Drei"
+four							"Vier"
+five							"Fünf"
+six							"Sechs"
+seven						"Sieben"
+eight						"Acht"
+nine							"Neun"
+ten							"Zehn"
+eleven						"Elf"
+twelve						"Zwölf"
+
+#AAAAAAAA
+About						"Über"
+Add							"Hinzufügen"
+Address						"Adresse"
+After						"nach"
+Align						"Ausrichtung"
+Almost						"kurz vor"
+And							"und"
+Anonymous					"Anonym"
+Application					"Anwendung"
+Attributes					"Attribute"
+Available						"Bereit"
+Away						"Abwesend"
+Awesome					"Ehrfürchtig"
+
+#BBBBBBBB
+Battery						"Akku status"
+Before						"bevor"
+Begin						"Anfang"
+Behave						"Werd' mich benehmen!"
+Block						"Sperren"
+Buddy						"Buddy"
+Burn						"Brennen"
+
+#CCCCCCCC
+Cancel						"Abbrechen"
+Capacity						"Kapazität"
+Center						"Mittig"
+"Cell Phone"					"Mobil Tel."
+Change						"Ändern"
+City							"Stadt"
+Clear						"Löschen"
+Close						"Schliessen"
+Colors						"Farben"
+Commands					"Kommandos"
+Company					"Firma"
+Connecting					"Verbinde"
+Connection					"Verbindung"
+Contact						"Kontaktieren"
+Contains						"beinhalted"
+Copy			"Kopieren"
+Copying		"kopiere"
+Copyright		"Rechtliches"
+Country		"Bundesland"
+Created		"Erstellt"
+Credits		"Mitwirkende"
+Cut			"Ausschneiden"
+
+#DDDDDDDD
+Date			"Date"
+Day			"Tag"
+Days			"Tage"
+Defaults		"Standard"
+Delete		"Löschen"
+Deskbar		"Deskbar"
+Developer		"Entwickler"
+Disks			"Laufwerke"
+Document		"Dokument"
+Done			"Fertig"
+Down			"Runter"
+Duplicate		"Duplizieren"
+
+#EEEEEEEE
+Edit			"Bearbeiten"
+Empty		"Leer"
+Encoding		"Zeichensatz"
+End			"Ende"
+Error			"Fehler"
+Events		"Ereignisse"
+Exactly		"genau"
+Execute		"Ausführbar"
+
+#FFFFFFFF
+Favorites		"Favoriten"
+Fax			"Telefax"
+File			"Datei"
+Files			"Dateien"
+Find			"Suchen"
+Folder		"Ordner"
+For			"für"
+Free			"Frei"
+
+#GGGGGGGG
+General		"Allgemein"
+Group		"Gruppe"
+
+#HHHHHHHH
+Help			"Hilfe"
+Hide			"Ausblenden"
+High			"Hoch"
+Homepage		"Homepage"
+Hour			"Stunde"
+Hours			"Stunden"
+
+#IIIIIIII
+Identify		"Identifizieren"
+Idle			"Untätig"
+Ignore		"Ignorieren"
+Import		"Importieren"
+Info			"Info"
+Install			"Installieren"
+Internet		"Internet"
+Is			"ist"
+Items			"Einträge"
+
+#JJJJJJJJ
+Journey		"Reise"
+
+#KKKKKKKK
+Keys			"Tasten"
+Kill			"Abbrechen"
+Kind			"Art"
+
+#LLLLLLLL
+Language		"Sprache"
+Left			"Links"
+Link			"Verlinke"
+List			"Liste"
+Locale		"Land"
+Low			"Gering"
+
+#MMMMMMMM
+Message		"Nachricht"
+Messages		"Nachrichten"
+Middle		"Mittel"
+Minute		"Minute"
+Minutes		"Minuten"
+Modified		"Geändert"
+Mount		"Mounten"
+Moving		"Moving"
+
+#NNNNNNNN
+Name			"Name"
+New			"Neu"
+"New Person"	"Neue Adresse"
+No			"Nein"
+Nobody		"Keiner"
+Normal		"Normal"
+Notice		"Notiz"
+
+#OOOOOOOO
+Offline		"Offline"
+Ok			"Ok"
+Online		"Online"
+Open			"Öffnen"
+Or			"oder"
+Other			"Andere"
+Owner		"Anwender"
+
+#PPPPPPPP
+Password		"Passwort"
+Paste			"Einfügen"
+Path			"Pfad"
+People		"Leute"
+Permissions		"Rechte"
+Platform		"System"
+Play			"Abspielen"
+Port			"Port"
+Print			"Drucken"
+Priority		"Priorität"
+Probably		"Vermutlich"
+Profile		"Profil eingeben"
+Project		"Projekt"
+Prompt		"Einzeln"
+
+#QQQQQQQQ
+Quit			"Beenden"
+
+#RRRRRRRR
+Record		"Aufnehmen"
+Relation		"Relation"
+Remove		"Entfernen"
+Replace		"Ersetzen"
+Restart		"Neustart"
+Restore		"Wiederherstellen"
+Revert		"Rückgängig"
+Right			"Rechts"
+Run			"Starte"
+Running		"Läuft seit"
+
+#SSSSSSSS
+Save			"Speichern"
+"Save As"		"Speichern Als..."
+Screenshot		"Vorschau"
+Search		"Suchen"
+Second		"Sekunde"
+Seconds		"Sekunden"
+Select		"Markieren"
+"Select All"		"Alles Markieren"
+Send			"Senden"
+Settings		"Einstellungen"
+Show			"Show"
+Since			"seit"
+Size			"Grösse"
+Skip			"Überspringen"
+Sort			"Sortieren"
+State			"Staat"
+Status		"Status"
+Stop			"Anhalten"
+Street			"Strasse"
+Strings		"Zeichenfolge"
+Support		"Unterstützung"
+Suspend		"StandBy"
+
+#TTTTTTTT
+Temporary		"Temporär"
+To			"nach"
+Typing		"Schreiben"
+
+#UUUUUUUU
+Unblock		"Entsperren"
+Undo			"Rückgängig"
+Unknown		"Unbekannt"
+Unmount		"Unmounten"
+Up			"Hoch"
+Update		"Aktuallisieren"
+User			"Nutzer"
+
+#VVVVVVVV
+Version		"Version"
+
+#WWWWWWWW
+Wait			"Warten"
+Waiting		"Warte"
+Warning		"Warnen"
+Website		"Webseite"
+Window		"Fenster"
+With			"Mit"
+"Work Phone"	"Büro"
+Write			"Schreiben"
+Wrong		"Falsch"
+
+#XXXXXXXX
+X-ray			"Röntgen"
+
+#YYYYYYYY
+Yes			"Ja"
+
+#ZZZZZZZZ
+Zip			"Plz"
+Zone			"Zone"

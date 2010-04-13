@@ -1,0 +1,102 @@
+# Language file for fRiSS 0.5
+# 
+# Note: all strings have to be quoted!
+
+# Meta Information
+	"FL:Translator"		"Frank Paul Silye"
+	"FL:Language"		"Norsk bokmål"
+	"FL:Version"		"1"
+
+
+# General
+	"Ok"				"Ok"
+	"Cancel"			"Avbryt"
+
+
+# FV-Popup
+	"Information"		"Informasjon"
+	"Refresh"			"Oppdater"
+	"Next Feed"			"Neste feed"
+	"Previous Feed"		"Forrige feed"
+	"Select Feed"		"Velg feed"
+	"Preferences" 		"Innstillinger"
+	"Language"			"Språk"
+	"About fRiSS" 		"Om fRiSS"
+	"About" 			"Om"
+
+# FV-Information
+	"Title"							"Tittel"
+	"Desc"							"Beskrivelse"
+	"Link"							"Lenke"
+	"<no description available>"	"<ingen beskrivelse tilgjengelig>"
+	"<no link available>"			"<ingen lenke tilgjengelig"
+
+
+# FV-Fehler
+	"An error occured while loading this feed."					"En feil oppstod når denne feeden skulle leses."
+	"Error: Please add some feeds in the Preferences Window!"	"Feil: Vennligst legg til noen feeds in Innstillinger vinduet!"
+	"Error: Fortune failed to load."							"Feil: Fortune kunne ikke leses."
+	"Warning: FeedLoader is still busy..."						"Advarsel: FeedLoader arbeider fremdeles..."
+	"Error: The browser could not be started :-("				"Feil: Nettleseren kunne ikke startes :-("
+
+# FV-Status
+	"Loading..." 		"Laster inn..."
+	"Loading done" 		"Innlasting ferdig"
+
+# PrefView
+	"Feeds"				"Feeds"
+	"Colours"			"Farger"
+	"Misc" 				"Diverse"
+	"URL"				"URL"
+
+# PV - Popup
+	"Collapse"			"Minimere"
+	"Expand"			"Ekspandere"
+	"Rename"			"Endre navn"
+	"New Item..."		"Nytt objekt..."
+	"Duplicate"			"Dupliser"
+	"Edit"				"Rediger"
+	"Edit..."			"Rediger..."
+	"Remove"			"Ta bort"
+	"Add Subfolder..."	"Legg til undermappe..."
+	"Import..."			"Importere..."
+	"Export..."			"Eksportere..."
+	"Add new Item..."	"Legg til nytt objekt..."
+	"Add new Folder..."	"Legg til ny mappe..."
+
+# PV - Tab Colour
+	"Background"							"Bakgrunn"
+	"Transparent background"				"Transparent bakgrunnd (bare replianter)"
+	"Adapt to Desktop background colour"	"Tilpass til skrivbordets bakgrunnsfarge"
+	"Custom background colour:"				"Egen definert bakgrunnsfarge:"
+	"Text Colour"							"Tekst farge"
+	"Adapt colour to background"			"Tilpass farge til bakgrunn"
+	"(black on bright/white on dark)"		"(svart på hvitt/hvitt på svart bakgrunn)"
+	"Custom text colour:"					"Egen definert tekst farge:"
+
+# PV - Tab Misc
+	"Refresh interval (min)"			"Oppdateringsintervall (min)"
+	"Load next feed instead of current"	"Gå till neste feed"
+	"Show scrollbar"					"Vis rullefelt"
+	"Automatic"							"Automatisk"
+	"Show always"						"Vis alltid"
+	"Show never"						"Vis aldri"
+	"Custom"							"Egen definert"
+	"Browser MIME-string"				"Nettleserens MIME-streng"
+
+# PV - Error
+	"One of the required fields is empty!"		"Et av de obligatoriske feltene er tom!"
+	"Your feed list must not be empty!"			"Din feedliste kan ikke være tom!"
+
+# FPrefEditWindow
+	"Edit Item"					"Rediger objekt"
+	"Add Description to title"	"Legg til en beskrivelse til tittelen"
+	"Browser for this feed"		"Nettleser for denne feeden"
+	"Default"					"Standard"
+	"Custom"					"Egen definert"
+	"Revert to Original"		"Tilbakestill til standard innstillinger"
+	"Save and Close"			"Lagre og lukk"
+
+# LOAD_NET - Error
+	"Error: Timeout! Server did not respond." 	"Feil: Timeout! Tjeneren svarte ikke."
+

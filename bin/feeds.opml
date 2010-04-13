@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<opml>
+
+<head>
+	<title>fRiSS feed storage</title>
+	<dateModified></dateCreated>
+	<expansionState></expansionState>
+	<vertScrollState></vertScrollState>
+</head>
+
+<body>
+	<outline text="BeOS">
+		<outline text="News">
+			<outline text="IsComputerOn" xmlURL="http://www.iscomputeron.com/index/backend.php" x-overrideBrowser="2" />
+			<outline text="BeGroovy" xmlURL="http://www.begroovy.com/index.rdf" />
+			<outline text="ZetaNews" xmlURL="http://www.zetanews.com/backend/recent.xml" />
+			<outline text="Haiku News RSS" xmlURL="http://haikunews.org/recent.rss" />
+			<outline text="Haiku News RDF" xmlURL="http://haikunews.org/recent.rdf" />
+		</outline>
+
+		<outline text="Files">
+			<outline text="bebits" xmlURL="http://www.bebits.com/backend/recent.rdf" />
+			<outline text="BeZip.de" xmlURL="http://www.bezip.de/backend/letzte-software.xml" x-status="broken" />
+			<outline text="HerzigNet" xmlURL="http://www.herzig-net.de/prog/recent.rss" x-addDesc="true" x-ttl="1440"/>
+		</outline>
+	
+		<outline text="Misc">
+			<outline text="BeClan" xmlURL="http://www.beclan.org/recent.xml" />
+		</outline>
+
+		<outline text="Haiku">
+			<outline text="News" xmlURL="http://haiku-os.org/rss.php?channel=news" />
+			<outline text="Forums" xmlURL="http://haiku-os.org/rss.php?channel=forums" />
+			<outline text="Newsletters" xmlURL="http://haiku-os.org/rss.php?channel=newsletters" />	
+			<outline text="Haiku CVS changes" xmlURL="http://cia.navi.cx/stats/project/OpenBeOS/.rss?ver=2&medium=plaintext&limit=20" />
+		</outline>
+
+		<outline text="UserGroup">
+			<outline text="BeOS Greece" xmlURL="http://www.beosgreece.com/backend.php" x-status="font-issue" />
+			<outline text="BeOS Italia" xmlURL="http://www.itbug.org/backend.php" />
+			
+			<outline text="France">
+				<outline text="BeosFrance" xmlURL="http://www.beosfrance.com/beosfrance.xml" />
+				<outline text="Ubix.org" xmlURL="http://www.ubix.org/cgi-bin/rhum?action=rssexport&forum=1" />
+			</outline>
+
+			<outline text="Japan">
+				<outline text="JPBE.net Frontpage" xmlURL="http://www.jpbe.net/index.rdf" />
+				<outline text="JPBE.net BeTips" xmlURL="http://www.jpbe.net/betips/index.rdf" />
+			</outline>
+		</outline>	
+	</outline>
+
+	<outline text="Dutch">
+		<outline text="FOK">
+			<outline text="Nieuws" xmlURL="http://rss.fok.nl/feeds/nieuws" />
+			<outline text="Voetbal" xmlURL="http://rss.fok.nl/feeds/voetbal" />
+			<outline text="Formule1" xmlURL="http://rss.fok.nl/feeds/formule1" />
+			<outline text="Reviews" xmlURL="http://rss.fok.nl/feeds/reviews" />
+			<outline text="Columns" xmlURL="http://rss.fok.nl/feeds/columns" />
+			<outline text="Weblog" xmlURL="http://rss.fok.nl/feeds/weblog" />
+		</outline>
+	</outline>
+
+	<outline text="English">
+		<outline text="PC-News">
+			<outline text="OSNews" xmlURL="http://www.osnews.com/files/recent.rdf" />
+			<outline text="slashdot RSS" xmlURL="http://slashdot.org/index.rss" />
+			<outline text="slashdot RDF" xmlURL="http://slashdot.org/slashdot.rdf" />
+			<outline text="CNet" xmlURL="http://news.com.com/2547-1_3-0-20.xml" />
+			<outline text="ComputerWorld" xmlURL="http://www.computerworld.com/news/xml/10/0,5009,,00.xml" />
+		</outline>
+			
+		<outline text="BBC">
+			<outline text="News Front Page" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/front_page/rss091.xml" />
+			<outline text="World" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/world/rss091.xml" />
+			<outline text="UK" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/uk/rss091.xml" />
+			<outline text="England" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/england/rss091.xml" />
+			<outline text="Northern Ireland" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/northern_ireland/rss091.xml" />
+			<outline text="Scotland" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/scotland/rss091.xml" />
+			<outline text="Wales" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/wales/rss091.xml" />
+			<outline text="Business" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/business/rss091.xml" />
+			<outline text="Politics" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/uk_politics/rss091.xml" />
+			<outline text="Health" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/health/rss091.xml" />
+			<outline text="Education" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/education/rss091.xml" />
+			<outline text="Science/Nature" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/sci/tech/rss091.xml" />
+			<outline text="Technology" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/technology/rss091.xml" />
+			<outline text="Entertainment" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/entertainment/rss091.xml" />
+			<outline text="Have Your Say" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/talking_point/rss091.xml" />
+			<outline text="Magazine" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/magazine/rss091.xml" />
+			<outline text="Week At a Glance" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/week_at-a-glance/rss091.xml" />
+			<outline text="Programmes" xmlURL="http://news.bbc.co.uk/rss/newsonline_uk_edition/programmes/rss091.xml" />
+		</outline>
+
+	</outline>
+
+	<outline text="German">
+		<outline text="Heise">
+			<outline text="News" xmlURL="http://www.heise.de/newsticker/heise.rdf" />
+			<outline text="Security" xmlURL="http://www.heise.de/security/news/news.rdf" />
+			<outline text="Mobil" xmlURL="http://www.heise.de/mobil/newsticker/heise.rdf" />
+			<outline text="Telepolis" xmlURL="http://www.heise.de/tp/news.rdf" />
+		</outline>
+
+		<outline text="Golem">
+			<outline text="Alle News" xmlURL="http://www.golem.de/rss.php?feed=RSS2.0" />
+			<outline text="Audio/Video" xmlURL="http://www.golem.de/rss.php?tp=av&feed=RSS2.0" />
+			<outline text="Foto" xmlURL="http://www.golem.de/rss.php?tp=foto&feed=RSS2.0" />
+			<outline text="Games" xmlURL="http://www.golem.de/rss.php?tp=games&feed=RSS2.0" />
+			<outline text="Handy" xmlURL="http://www.golem.de/rss.php?tp=handy&feed=RSS2.0" />
+			<outline text="Internet" xmlURL="http://www.golem.de/rss.php?tp=inet&feed=RSS2.0" />
+			<outline text="Mobil" xmlURL="http://www.golem.de/rss.php?tp=mc&feed=RSS2.0" />
+			<outline text="OSS" xmlURL="http://www.golem.de/rss.php?tp=oss&feed=RSS2.0" />
+			<outline text="Security" xmlURL="http://www.golem.de/rss.php?tp=sec&feed=RSS2.0" />
+			<outline text="Hardware" xmlURL="http://www.golem.de/rss.php?r=hw&feed=RSS2.0" />
+			<outline text="Software" xmlURL="http://www.golem.de/rss.php?r=sw&feed=RSS2.0" />
+			<outline text="Networld" xmlURL="http://www.golem.de/rss.php?r=nw&feed=RSS2.0" />
+			<outline text="Entertainment" xmlURL="http://www.golem.de/rss.php?r=et&feed=RSS2.0" />
+			<outline text="TK" xmlURL="http://www.golem.de/rss.php?r=tk&feed=RSS2.0" />
+			<outline text="Wirtschaft" xmlURL="http://www.golem.de/rss.php?r=wi&feed=RSS2.0" />
+			<outline text="E-Commerce" xmlURL="http://www.golem.de/rss.php?r=ec&feed=RSS2.0" />
+			<outline text="Forumsbeträge" xmlURL="http://forum.golem.de/rss.php?feed=RSS2.0" />
+		</outline>
+			
+		<outline text="Die Zeit">
+			<outline text="ZEIT Homepage" xmlURL="http://newsfeed.zeit.de/" />
+			<outline text="Politik" xmlURL="http://newsfeed.zeit.de/politik/index" />
+			<outline text="Dossier" xmlURL="http://newsfeed.zeit.de/dossier/index" />
+			<outline text="Wirtschaft" xmlURL="http://newsfeed.zeit.de/wirtschaft/index" />
+			<outline text="Wissen" xmlURL="http://newsfeed.zeit.de/wissen/index" />
+			<outline text="Feuilleton" xmlURL="http://newsfeed.zeit.de/feuilleton/index" />
+			<outline text="Literatur" xmlURL="http://newsfeed.zeit.de/literatur/index" />
+			<outline text="Leben" xmlURL="http://newsfeed.zeit.de/leben/index" />
+			<outline text="Reisen" xmlURL="http://newsfeed.zeit.de/reisen/index" />
+			<outline text="Chancen" xmlURL="http://newsfeed.zeit.de/chancen/index" />
+			<outline text="Zeitläufte" xmlURL="http://newsfeed.zeit.de/zeitlaeufte/index" />
+			<outline text="Online Aktuell" xmlURL="http://newsfeed.zeit.de/online_aktuell" />
+			<outline text="Wohlfühlen" xmlURL="http://newsfeed.zeit.de/wohlfuehlen/index" />
+			<outline text="Media" xmlURL="http://newsfeed.zeit.de/wirtschaft/media/index" />
+			<outline text="Hochschule" xmlURL="http://newsfeed.zeit.de/hochschule/index" />
+			<outline text="Reden zur Zeit" xmlURL="http://newsfeed.zeit.de/reden/index" />
+		</outline>
+
+		<outline text="N24">
+			<outline text="Frontpage" xmlURL="http://www.n24.de/rss/?rubrik=home" />
+			<outline text="Politik" xmlURL="http://www.n24.de/rss/?rubrik=politik" />
+			<outline text="Wirtschaft" xmlURL="http://www.n24.de/rss/?rubrik=wirtschaft" />
+			<outline text="Sport" xmlURL="http://www.n24.de/rss/?rubrik=sport" />
+			<outline text="Boulevard" xmlURL="http://www.n24.de/rss/?rubrik=boulevard" />
+			<outline text="Dokumentationen" xmlURL="http://www.n24.de/rss/?rubrik=dokus" />
+		</outline>
+	</outline>
+	
+	<outline text="Media">
+	
+		<outline text="Radio">
+			<outline text="SWR3 (de)" xmlURL="http://www.swr3.de/rdf-feed/" />
+		</outline>
+		
+		<outline text="TV">
+			<outline text="ORF1 (at)" xmlURL="http://rss.orf.at/orf1.xml" x-addDesc="true" x-overrideBrowser="2" />
+			<outline text="ORF2 (at)" xmlURL="http://rss.orf.at/orf2.xml" x-addDesc="true" x-overrideBrowser="2" />
+		</outline>
+		
+	</outline>
+
+	<outline text="Examples">
+		<outline text="Fortune" 			xmlURL="fortune" />
+		<outline text="run example: PHP"	xmlURL="run://php -f test.php" />
+		<outline text="run example: ls"		xmlURL="run://ls /boot/home/mail/in" />
+
+		<outline text="Wetter in Laupheim"	xmlURL="http://www.rssweather.com/rss.php?config=&forecast=zandh&icao=ETHL&alt=rss20a" />
+	</outline>
+
+</body>
+
+</opml>
+			

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://my.netscape.com/rdf/simple/0.9/">
+
+<channel>
+<title>Slashdot</title>
+<link>http://slashdot.org/</link>
+<description>News for nerds, stuff that matters</description>
+</channel>
+
+<image>
+<title>Slashdot</title>
+<url>http://images.slashdot.org/topics/topicslashdot.gif</url>
+<link>http://slashdot.org/</link>
+</image>
+
+<item>
+<title>Mobo for Vertically Challenged Devices</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/1555222</link>
+</item>
+
+<item>
+<title>DNS Inventor Predicts Future of the Internet</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/1533204</link>
+</item>
+
+<item>
+<title>RIAA Dumps Unsold Inventory to Settle Anti-Trust Case</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/146244</link>
+</item>
+
+<item>
+<title>Response to Gordon Cormack's Study of Spam Detection</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/1314208</link>
+</item>
+
+<item>
+<title>Next Knoppix Release to Feature GPL'd FreeNX</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/1310243</link>
+</item>
+
+<item>
+<title>Mutation Creates SuperKid</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/1234250</link>
+</item>
+
+<item>
+<title>Yahoo Changes Protocol, Blocks Third Party Clients</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/128248</link>
+</item>
+
+<item>
+<title>Linux Journal On Linux's Adoption In US Courts</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/0135208</link>
+</item>
+
+<item>
+<title>Hotmail, Others Follow Gmail's Storage Boost</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/0120245</link>
+</item>
+
+<item>
+<title>Cisco Sued over OFDM Wireless Standards</title>
+<link>http://slashdot.org/article.pl?sid=04/06/24/017243</link>
+</item>
+
+<textinput>
+<title>Search Slashdot</title>
+<description>Search Slashdot stories</description>
+<name>query</name>
+<link>http://slashdot.org/search.pl</link>
+</textinput>
+
+</rdf:RDF>

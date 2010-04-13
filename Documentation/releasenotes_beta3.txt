@@ -1,0 +1,39 @@
+FRISS DOCUMENTATION
+
+friss Ver. beta3
+
+This version is considered  "not very stable". I need feedback on bugs, crashs and
+feeds that do not work so that I can fix it. Please send reports!
+
+I am not responsible for any problems caused by a crashed Tracker. Don't say
+I did not warn you ;-)  In case of problems, don't run friss as replicant and/or get
+ProcessController from bebits. It's a great tool by the way.
+
+
+Known Issues:
+	- For Color Auto-Adapt to work properly, you have to set the desktop background
+		color to something matching your background image. Friss cannot check
+		your image and decide for itself.
+	- text color for the textview (like for Fortune) is not updated correctly.
+	- If you use the Backgrounds preflet, the color will not auto-adapt. You will have
+		to enter Preferences and click on the one of the adapt-radiobuttons to
+		make it work. I haven't found a "good" way to check for background/color
+		changes.
+	- The pseudo-categories suck. They will be replaced with real ones. Promised!
+	- Occasional crash after adding a new feed.
+	- BeOS R5: displays a color matrix instead of sliders
+		Workaround: Update to R5.0.3
+	- BeOS R5: shows "Could not open Browser" despite it was opened correctly
+		Workaround: Update to R5.0.3
+	- Zeta: Possibly some more compatibility issues I cannot even think of.
+
+Not supported feeds:
+	See feeds.txt
+
+Please contact me for feature requests and bug reports:
+	beos@herzig-net.de
+
+Download:
+	http://www.herzig-net.de/prog/friss/
+
+(C)2004 N3S (Andreas Herzig)

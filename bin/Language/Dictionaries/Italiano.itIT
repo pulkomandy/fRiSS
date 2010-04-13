@@ -1,0 +1,105 @@
+# Language file for fRiSS 0.5
+#
+# Note: all strings have to be quoted!
+#
+# Format: "source/english" "target/Italian"
+#
+
+# Meta Information
+	"FL:Translator"		"Andrea Bernardi (andrea@itbug.org)"
+	"FL:Language"		"Italiano"
+	"FL:Version"		"1"
+
+
+# General
+#	"Ok"									""
+	"Cancel"								"Annulla"
+
+
+# FV-Popup
+	"Information"							"Informazioni"
+#	"Refresh"								"Aggirona"
+	"Next Feed"								"Prossimo Feed"
+	"Previous Feed"							"Feed Precedente"
+#	"Select Feed"							"Seleziona Feed"
+	"Preferences" 							"Preferenze"
+	"Language"								"Lingua"
+	"About fRiSS" 							"A proposito di fRiSS"
+	"About" 								"A proposito"
+
+# FV-Information
+	"Title"									"Titolo"
+#	"Desc"									""
+	"Link"									"Link"
+#	"<no description available>"			""
+#	"<no link available>"					""
+
+
+# FV-Fehler
+#	"An error occured while loading this feed."					""
+#	"Error: Please add some feeds in the Preferences Window!"	""
+#	"Error: Fortune failed to load."							""
+#	"Warning: FeedLoader is still busy..."						""
+#	"Error: The browser could not be started :-("				""
+
+# FV-Status
+#	"Loading..." 							""
+#	"Loading done" 							""
+
+# PrefView
+#	"Feeds"									""
+	"Colours"								"Colori"
+#	"Misc" 									""
+#	"URL"									""
+
+# PV - Popup
+#	"Collapse"								""
+#	"Expand"								""
+	"Rename"								"Rinomina"
+	"New Item..."							"Noovo"
+	"Duplicate"								"Copia"
+	"Edit"								"Modifica"
+	"Edit..."								"Edita..."
+	"Remove"								"Cancella"
+#	"Add Subfolder..."						""
+#	"Import..."								""
+#	"Export..."								""
+	"Add new Item..."						      "Creane uno nuovo"
+	"Add new Folder..."						"Aggiungi una cartella"
+
+
+# PV - Tab Colour
+#	"Background"							""
+#	"Transparent background"					""
+	"Adapt to Desktop background colour"			"Adatta il colore al Desktop"
+#	"Custom background colour:"					""
+	"Text Colour"							"Colore Testo"
+	"Adapt colour to background"					"Adatta il colore allo sfondo"
+#	"(black on bright/white on dark)"				""
+#	"Custom text colour:"						""
+
+# PV - Tab Misc
+#	"Refresh interval (min)"					""
+#	"Load next feed instead of current"				""
+	"Show scrollbar"							"Montrer le scrollbar"
+	"Automatic"								"Automatique"
+	"Show always"							"Toujours"
+	"Hide always"							"Jamais"
+#	"Custom"								""
+#	"Browser MIME-Type"						""
+
+# PV - Error
+#	"One of the required fields is empty!"			""
+#	"Your feed list must not be empty!"				""
+
+# FPrefEditWindow
+	"Edit Item"								"Edita"
+	"Add Description to title"					"Aggiungi una descrizione"
+#	"Browser for this feed"						""
+	"Default"								"Predefinito"
+#	"Custom"								""
+	"Revert to Original"						"Ritorna all'originale"
+	"Save and Close"							"Salva e chiudi"
+
+# LOAD_NET - Error
+#	"Error: Timeout! Server did not respond."			"Errore: TImeOut! Il server non risponde."

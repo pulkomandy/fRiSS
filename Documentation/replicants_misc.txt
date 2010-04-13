@@ -1,0 +1,14 @@
+FRISS DOCUMENTATION - KNOWLEDGE
+
+Bad Ideas
+
+The straitforward idea to close ones replicant would be to 
+	be_app->PostMessage(B_QUIT_REQUESTED);
+as it closes your own app as intended. Well, yes, it kills your app, but unfortunately, the application for your replicant will be shelfer or even worse Tracker, so killing that is not such a good idea...
+Use this instead:
+	
+
+
+
+
+

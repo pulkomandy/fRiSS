@@ -1,0 +1,86 @@
+
+
+friss Ver. 0.5 (you can call it "Beta 5" or "RC5" if you like)
+
+
+I need feedback on bugs, crashs and feeds that do not work so that I can fix it. Please send reports!
+
+
+Supported feed types:
+	- rdf:RDF (the XML-Version)
+	- rss version="2.00"
+	- rss version="2.0"
+	- rss version="1.0"
+	- rss version="0.91"
+	- ATOM
+	and maybe more
+
+Partially supported (experimental)
+	- iCal/Sunbird ICS calendar files
+
+Not supported:
+	- any non-XML rdf-version
+
+
+Supported encodings:
+	- iso-8859-*
+	- EUC-JP, Shift_JIS
+	- windows-1252
+
+
+Known Issues:
+	- background color does not change immediately after a workspace change.
+	- the format of the settings file has changed. Friss will not convert the file but
+		start with defaults until it is closed. It will then create a new XML settings file.
+	- Preferences: drag and drop isn't good yet
+	- The Dragger and its surrounding space don't get redrawn properly.
+	- There are still some charsets left which are not supported yet.
+	- For certain charsets (e.g. EUC-JP) to take affect, your default font needs to support it too.
+	- For Color Auto-Adapt to work properly, you have to set the desktop background
+		color to something matching your background image. Friss cannot check
+		your image and decide for itself.
+	- text color for the textview (like for Fortune) is not updated correctly.
+	- If you use the Backgrounds preflet, the color will not auto-adapt. You will have
+		to enter Preferences and click on the one of the adapt-radiobuttons to
+		make it work. I haven't found a "good" way to check for background/color
+		changes.
+	- Zeta: Possibly some more compatibility issues I cannot even think of.
+	- Replicant mode: Preferences Window will block Tracker.
+
+
+Tips&Tricks for those who bother to read this file:
+	- use a middle button click to advance one feed	
+	- see example_feeds/ on how to display the output of fortune, php or other programmes.
+
+Please contact me for feature requests and bug reports:
+	beos@herzig-net.de
+	Please send screenshots if it's hard to explain what's wrong.
+	If you encounter any feed that does not work, please send me the link so that I
+	can have a look at it.
+	Und natürlich freue ich mich auch über Mails auf deutsch ;-)
+
+
+I want to thank the following people:
+	0033				original idea and feedback
+	frankps			lots of feedback and bug reports
+	Martin A.			swedish translation
+	Andrea Bernardi		italian translation and for the motivation to continue on version 0.5
+	KiM				japanese translation and the nice review on jpbe.net
+
+
+Download:
+	http://www.herzig-net.de/prog/friss/
+	http://www.bebits.com/app/3898
+
+Donate:
+	Via Paypal to beos@herzig-net.de
+	Your donations will be used to buy a Zeta license :-)
+
+Disclaimer:
+	I deny all responsibility for any problem or loss of data caused by a crash or
+	misbehaviour of friss. Use at your own risk.
+	And I am neither responsible for the content of newsfeeds nor for the content
+	of any linked website.
+
+
+(C)2004 Andreas Herzig

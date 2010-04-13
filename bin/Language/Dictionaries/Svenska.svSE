@@ -1,0 +1,102 @@
+# Language file for fRiSS 0.5
+# 
+# Note: all strings have to be quoted!
+
+# Meta Information
+	"FL:Translator"		"Martin A."
+	"FL:Language"		"Svenska"
+	"FL:Version"		"1"
+
+
+# General
+#	"Ok"				"Ok"
+#	"Cancel"			"Abbrechen"
+
+
+# FV-Popup
+	"Information"		"Informationen"
+	"Refresh"			"Uppdatera"
+	"Next Feed"			"Nästa feed"
+	"Previous Feed"		"Föregående feed"
+	"Select Feed"		"Välj feed"
+	"Preferences" 		"Inställningar"
+	"Language"			"Språk"
+	"About fRiSS" 		"Om fRiSS"
+	"About" 			"Om"
+
+# FV-Information
+#	"Title"							""
+#	"Desc"							""
+#	"Link"							""
+#	"<no description available>"	""
+#	"<no link available>"			""
+
+
+# FV-Fehler
+	"An error occured while loading this feed."					"Ett fel inträffade när denna feed skulle laddas."
+	"Error: Please add some feeds in the Preferences Window!"	"Fel: Var vänlig lägg till ett par feeds till Inställningar-fönstret!"
+	"Error: Fortune failed to load."							"Fel: Fortune kunde inte laddas."
+	"Warning: FeedLoader is still busy..."						"Varning: FeedLoader arbetar fortfarande.."
+	"Error: The browser could not be started :-("				"Fel: Webbläsaren kunde inte startas :-("
+
+# FV-Status
+	"Loading..." 		"Laddar..."
+	"Loading done" 		"Laddat klart"
+
+# PrefView
+	"Feeds"				"Feeds"
+	"Colours"			"Färger"
+	"Misc" 				"Övrigt"
+	"URL"				"URL"
+
+# PV - Popup
+	"Collapse"			"Minimera"
+	"Expand"			"Expandera"
+	"Rename"			"Döp om"
+	"New Item..."		"Ny objekt..."
+#	"Duplicate"			""
+	"Edit"				"Editera"
+	"Edit..."			"Editera..."
+	"Remove"			"Ta bort"
+	"Add Subfolder..."	"Lägg till undermapp..."
+	"Import..."			"Importera..."
+	"Export..."			"Exportera..."
+	"Add new Item..."	"Lägg till ny objekt..."
+	"Add new Folder..."	"Lägg till ny mapp..."
+
+# PV - Tab Colour
+	"Background"							"Bakgrund"
+	"Transparent background"				"Transparent bakgrund (replicants only)"
+	"Adapt to Desktop background colour"	"Anpassa till skrivbordets bakgrundsfärg"
+	"Custom background colour:"				"Egen bakgrundsfärg:"
+	"Text Colour"							"Textfärg"
+	"Adapt colour to background"			"Anpassa färg till bakgrund"
+	"(black on bright/white on dark)"		"(svart på vit/vit på svart bakgrund)"
+	"Custom text colour:"					"Egen textfärg:"
+
+# PV - Tab Misc
+	"Refresh interval (min)"			"Uppdatera intervall (min)"
+	"Load next feed instead of current"	"Gå till nästa feed"
+	"Show scrollbar"					"Visa rullningslister"
+	"Automatic"							"Automatisk"
+	"Show always"						"Visa alltid"
+	"Show never"						"Visa aldrig"
+	"Custom"							"Egen"
+	"Browser MIME-string"				"Webbläsarens MIME-sträng"
+
+# PV - Error
+	"One of the required fields is empty!"		"Ett av de obligatoriska fälten är tomt!"
+	"Your feed list must not be empty!"			"Din feedlista får inte vara tom!"
+
+# FPrefEditWindow
+	"Edit Item"					"Editera objekt"
+	"Add Description to title"	"Lägg till en beskrivning till titeln"
+	"Browser for this feed"		"Webbläsare för denna feed"
+	"Default"					"Standard"
+	"Custom"					"Egen"
+	"Revert to Original"		"Återställ till grundinställning"
+	"Save and Close"			"Spara och stäng"
+
+# LOAD_NET - Error
+	"Error: Timeout! Server did not respond." 	"Fel: Timeout! Servern svarade inte."
+

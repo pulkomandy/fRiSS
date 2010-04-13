@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://my.netscape.com/rdf/simple/0.9/">
+
+<channel>
+  <title>BeBits</title>
+  <link>http://www.bebits.com/</link>
+  <description>the latest BeOS applications</description>
+</channel>
+
+<image>
+  <title>BeBits</title>
+  <url>http://www.bebits.com/gfx/logos/badge.gif</url>
+  <link>http://www.bebits.com/</link>
+</image>
+<item>
+  <title>BeGV BeGV 0.1.2</title>
+  <link>http://www.bebits.com/app/1946/</link>
+</item>
+<item>
+  <title>AFPL Ghostscript AFPL Ghostscript 8.14</title>
+  <link>http://www.bebits.com/app/2209/</link>
+</item>
+<item>
+  <title>bud for ffmpeg R7</title>
+  <link>http://www.bebits.com/app/3800/</link>
+</item>
+<item>
+  <title>FireFox &amp; Mozilla - Bleeding Edge 1.7-10</title>
+  <link>http://www.bebits.com/app/2715/</link>
+</item>
+<item>
+  <title>Wesnoth 0.7.9</title>
+  <link>http://www.bebits.com/app/3553/</link>
+</item>
+<item>
+  <title>G-pro 040612</title>
+  <link>http://www.bebits.com/app/3863/</link>
+</item>
+<item>
+  <title>WonderBrush 1.2.0</title>
+  <link>http://www.bebits.com/app/3569/</link>
+</item>
+<item>
+  <title>BeOS 5 PE Max Edition 3.1 Beta 1</title>
+  <link>http://www.bebits.com/app/3892/</link>
+</item>
+<item>
+  <title>vim6 6.3.001</title>
+  <link>http://www.bebits.com/app/2693/</link>
+</item>
+<item>
+  <title>Rocks'n'Diamonds SDL 3.1.0</title>
+  <link>http://www.bebits.com/app/3891/</link>
+</item>
+</rdf:RDF>
+

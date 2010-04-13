@@ -1,0 +1,105 @@
+# Language file for fRiSS 0.5
+# 
+# Note: all strings have to be quoted!
+#
+# Format: "source/english" "target/french"
+# 
+
+# Meta Information
+	"FL:Translator"		"Andreas Herzig (beos@herzig-net.de)"
+	"FL:Language"		"Français"
+	"FL:Version"		"1"
+
+
+# General
+#	"Ok"									""
+	"Cancel"								"Annuler"
+
+
+# FV-Popup
+	"Information"							"Informations"
+#	"Refresh"								""
+	"Next Feed"								"Feed suivante"
+	"Previous Feed"							"Feed prochaine"
+#	"Select Feed"							""
+	"Preferences" 							"Préférences"
+	"Language"								"Langue"
+	"About fRiSS" 							"A propos de fRiSS"
+	"About" 								"A propos de"
+
+# FV-Information
+	"Title"									"Titre"
+#	"Desc"									""
+	"Link"									"Lien"
+#	"<no description available>"			""
+#	"<no link available>"					""
+
+
+# FV-Fehler
+#	"An error occured while loading this feed."					""
+#	"Error: Please add some feeds in the Preferences Window!"	""
+#	"Error: Fortune failed to load."							""
+#	"Warning: FeedLoader is still busy..."						""
+#	"Error: The browser could not be started :-("				""
+
+# FV-Status
+#	"Loading..." 							""
+#	"Loading done" 							""
+
+# PrefView
+#	"Feeds"									""
+	"Colours"								"Couleurs"
+#	"Misc" 									""
+#	"URL"									""
+
+# PV - Popup
+#	"Collapse"								""
+#	"Expand"								""
+	"Rename"								"Renommer"
+	"New Item..."							"Nouveau élément"
+	"Duplicate"								"Dupliquer"
+	"Edit"									"Editer"
+	"Edit..."								"Editer..."
+	"Remove"								"Supprimer"
+#	"Add Subfolder..."						""
+#	"Import..."								""
+#	"Export..."								""
+	"Add new Item..."						"Ajouter un nouveau élément"
+	"Add new Folder..."						"Ajouter un nouveau dossier..."
+
+
+# PV - Tab Colour
+#	"Background"							""
+#	"Transparent background"				""
+	"Adapt to Desktop background colour"	"Adapte au couleur du Desktop"
+#	"Custom background colour:"				""
+	"Text Colour"							"Couleur du Tèxte"
+	"Adapt colour to background"			"Adapte le couleur au background"
+#	"(black on bright/white on dark)"		""
+#	"Custom text colour:"					""
+
+# PV - Tab Misc
+#	"Refresh interval (min)"				""
+#	"Load next feed instead of current"		""
+	"Show scrollbar"						"Montrer le scrollbar"
+	"Automatic"								"Automatique"
+	"Show always"							"Toujours"
+	"Hide always"							"Jamais"
+#	"Custom"								""
+#	"Browser MIME-Type"						""
+
+# PV - Error
+#	"One of the required fields is empty!"	""
+#	"Your feed list must not be empty!"		""
+
+# FPrefEditWindow
+	"Edit Item"								"Editer cet élément"
+	"Add Description to title"				"Ajouter le déscription au titre"
+#	"Browser for this feed"					""
+	"Default"								"Défaut"
+#	"Custom"								""
+	"Revert to Original"					"Défaire à l'original"
+	"Save and Close"						"Enregistrer et fermer"
+
+# LOAD_NET - Error
+#	"Error: Timeout! Server did not respond."	""

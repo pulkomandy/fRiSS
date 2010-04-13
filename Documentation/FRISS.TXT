@@ -1,0 +1,19 @@
+http://forum.beosjournal.org/viewtopic.php?t=1060&postdays=0&postorder=asc&start=10
+
+mmadia
+
+#2.5 
+A variation of fRISS that displays CIA messages. CIA is an IRC-bot that
+outputs each and every cvs commit to a certain channel, #haiku for
+instance.
+
+
+
+http://cia.navi.cx/stats/project/OpenBeOS
+http://cia.navi.cx/stats/project/OpenBeOS/.rss
+
+
+
+Spenden / Donate
+
+PayPal: beos@herzig-net.de

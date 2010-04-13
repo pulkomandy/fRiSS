@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns="http://my.netscape.com/rdf/simple/0.9/">
+
+<channel>
+<title>OSNews</title>
+<link>http://www.osnews.com/</link>
+<description>Exploring the future of computing</description>
+</channel>
+
+<item>
+<title>*Linux Lite: Cobind and the Simpler Life*</title>
+<link>http://www.osnews.com/story.php?news_id=7355</link>
+<description>Recently, I got my hands on version 0.2 of Cobind, a Linux lite desktop, based on Red Hat/Fedora Core 1, from a software company in Pittsburgh. Not yet in general release, Cobind is a one disc wonder....</description>
+<dc:date>2004-06-14T06:35:46-00:00</dc:date>
+</item>
+
+<item>
+<title>Debian AMD x86_64 Port Ready</title>
+<link>http://www.osnews.com/story.php?news_id=7354</link>
+<description>The Debian Project announced their AMD64 port is r...</description>
+<dc:date>2004-06-14T06:32:48-00:00</dc:date>
+</item>
+
+<item>
+<title>Microsoft's SP1 for Server 2003 Packs a Security Punch</title>
+<link>http://www.osnews.com/story.php?news_id=7353</link>
+<description>Microsoft says its set of upgrades for Windows Ser...</description>
+<dc:date>2004-06-14T06:32:28-00:00</dc:date>
+</item>
+
+<item>
+<title>A Splintering Linux Community</title>
+<link>http://www.osnews.com/story.php?news_id=7352</link>
+<description>&quot;We now have two distinct classes of Linux users ...</description>
+<dc:date>2004-06-14T06:32:09-00:00</dc:date>
+</item>
+
+<item>
+<title>FreeBSD, Stealth-Growth Open Source Project</title>
+<link>http://www.osnews.com/story.php?news_id=7351</link>
+<description>Given the rapid growth of Linux in the technology ...</description>
+<dc:date>2004-06-14T06:07:48-00:00</dc:date>
+</item>
+
+<item>
+<title>Multithreading with the .NET Framework</title>
+<link>http://www.osnews.com/story.php?news_id=7350</link>
+<description>Every programmer needs to know how and when to use...</description>
+<dc:date>2004-06-14T06:07:30-00:00</dc:date>
+</item>
+
+<item>
+<title>GNUstep 0.9.3, FOX Toolkit 1.2.4 Released</title>
+<link>http://www.osnews.com/story.php?news_id=7349</link>
+<description>In GNUstep 0.9.3 spell checker has been reimplemen...</description>
+<dc:date>2004-06-14T03:08:01-00:00</dc:date>
+</item>
+
+<item>
+<title>SkyFS Gets True Multi-user Support</title>
+<link>http://www.osnews.com/story.php?news_id=7348</link>
+<description>SkyFS has been updated to support the &quot;Securtiy C...</description>
+<dc:date>2004-06-13T22:18:31-00:00</dc:date>
+</item>
+
+<item>
+<title>YellowTAB's Zeta 1.0-RC3 Available for Purchase</title>
+<link>http://www.osnews.com/story.php?news_id=7347</link>
+<description>YellowTAB's Zeta 1.0-RC3 is now available for pur...</description>
+<dc:date>2004-06-13T22:18:05-00:00</dc:date>
+</item>
+
+<item>
+<title>PCLinuxOS Preview 7 Review</title>
+<link>http://www.osnews.com/story.php?news_id=7346</link>
+<description>TuxS.org has posted a short review of the PCLinuxO...</description>
+<dc:date>2004-06-13T22:17:33-00:00</dc:date>
+</item>
+
+<item>
+<title>*Opinion: Why Users Blame the Spatial Nautilius*</title>
+<link>http://www.osnews.com/story.php?news_id=7344</link>
+<description>The recently announced GNOME 2.6 has finally brought many features long awaited by the Linux desktop fans. GNOME 2.6 is all about ease of use, performance and unification and while it's unfortunately hard to say that the GNOME desktop feels fast, it certainly began to be really easy to use and it has consistent look and feel — and that  consistency is what makes up for most of the quality of a graphical user environment. UPDATE: Scroll down the article to read some added commentary....</description>
+<dc:date>2004-06-13T07:21:50-00:00</dc:date>
+</item>
+
+<item>
+<title>First Impressions Review of AmigaOS4-Prerelease</title>
+<link>http://www.osnews.com/story.php?news_id=7345</link>
+<description>Read here for a not-so-short first-impressions rev...</description>
+<dc:date>2004-06-13T07:21:10-00:00</dc:date>
+</item>
+
+<item>
+<title>Unofficial Fedora Core 2 Guide for Beginners </title>
+<link>http://www.osnews.com/story.php?news_id=7343</link>
+<description>Yet another unofficial Fedora Core 2 Guide for Beg...</description>
+<dc:date>2004-06-12T19:17:20-00:00</dc:date>
+</item>
+
+<item>
+<title>Introduction to Data Services</title>
+<link>http://www.osnews.com/story.php?news_id=7342</link>
+<description>common language runtime objects, Extensible Markup...</description>
+<dc:date>2004-06-12T16:55:12-00:00</dc:date>
+</item>
+
+<item>
+<title>GTK+ 2.4.3 Released</title>
+<link>http://www.osnews.com/story.php?news_id=7341</link>
+<description>GTK+ 2.4.3 is a bug fix release and is source and ...</description>
+<dc:date>2004-06-11T23:04:45-00:00</dc:date>
+</item>
+
+<textinput>
+<title>Search OSNews</title>
+<description>Search OSNews articles</description>
+<name>search</name>
+<link>http://www.osnews.com/search.php</link>
+</textinput>
+
+</rdf:RDF>

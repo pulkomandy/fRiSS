@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
+ "http://my.netscape.com/publish/formats/rss-0.91.dtd">
+
+<rss version="0.91">
+
+<channel>
+<title>IsComputerOn</title>
+<link>http://www.iscomputeron.com</link>
+<description>IsComputerOn</description>
+<language>en-us</language>
+
+<item>
+<title>RSS Reader For BeOS Under Development.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=390</link>
+</item>
+
+<item>
+<title>Zeta RC3 Preview.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=389</link>
+</item>
+
+<item>
+<title>Zeta Gets Native Media Player And New Codecs.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=388</link>
+</item>
+
+<item>
+<title>BeOS Max v3.1 Beta Ready For Testing.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=387</link>
+</item>
+
+<item>
+<title>TuneTracker/Zeta Partnership Announced.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=386</link>
+</item>
+
+<item>
+<title>Ten Years of BeOS.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=385</link>
+</item>
+
+<item>
+<title>Port Sonork, Get $1000</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=384</link>
+</item>
+
+<item>
+<title>Headed Over To Taiwan.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=383</link>
+</item>
+
+<item>
+<title>yellowTab &amp; Bernd Korz Move Around.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=382</link>
+</item>
+
+<item>
+<title>BeOSFrance Interviews Team Maui.</title>
+<link>http://www.iscomputeron.com/index/modules.php?name=News&amp;file=article&amp;sid=381</link>
+</item>
+
+</channel>
+</rss>

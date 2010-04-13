@@ -1,0 +1,110 @@
+# Language file for fRiSS 0.5
+# 
+# Note: all strings have to be quoted!
+
+# Meta Information
+	"FL:Translator"		"Andreas Herzig (beos@herzig-net.de)"
+	"FL:Language"		"Deutsch"
+	"FL:Version"		"1"
+
+
+# General
+	"Ok"				"Ok"
+	"Cancel"			"Abbrechen"
+
+
+# FV-Popup
+	"Information"		"Informationen"
+	"Refresh"			"Aktualisieren"
+	"Next Feed"			"Nächster Feed"
+	"Previous Feed"		"Vorheriger Feed"
+	"Select Feed"		"Feed auswählen"
+	"Preferences" 		"Einstellungen"
+	"Language"			"Sprache"
+	"About fRiSS" 		"Über fRiSS"
+	"About" 			"Über"
+
+# FV-Information
+	"Title"							"Titel"
+	"Desc"							"Beschr."
+	"Link"							"Link"
+	"<no description available>"	"<keine Beschreibung verfügbar>"
+	"<no link available>"			"<kein Link verfügbar>"
+
+
+# FV-Fehler
+	"An error occured while loading this feed."					"Beim Laden des Feeds ist ein Fehler aufgetreten."
+	"Error: Please add some feeds in the Preferences Window!"	"Fehler: Bitte ein paar Feeds im Einstellungen-Dialog eintragen!"
+	"Error: Fortune failed to load."							"Fehler: Fortune konnte nicht geladen werden."
+	"Warning: FeedLoader is still busy..."						"Warnung: Der Feed-Lader ist noch beschäftigt..."
+	"Error: The browser could not be started :-("				"Fehler: Der Browser konnte nicht gestartet werden :-("
+
+# FV-Status
+	"Loading..." 		"Lade..."
+	"Loading done" 		"Laden beendet."
+
+# PrefView
+	"Feeds"				"Feeds"
+	"Colours"			"Farben"
+	"Misc" 				"Sonst"
+	"URL"				"URL"
+
+# PV - Popup
+	"Collapse"			"Zuklappen"
+	"Expand"			"Aufklappen"
+	"Rename"			"Umbenennen"
+	"New Item..."		"Neuer Eintrag..."
+	"Duplicate"			"Duplizieren"
+	"Edit"				"Bearbeiten"
+	"Edit..."			"Bearbeiten..."
+	"Remove"			"Entfernen"
+	"Add Subfolder..."	"Unterordner anlegen..."
+	"Import..."			"Importieren..."
+	"Export..."			"Exportieren..."
+	"Add new Item..."	"Neuen Eintrag anlegen..."
+	"Add new Folder..."	"Neuen Ordner anlegen..."
+
+
+# PV - Tab Colour
+	"Background"							"Hintergrund"
+	"Transparent background"				"Transparenter Hintergrund (Nur für Replikanten)"
+	"Adapt to Desktop background colour"	"An Desktopfarbe anpassen"
+	"Custom background colour:"				"Eigene Hintergrundfarbe:"
+	"Text Colour"							"Textfarbe"
+	"Adapt colour to background"			"Farbe dem Hintergrund anpassen"
+	"(black on bright/white on dark)"		"(Schwarz auf hellem/Weiss auf dunklem Hintergrund)"
+	"Custom text colour:"					"Eigene Textfarbe:"
+
+# PV - Tab Misc
+	"Refresh interval (min)"				"Neuladen (min)"
+	"Load next feed instead of current"		"Nächsten Feed laden nach Ablauf der Zeit"
+	"Show scrollbar"						"Scrollbalken anzeigen"
+	"Automatic"								"Automatisch"
+	"Show always"							"Immer"
+	"Hide always"							"Niemals"
+	"Custom"								"Benutzerdefiniert"
+	"Browser MIME-Type"						"MIME-Typ des Browsers"
+
+# PV - Error
+	"One of the required fields is empty!"	"Eines der benötigten Felder ist leer!"
+	"Your feed list must not be empty!"		"Die Feedliste darf nicht leer bleiben!"
+
+# FPrefEditWindow
+	"Edit Item"								"Eintrag bearbeiten"
+	"Add Description to title"				"Beschreibung an Titel anhängen"
+	"Browser for this feed"					"Browser für diesen Feed"
+	"Default"								"Standard"
+	"Custom"								"Eigener"
+	"Revert to Original"					"Änderungen widerrufen"
+	"Save and Close"						"Speichern und Schließen"
+
+# LOAD_NET - Error
+	"Error: Timeout! Server did not respond." "Fehler: Timeout! Der Server hat nicht geantwortet."
+
+# Zeugs 0.5.6
+	"Unexpected Event"						"Unerwartetes Ereignis"
+	"The mouse button you just pressed is not yet supported in friss."
+											"Die Maustaste, die du gerade gedrückt hast, wird in Friss noch nicht unterstützt."
+	"Thankyou"								"Vielen Dank"
+	
+	

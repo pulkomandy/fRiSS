@@ -1,0 +1,7 @@
+Compatibility Issues BeOS R5 vs Zeta
+
+- Views without B_WILL_DRAW will be drawn anyway on R5. Zeta does not.
+- Default Pulse Rate differs
+- SetViewColor, SetHighColor, SetLowColor... don't rely on what you see on R5. On Zeta you might end up with blue text on blue background.
+
+

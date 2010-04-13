@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns="http://my.netscape.com/rdf/simple/0.9/">
+
+<channel>
+  <title>heise online news</title>
+  <link>http://www.heise.de/newsticker/</link>
+  <description>Nachrichten aus der Welt des Computers</description>
+</channel>
+
+
+<item>
+  <title>Rambus stellt Turbo-PCI-Express vor</title>
+  <link>http://www.heise.de/newsticker/meldung/48454</link>
+</item>
+
+<item>
+  <title>Supreme Court ermöglicht Freigabe von Intel-Dokumenten an EU-Kommission</title>
+  <link>http://www.heise.de/newsticker/meldung/48453</link>
+</item>
+
+<item>
+  <title>Rasanter A/D-Umsetzer in CMOS-Technologie</title>
+  <link>http://www.heise.de/newsticker/meldung/48451</link>
+</item>
+
+<item>
+  <title>Privates Raumschiff sicher wieder auf der Erde gelandet</title>
+  <link>http://www.heise.de/newsticker/meldung/48450</link>
+</item>
+
+<item>
+  <title>LKW-Maut: Umfangreicher Aktionsplan läuft an</title>
+  <link>http://www.heise.de/newsticker/meldung/48452</link>
+</item>
+
+<item>
+  <title>Coca Cola verschenkt 25 Millionen Musik-Downloads</title>
+  <link>http://www.heise.de/newsticker/meldung/48449</link>
+</item>
+
+<item>
+  <title>Microsoft sammelt Anregungen für Internet Explorer</title>
+  <link>http://www.heise.de/newsticker/meldung/48437</link>
+</item>
+
+<item>
+  <title>NBC Universal plant Online-Filmangebot</title>
+  <link>http://www.heise.de/newsticker/meldung/48446</link>
+</item>
+
+<item>
+  <title>Serial-ATA-Platten mit NCQ bald im Handel</title>
+  <link>http://www.heise.de/newsticker/meldung/48445</link>
+</item>
+
+<item>
+  <title>LinuxTag: Demo gegen Softwarepatente</title>
+  <link>http://www.heise.de/newsticker/meldung/48448</link>
+</item>
+
+<item>
+  <title>Voice-over-IP mit Skype für Linux</title>
+  <link>http://www.heise.de/newsticker/meldung/48441</link>
+</item>
+
+<item>
+  <title>Lufthansa baut Angebot an Flugstrecken mit Internet an Bord aus</title>
+  <link>http://www.heise.de/newsticker/meldung/48444</link>
+</item>
+
+<item>
+  <title>Yahoo startet chinesischen Webindex</title>
+  <link>http://www.heise.de/newsticker/meldung/48439</link>
+</item>
+
+<item>
+  <title>Intel-Chef Barrett: Rezession in Chipbranche beendet</title>
+  <link>http://www.heise.de/newsticker/meldung/48440</link>
+</item>
+
+<item>
+  <title>Hitachi baut Festplattenwerk für 500 Millionen Dollar</title>
+  <link>http://www.heise.de/newsticker/meldung/48438</link>
+</item>
+
+
+</rdf:RDF>
