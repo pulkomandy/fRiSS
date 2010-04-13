@@ -306,22 +306,15 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 		
 		case CMD_ADD_ITEM:
 			// Changed behaviour: Add new XmlNode and open Edit for it
-			/*
-			if (strlen(tName->Text())>0 && strlen(tUrl->Text())>0) {
-				*
-				bv->AddItem( new XmlNode(tName->Text(), tUrl->Text()) );
-				tName->SetText("");
-				tUrl->SetText("");
-				tDesc->SetText("");
-				bv->DeselectAll();
-				bv->FullListSortItems(&compare_func);
-				*
-			}
-			else {
-				(new BAlert(_T("Error"),_T("One of the required fields is empty!"),_T("Oops!")))->Go();
-			}
-			*/
-			break;
+			
+			bv->DeselectAll();
+			bv->AddItem( new XmlNode("New feed") );
+			bv->Select(bv->CountItems() - 1);
+			//bv->FullListSortItems(&compare_func);
+			editi = bv->CurrentSelection();
+			
+			//Falltrough : edit the item we just added
+
 		case CMD_EDIT_ITEM:
 			{
 				if (editi == bv->CurrentSelection()) {
