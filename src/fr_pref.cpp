@@ -477,6 +477,7 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 bool
 FrissPrefWin::QuitRequested()
 {
+	//TODO : all of this should be checked while the user makes change, not on closing the window...
 	config->m_iAnz = bv->CountItems();
 
 	// refresh rate	
@@ -596,7 +597,8 @@ FrissPrefWin::Export(XmlNode* parent, entry_ref* ref)
 		return;
 	
 	BPath path;
-	e.GetPath(&path);	
+	e.GetPath(&path);
+	printf("Saving feeds to %s\n",path.Path());
 
 	parent->SaveToFile(path.Path());
 	/*
