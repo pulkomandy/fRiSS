@@ -114,5 +114,48 @@ int LoadFeedNet(const char* feed, char* buf, int bufsize)
     buf[size] = 0; // string sicher machen
     
     FPRINT(( "  Receive ok" ));
-	return size;
+	// Do basic HTTP parsing:
+	BString result;
+	result.Append(buf, 12).Remove(0,9);
+	int http_return_code = atoi(result.String());
+	
+	switch (http_return_code)
+	{
+		case 200: // OK
+			return size;
+		
+		// Redirections:
+		case 301: // Moved Permanently
+		case 302: // Found (URL typo?)
+		{
+			/* Example:
+			HTTP/1.1 301 Moved Permanently
+			Date: Tue, 13 Apr 2010 20:53:54 GMT
+			Server: Apache
+			Location: http://joomla.iscomputeron.com/index/backend.php
+			Vary: Accept-Encoding
+			Content-Length: 256
+			Connection: close
+			Content-Type: text/html; charset=iso-8859-1
+			*/
+			BString redirectedUrl(buf);
+			redirectedUrl.Remove(0, redirectedUrl.FindFirst("Location:") + 9);
+			redirectedUrl.Truncate(redirectedUrl.FindFirst('n'));
+			
+			FPRINT(("LN: Redirected to %sn", redirectedUrl.String()));
+   	
+   			//TODO prevent unlimited recursion!
+   				
+			return LoadFeedNet(redirectedUrl.Trim().String(), buf, bufsize);
+		}
+		
+		//case 403: // Access Denied
+		//case 404: // File not Found
+		//case 5xx: // Server failure
+		default:
+			printf("LoadFeedNet() failed, Server response was '%d'n", http_return_code);
+			FPRINT(( "DATA: %d bytesn==n%sn==n", size, buf));
+	}
+	
+	return -1;
 }
