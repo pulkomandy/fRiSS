@@ -451,6 +451,8 @@ FrissView::MessageReceived(BMessage *msg)
 		case MSG_PREF_DONE:
 			// signaled by FrissPrefWindow, saying it's done
 			//inv = true;
+
+			theRoot->SaveToFile( config->Feedlist.String() );
 			pulsing = true;
 			
 			UpdateColors();

@@ -71,7 +71,7 @@ XmlNode::XmlNode(const char* buf, XmlNode* parent) :
 	if (!buf)
 		XPRINT(0,("Parse error\n"));
 	else
-		XPRINT(0,("ok\n"));
+		XPRINT(0,("XmlNode(buf,parent): ok\n"));
 }
 
 
@@ -963,15 +963,13 @@ XmlNode::Display(int level) const
 
 bool
 XmlNode::SaveToFile(const char* filename) const
-{
-	puts("XmlNode::SaveToFile");
-	
+{	
 	int ref = creat(filename, 0666);
 	if (ref < 0) {
 		perror("open");
 		return false;
 	}
-	
+
 	BString dummy("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n\n");
 	write(ref, dummy.String(), dummy.Length());
 	
@@ -1100,7 +1098,7 @@ XmlNode::LoadFile(const char* filename)
 		return false;
 	}
 	else {
-		puts("ok");
+		puts("XmlNode::Load: ok");
 		return true;
 	}
 }

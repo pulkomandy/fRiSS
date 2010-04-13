@@ -232,7 +232,7 @@ FrissConfig::Defaults()
 		//path.Append("Language/Dictionaries");
 		
 		Feedlist	= path.Path();
-		Feedlist	<< "feeds.opml";		
+		Feedlist	<< "/feeds.opml";		
 	}
 	else	
 		Feedlist	= "./feeds.opml";

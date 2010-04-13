@@ -306,12 +306,14 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 		
 		case CMD_ADD_ITEM:
 			// Changed behaviour: Add new XmlNode and open Edit for it
-			
-			bv->DeselectAll();
-			bv->AddItem( new XmlNode("New feed") );
-			bv->Select(bv->CountItems() - 1);
-			//bv->FullListSortItems(&compare_func);
-			editi = bv->CurrentSelection();
+			{
+				XmlNode* newItem = new XmlNode("outline");
+				EditItem(newItem);
+				bv->AddItem(newItem);
+				theList->AddChild(newItem);
+				bv->FullListSortItems(&compare_func);
+				break;
+			}
 			
 			//Falltrough : edit the item we just added
 
