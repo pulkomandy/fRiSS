@@ -107,7 +107,7 @@ int LoadFeedNet(const char* feed, char* buf, int bufsize)
    	//printf("Reading: %s\n", sock.ErrorStr() );
 	sock.Close();
 	
-	int size = buffy.Size();
+	int size = buffy.BytesRemaining();
 	if (size>bufsize)
 		size = bufsize-1;
     buffy.RemoveData(buf,size);

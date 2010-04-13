@@ -198,13 +198,6 @@ NLang::BuildLangMenu(BMenu* menu, const char* current)
 {
 	BMenuItem* mi;
 	
-	/*
-	if (current)
-		printf("Current language is %d\n", current[0]);
-	else
-		puts("No current language :-(");
-	*/
-	
 	menu->SetRadioMode(true);
 	
 	BMessage *defmsg = new BMessage(CMD_LANG_LOAD);
@@ -215,18 +208,10 @@ NLang::BuildLangMenu(BMenu* menu, const char* current)
 	}	
 	
 	menu->AddSeparatorItem();
-	
-	
-	/*
-	BEntry ent(mPath.String(),true);
-	BPath path;
-	ent.GetPath(&path);*/
-
-	//printf("Language directory is %s\n", mPath.String());
 		
 	BDirectory dir(mPath.String());
 	if (dir.InitCheck() != B_OK) {
-		printf("\tfailn");
+		printf("%s : Directory %s is wrong ?\n",__func__,mPath.String());
 		return;
 	}
 	BEntry entry;

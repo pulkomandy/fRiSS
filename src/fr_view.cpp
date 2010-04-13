@@ -788,48 +788,54 @@ FrissView::LoadDone()
 		return;
 	}
 	
-	addDesc = (currentFeed->Attribute("x-addDesc") != NULL);
-	currentType = currentFeed->Attribute("xmlURL");
-	currentType.Remove(0, currentType.FindLast('.'));
+	if (*buf == 0) {
+		status = _T("Error: Feed is empty");
+		anz = -1;
+	} else {
 	
-	if (currentType.ICompare(".ICS")==0) {
-		// iCal / Sunbird ICS
-		#ifndef OPTIONS_NO_ICS
-			anz = Parse_ics(buf, tlist, status, updateFeedList);	
-		#else
-			anz = -1;
-			status = _T("ICS is not supported in this build");
-		#endif
-	}
-	else {
-		// default is RSS/RDF/XML
-
-		// build tree from loaded file:
-		XmlNode* root = new XmlNode(buf, NULL);
-			
-		XmlNode* x = root->FindChild("channel",NULL,true);
-		if (x) {
-			// assume it's RSS or RDF Xml style
-			
-			anz = Parse_rss(root, tlist, status, updateFeedList, addDesc);
+		addDesc = (currentFeed->Attribute("x-addDesc") != NULL);
+		currentType = currentFeed->Attribute("xmlURL");
+		currentType.Remove(0, currentType.FindLast('.'));
+		
+		if (currentType.ICompare(".ICS")==0) {
+			// iCal / Sunbird ICS
+			#ifndef OPTIONS_NO_ICS
+				anz = Parse_ics(buf, tlist, status, updateFeedList);	
+			#else
+				anz = -1;
+				status = _T("ICS is not supported in this build");
+			#endif
 		}
 		else {
-			x = root->FindChild("feed");
-			
+			// default is RSS/RDF/XML
+	
+			// build tree from loaded file:
+			XmlNode* root = new XmlNode(buf, NULL);
+				
+			XmlNode* x = root->FindChild("channel",NULL,true);
 			if (x) {
-				#ifndef OPTIONS_NO_ATOM
-					anz = Parse_atom(root, tlist, status, updateFeedList, addDesc);	
-				#else
-					anz = -1;
-					status = _T("ATOM is not supported in this build");
-				#endif		
+				// assume it's RSS or RDF Xml style
+				
+				anz = Parse_rss(root, tlist, status, updateFeedList, addDesc);
 			}
 			else {
-				// unknown XML type
-				status = _T("Error: Unrecognized format");
-				anz = -1;
-			}
-		}					
+				x = root->FindChild("feed");
+				
+				if (x) {
+					#ifndef OPTIONS_NO_ATOM
+						anz = Parse_atom(root, tlist, status, updateFeedList, addDesc);	
+					#else
+						anz = -1;
+						status = _T("ATOM is not supported in this build");
+					#endif		
+				}
+				else {
+					// unknown XML type
+					status = _T("Error: Unrecognized format");
+					anz = -1;
+				}
+			}					
+		}
 	}
 	//printf("\nNACH DEM PARSEN: anz=%i Status='%s'\n\n", anz, status.String() );
 	
