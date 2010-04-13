@@ -26,7 +26,7 @@ Main friss :
 	fr_view.cpp
 	;
 
-BELIBS = -lbe -lnetapi -ltracker -lzeta -ltextencoding ;
+BELIBS = -lbe -lnetwork -lbnetapi -ltracker -ltextencoding -lstdc++ ;
 
 LINKLIBS on friss = $(BELIBS) ;
 

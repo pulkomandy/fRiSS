@@ -1111,7 +1111,7 @@ FrissView::Launch(FStringItem* fi)
 	if (currentFeed) {
 		const char* bb = currentFeed->Attribute(OPML_OVERRIDE_BROWSER);
 		if (bb)
-			BrowserType = std::atoi(bb);
+			BrowserType = atoi(bb);
 	}
 	
 	switch (BrowserType) {

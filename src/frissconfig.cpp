@@ -42,7 +42,7 @@ FrissConfig::FrissConfig(BMessage* archive)
 }
 
 status_t
-FrissConfig::Archive(BMessage *msg, bool deep = true) const
+FrissConfig::Archive(BMessage *msg, bool deep) const
 {
 	msg->AddInt32("version", m_iVersion);
 	msg->AddInt32("RefreshRate", RefreshRate);

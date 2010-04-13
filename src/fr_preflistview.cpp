@@ -1,9 +1,9 @@
 #include "fr_preflistview.h"
 
 PrefListView::PrefListView(XmlNode* listroot, BRect f, const char *name,
-	list_view_type type = B_SINGLE_SELECTION_LIST,
-	uint32 resizingMode = B_FOLLOW_LEFT | B_FOLLOW_TOP,
-	uint32 flags = B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS) :
+	list_view_type type,
+	uint32 resizingMode,
+	uint32 flags) :
 	BOutlineListView(f, name, type, resizingMode, flags)
 {
 	root = listroot;

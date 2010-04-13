@@ -2,6 +2,7 @@
 #define FR_PREF
 
 #include <be/InterfaceKit.h>
+#include <storage/FilePanel.h>
 
 #include "fr_def.h"
 #include "fr_preflistview.h"

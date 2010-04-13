@@ -3,6 +3,8 @@
 #include "xmlnode.h"
 #include <stdlib.h>
 
+#include <File.h>
+
 //#define TRACE_XML
 #define XML_FUNC	3
 
@@ -283,7 +285,7 @@ XmlNode::Attribute(const char* key) const
 }
 
 int
-XmlNode::AttributeAsInt(const char* key, int defaultValue=0) const
+XmlNode::AttributeAsInt(const char* key, int defaultValue) const
 {
 	const char *val = Attribute(key);
 	if (!val)
@@ -293,7 +295,7 @@ XmlNode::AttributeAsInt(const char* key, int defaultValue=0) const
 }
 
 bool
-XmlNode::AttributeAsBool(const char* key, bool defaultValue=false) const
+XmlNode::AttributeAsBool(const char* key, bool defaultValue) const
 {
 	const char *val = Attribute(key);
 	if (!val)

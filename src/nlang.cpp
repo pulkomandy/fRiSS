@@ -194,7 +194,7 @@ NLang::load_lang_file(const char* name)
 
 
 void
-NLang::BuildLangMenu(BMenu* menu, const char* current=NULL)
+NLang::BuildLangMenu(BMenu* menu, const char* current)
 {
 	BMenuItem* mi;
 	
