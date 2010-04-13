@@ -75,7 +75,7 @@ typedef unsigned long ulong;
 #define OPML_TTL				"x-ttl"
 
 
-#define BROWSER_MIME_NETPOSITIVE		"application/x-vnd.Be-NPOS"
+#define BROWSER_MIME_WEBPOSITIVE		"application/x-vnd.Haiku-WebPositive"
 #define BROWSER_MIME_FIREFOX			"application/x-vnd.Firefox"
 #define BROWSER_MIME_CUSTOM_DEFAULT		"application/x-vnd.Mozilla"
 

@@ -1133,7 +1133,7 @@ FrissView::Launch(FStringItem* fi)
 	
 		case BrowserNetpositive:
 		default:
-			app = BROWSER_MIME_NETPOSITIVE;
+			app = BROWSER_MIME_WEBPOSITIVE;
 	}
 	
 	BString url(fi->Url());

@@ -254,7 +254,7 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 		br = boxBrowser->Bounds();
 		br.top += 10; br.InsetBy(5,5);
 		br.bottom = 20;
-		boxBrowser->AddChild( cBrowserNetP = new BRadioButton(br, "cBrowserNetP", _T("NetPositive"), NULL) );
+		boxBrowser->AddChild( cBrowserNetP = new BRadioButton(br, "cBrowserNetP", _T("WebPositive"), NULL) );
 		br.OffsetBy(0,20);
 		boxBrowser->AddChild( cBrowserFox = new BRadioButton(br, "cBrowserFox", _T("Mozilla Firefox"), NULL) );
 		br.OffsetBy(0,30);
