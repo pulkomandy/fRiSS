@@ -1,0 +1,34 @@
+rule UserObject
+{
+	switch $(>)
+	{
+		case *.rdef     : ResourceCompiler $(<) : $(>) ;
+		case *.rsrc     : ResourceLinker $(<) : $(>) ;
+		case *          : ECHO "unknown file type: " $(<) ;
+	}
+}
+
+rule ResourceCompiler
+{
+	DEPENDS $(<) : $(>) ;
+	Clean clean : $(<) ;
+}
+
+actions ResourceCompiler
+{
+	# convert rdef to rsrc
+	rc -o $(<) $(>) ;
+}
+
+rule ResourceLinker
+{
+	DEPENDS $(<) : $(>) ;
+	Clean clean : $(<) ;
+}
+
+actions ResourceLinker
+{
+	# push rsrc into final binary
+	xres -o $(<) $(>) ;
+	mimeset -f $(<) ;
+}

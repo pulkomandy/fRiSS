@@ -1,3 +1,4 @@
+SubDir src ;
 
 Main friss :
 	frissconfig.cpp
@@ -25,6 +26,11 @@ Main friss :
 	fr_ftextview.cpp
 	fr_view.cpp
 	;
+
+if $(OS) = HAIKU {
+	Object friss.rsrc : friss.rdef ;
+	Object friss : friss.rsrc ;
+}
 
 BELIBS = -lbe -lnetwork -lbnetapi -ltracker -ltextencoding -lstdc++ ;
 
