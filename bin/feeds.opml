@@ -3,13 +3,22 @@
 <?xml version="1.0" encoding="utf-8" />
 <?xml version="1.0" encoding="utf-8" />
 <?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
 <opml>
 	<head>
 		<dateCreated>Tue Apr 13 22:21:59 2010</dateCreated>
 	</head>
 	<body>
-		<outline text="g" xmlURL="http://code.google.com/feeds/p/grafx2/updates/basic" />
-		<outline text="EmptyGroup" />
-		<outline text="hfgf" xmlURL="http://www.iscomputeron.com/index/backend.php" />
+		<outline text="grafx2" xmlURL="http://code.google.com/feeds/p/grafx2/updates/basic" x-addDesc="true" />
+		<outline text="planet gp2x" xmlURL="http://planet.gp2x.org/atom.xml" />
+		<outline text="gp2x wiki" xmlURL="http://wiki.gp2x.org/index.php?title=Special:Recentchanges&feed=rss" />
+		<outline text="gp2x file archive" xmlURL="http://dl.openhandhelds.org/gp2x/rss20.php" />
+		<outline text="cpcsdk" xmlURL="http://code.google.com/feeds/p/cpcsdk/updates/basic" />
+		<outline text="haiku blogs" xmlURL="http://www.haiku-os.org/blog/feed" />
+		<outline text="Haiku site" xmlURL="http://www.haiku-os.org/rss.xml" />
+		<outline text="Kevtris" xmlURL="http://blog.kevtris.org/?feed=atom" />
+		<outline text="lynxdev" xmlURL="http://www.yaronet.com/rss_c.php?c=255" />
+		<outline text="ico" xmlURL="http://joomla.iscomputeron.com/index.php?option=com_rss&feed=ATOM0.3&no_html=1" />
+		<outline text="grafx2 alerts" xmlURL="http://www.google.com/alerts/feeds/17362184002103587184/16487832607225648859" />
 	</body>
 </opml>
