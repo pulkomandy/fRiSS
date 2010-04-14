@@ -378,7 +378,7 @@ XmlNode::RemoveAllAttributes()
 {
 	void* attr;
 	for (int32 i=0; (attr = mAttribute.ItemAt(i)); i++)
-		delete attr;
+		delete static_cast<XmlNode*>(attr);
 		
 	mAttribute.MakeEmpty();
 }
@@ -438,7 +438,7 @@ XmlNode::RemoveAllChildren()
 {
 	void* attr;
 	for (int32 i=0; (attr = mChild.ItemAt(i)); i++)
-		delete attr;
+		delete static_cast<XmlNode*>(attr);
 		
 	mChild.MakeEmpty();
 }
