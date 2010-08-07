@@ -41,7 +41,7 @@ public:
 		BMessage* m = new BMessage('slfd');
 		feedList->SetSelectionMessage(m);
 
-		XmlNode* XfeedList = theList->ItemAt(0)->ItemAt(1);
+		XmlNode* XfeedList = theList->FindChild("body", NULL, true);
 		for (int i = 0; i < XfeedList->Children(); i++) {
 			BStringItem* it = new BStringItem(XfeedList->ItemAt(i)->Attribute("text"));
 			feedList->AddItem(it);
