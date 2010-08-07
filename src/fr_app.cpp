@@ -10,14 +10,42 @@ class MyWindow : public BWindow
 {
 private:
 	FrissView	*myf;
+	BListView* feedList;
+
+	void MessageReceived(BMessage* message)
+	{
+		switch(message->what) {
+			case 'slfd':
+				myf->Load(feedList->CurrentSelection());
+				break;
+			default:
+				BWindow::MessageReceived(message);
+		}
+	}
 
 public:
 	MyWindow(FrissConfig* config, XmlNode* theList, BRect frame, const char* Title) : 
 		BWindow(frame, Title, B_TITLED_WINDOW, B_FRAME_EVENTS)
 	{	
 		BRect brect = Bounds();
+		brect.left += 100;
 		myf = new FrissView(config, theList, brect);
 		AddChild(myf);
+
+		brect = Bounds();
+		brect.right = brect.left + 100;
+
+		feedList = new BListView(brect, "feedlist");
+		AddChild(feedList);
+
+		BMessage* m = new BMessage('slfd');
+		feedList->SetSelectionMessage(m);
+
+		XmlNode* XfeedList = theList->ItemAt(0)->ItemAt(1);
+		for (int i = 0; i < XfeedList->Children(); i++) {
+			BStringItem* it = new BStringItem(XfeedList->ItemAt(i)->Attribute("text"));
+			feedList->AddItem(it);
+		}
 	}
 	
 	bool QuitRequested()
@@ -39,6 +67,7 @@ public:
 			conf->Save( path.Path() );
 		}	
 	}
+
 	
 };
 
@@ -80,9 +109,11 @@ public:
 			FailsafeFeeds(x_root);
 		}	
 
-		/*puts("--------");
+		/*
+		puts("--------");
 		x_root->Display();
-		puts("--------");*/
+		puts("--------");
+		*/
 		
 		theWindow = new MyWindow(config,x_root,windowRect,VERSION_);
 		theWindow->Show();

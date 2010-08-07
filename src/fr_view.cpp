@@ -621,6 +621,7 @@ FrissView::FindItem(int index, int& is, XmlNode* node)
 	return NULL;
 }
 
+
 void
 FrissView::Load(int idx, XmlNode* direct)
 {
