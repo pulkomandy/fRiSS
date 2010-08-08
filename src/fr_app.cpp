@@ -6,18 +6,29 @@
 
 const char *app_signature = APP_SIGNATURE;
 
+const int msg_SelFeed = 'slfd';
+const int msg_EditFeed = 'edfd';
+
 class MyWindow : public BWindow
 {
 private:
 	FrissView	*myf;
 	BListView* feedList;
+	XmlNode* Xfeeds;
 
 	void MessageReceived(BMessage* message)
 	{
 		switch(message->what) {
-			case 'slfd':
+			case msg_SelFeed:
 				myf->Load(feedList->CurrentSelection());
 				break;
+			case msg_EditFeed:
+			{
+				BPoint p(30,30);
+				p = ConvertToScreen(p);
+				(new FPrefEditWindow(this, Xfeeds->ItemAt(feedList->CurrentSelection()), p, true))->Show();
+				break;
+			}
 			default:
 				BWindow::MessageReceived(message);
 		}
@@ -38,12 +49,15 @@ public:
 		feedList = new BListView(brect, "feedlist");
 		AddChild(feedList);
 
-		BMessage* m = new BMessage('slfd');
+		BMessage* m = new BMessage(msg_SelFeed);
 		feedList->SetSelectionMessage(m);
 
-		XmlNode* XfeedList = theList->FindChild("body", NULL, true);
-		for (int i = 0; i < XfeedList->Children(); i++) {
-			BStringItem* it = new BStringItem(XfeedList->ItemAt(i)->Attribute("text"));
+		m = new BMessage(msg_EditFeed);
+		feedList->SetInvocationMessage(m);
+
+		Xfeeds = theList->FindChild("body", NULL, true);
+		for (int i = 0; i < Xfeeds->Children(); i++) {
+			BStringItem* it = new BStringItem(Xfeeds->ItemAt(i)->Attribute("text"));
 			feedList->AddItem(it);
 		}
 	}

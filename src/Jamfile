@@ -36,4 +36,4 @@ BELIBS = -lbe -lnetwork -lbnetapi -ltracker -ltextencoding -lstdc++.r4 ;
 
 LINKLIBS on friss = $(BELIBS) ;
 
-File ../bin/friss : friss ;
+File ../bin/common/apps/friss/friss : friss ;
