@@ -1,34 +1,23 @@
 FRISS DOCUMENTATION - FUTURE / FEATURE REQUEST / TODO
 
 CRITICAL / IN PROGRESS:
-	- FIXME: replicant mode
 	- FIXME: Firefox lädt nen Schrott und nicht die richtige Seite, vorallem, wenn bereits ein Fenster offen ist oder auch nicht. "Signature in rsrc doesn't match constructor arg. (application/x-vnd.Mozilla,application/x-vnd.Firefox)  "
 	- FIXME: Crash als Replicant beim Beenden des Containers/Shelfer
-
 	- fix "reload timer" issue
 		- actual minutes instead of ticks
-
 	- fix "first load fails" issue
 		- Add timer
-
 	XML AND RELATED
 		- XmlNode::SortChildren( int*(XmlNode*a, XmlNode*b));
 		- SortX(XmlNode* a, XmlNode* b)
-	
 	PREFERENCES:
 		- (IMPROVE) drag and drop
 		- resize
 		- Import, Export
 		- Folders: Rename
-
-
-HIGH:
-
 MEDIUM:
 	- obey to channels <TTL>
 	- modal Preferences blocks Tracker
-	- favicons
-
 LOW:
 	- auto scroll lines vertically
 	- get transparency working
