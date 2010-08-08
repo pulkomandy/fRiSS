@@ -17,7 +17,7 @@ typedef unsigned long ulong;
 
 
 
-#define APP_SIGNATURE	"application/N3S.fRiSS"
+#define APP_SIGNATURE	"application/x-vnd.friss"
 
 // ======= VERSION ===========================================
 //#define VER_ACTUAL	"0.5"

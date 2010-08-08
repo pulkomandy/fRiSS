@@ -1,6 +1,6 @@
 #include "frissconfig.h"
 #include "xmlnode.h"
-#include <be/StorageKit.h>
+#include <StorageKit.h>
 
 FrissConfig::FrissConfig()
 {
@@ -236,7 +236,7 @@ FrissConfig::Defaults()
 	}
 	else	
 		Feedlist	= "./feeds.opml";
-	
+
 	// Appearance ===============================================================
 	m_rWindow.Set(50,50,300,200);
 	

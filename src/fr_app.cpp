@@ -102,30 +102,18 @@ public:
 		
 		windowRect = config->GetWindowRect();
 		
-		printf("Ok, loading feed list: %s\n", config->Feedlist.String());
 		if (!x_root->LoadFile( config->Feedlist.String() )) {
 			config->m_iAnz = 4;
 			config->SetIndex(0);
 			FailsafeFeeds(x_root);
 		}	
 
-		/*
-		puts("--------");
-		x_root->Display();
-		puts("--------");
-		*/
-		
 		theWindow = new MyWindow(config,x_root,windowRect,VERSION_);
 		theWindow->Show();
 	}
 	
 	void FailsafeFeeds(XmlNode* root)
 	{
-		puts("failsafe: could not load feed list, using hardcoded ones");
-		
-		//root->CreateChild("opml");
-		//root->CreateChild("opml/head");
-		
 		time_t now = time(NULL);
 		BString d(ctime(&now));
 		d.RemoveSet("\t\r\n");
