@@ -6,19 +6,18 @@
 <?xml version="1.0" encoding="utf-8" />
 <opml>
 	<head>
-		<dateCreated>Tue Apr 13 22:21:59 2010</dateCreated>
+		<dateCreated>Sat Aug 7 17:38:10 2010</dateCreated>
 	</head>
 	<body>
-		<outline text="grafx2" xmlURL="http://code.google.com/feeds/p/grafx2/updates/basic" x-addDesc="true" />
-		<outline text="planet gp2x" xmlURL="http://planet.gp2x.org/atom.xml" />
-		<outline text="gp2x wiki" xmlURL="http://wiki.gp2x.org/index.php?title=Special:Recentchanges&feed=rss" />
-		<outline text="gp2x file archive" xmlURL="http://dl.openhandhelds.org/gp2x/rss20.php" />
+		<outline text="friss" xmlURL="http://akina.pulkomandy.ath.cx/projects/friss/timeline?ticket=on&changeset=on&milestone=on&wiki=on&max=50&author=&daysback=90&format=rss" />
+		<outline text="Grafx2" xmlURL="http://code.google.com/feeds/p/grafx2/updates/basic" />
+		<outline text="ReACID" xmlURL="http://pulkomandy.ath.cx/projects/ReACID/timeline?ticket=on&amp;changeset=on&amp;milestone=on&amp;wiki=on&amp;max=50&amp;author=&amp;daysback=90&amp;format=rss" />
 		<outline text="cpcsdk" xmlURL="http://code.google.com/feeds/p/cpcsdk/updates/basic" />
-		<outline text="haiku blogs" xmlURL="http://www.haiku-os.org/blog/feed" />
-		<outline text="Haiku site" xmlURL="http://www.haiku-os.org/rss.xml" />
-		<outline text="Kevtris" xmlURL="http://blog.kevtris.org/?feed=atom" />
-		<outline text="lynxdev" xmlURL="http://www.yaronet.com/rss_c.php?c=255" />
-		<outline text="ico" xmlURL="http://joomla.iscomputeron.com/index.php?option=com_rss&feed=ATOM0.3&no_html=1" />
-		<outline text="grafx2 alerts" xmlURL="http://www.google.com/alerts/feeds/17362184002103587184/16487832607225648859" />
+		<outline text="lynxtracker" xmlURL="http://pulkomandy.ath.cx/projects/lynxtracker/timeline?ticket=on&amp;changeset=on&amp;milestone=on&amp;wiki=on&amp;max=50&amp;author=&amp;daysback=90&amp;format=rss" />
+		<outline text="muz80" xmlURL="http://pulkomandy.ath.cx/projects/muz80/timeline?ticket=on&amp;changeset=on&amp;milestone=on&amp;wiki=on&amp;max=50&amp;author=&amp;daysback=90&amp;format=rss" />
+		<outline text="rapido" xmlURL="http://code.google.com/feeds/p/rapidofsm/updates/basic" />
+		<outline text=".theRush//" xmlURL="http://sourceforge.net/apps/trac/therush/timeline?ticket=on&changeset=on&milestone=on&wiki=on&max=50&daysback=90&format=rss" />
+		<outline text="haiku" xmlURL="http://dev.haiku-os.org/timeline?ticket=on&amp;milestone=on&amp;wiki=on&amp;max=50&amp;daysback=90&amp;format=rss" />
+		<outline text="Grafx2alerts" xmlURL="http://www.google.com/alerts/feeds/17362184002103587184/16487832607225648859" />
 	</body>
 </opml>
