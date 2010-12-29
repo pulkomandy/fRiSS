@@ -1,5 +1,6 @@
 #include "fr_def.h"
 #include "fr_view.h"
+#include "feedlistview.h"
 #include <FindDirectory.h>
 #include <Path.h>
 #include <unistd.h>
@@ -35,8 +36,9 @@ private:
 	}
 
 public:
-	MyWindow(FrissConfig* config, XmlNode* theList, BRect frame, const char* Title) : 
-		BWindow(frame, Title, B_TITLED_WINDOW, B_FRAME_EVENTS)
+	MyWindow(FrissConfig* config, XmlNode* theList, BRect frame,
+		const char* Title) : 
+	BWindow(frame, Title, B_TITLED_WINDOW, B_FRAME_EVENTS)
 	{	
 		BRect brect = Bounds();
 		brect.left += 100;
@@ -57,7 +59,7 @@ public:
 
 		Xfeeds = theList->FindChild("body", NULL, true);
 		for (int i = 0; i < Xfeeds->Children(); i++) {
-			BStringItem* it = new BStringItem(Xfeeds->ItemAt(i)->Attribute("text"));
+			FeedListItem* it = new FeedListItem(Xfeeds->ItemAt(i));
 			feedList->AddItem(it);
 		}
 	}
