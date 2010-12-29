@@ -13,7 +13,7 @@
 #define ERROR_NET_DNS		-10
 #define ERROR_NET_TIMEOUT	-55
 
-//#define TRACE_NET
+// #define TRACE_NET
 
 #ifdef TRACE_NET
 	#define FPRINT(x) printf x 
@@ -64,22 +64,18 @@ int LoadFeedNet(const char* feed, char* buf, int bufsize)
 
 	//#define VER_HTTP "Wget/1.8"
 
-	// workaround for bezip.de:
-	if (st.ICompare("www.bezip.de")==0)
-		sprintf(cmd, "GET %s\r\n\r\n",feed);
-	else
-		sprintf(
-			cmd,
-			"GET %s HTTP/1.1\r\nHost: %s\r\nUser-Agent: %s\r\nAccept: */*\r\nConnection: Close\r\n\r\n",
-			feed,
-			st.String(),
-			VER_HTTP
-			);
+	sprintf(
+		cmd,
+		"GET %s HTTP/1.1\r\nHost: %s\r\nUser-Agent: %s\r\nAccept: */*\r\nConnection: Close\r\n\r\n",
+		feed,
+		st.String(),
+		VER_HTTP
+	);
 
 	FPRINT(( "HTTP-Request:\n------------\n%s\n------------\n", cmd ));
 
 	sock.SetNonBlocking(true);
-    if (sock.Send(cmd, sizeof(cmd), 0) == B_ERROR) {
+    if (sock.Send(cmd, strlen(cmd), 0) == B_ERROR) {
     	puts(sock.ErrorStr());
     	sock.Close();
 		return ERROR_NET;
@@ -107,13 +103,14 @@ int LoadFeedNet(const char* feed, char* buf, int bufsize)
    	//printf("Reading: %s\n", sock.ErrorStr() );
 	sock.Close();
 	
-	int size = buffy.BytesRemaining();
+	int size = buffy.Size();
 	if (size>bufsize)
 		size = bufsize-1;
     buffy.RemoveData(buf,size);
     buf[size] = 0; // string sicher machen
+	FPRINT(("HTTP RESPONSE  size %d /== %s\n",size, buf));
     
-    FPRINT(( "  Receive ok" ));
+    FPRINT(( "  Receive ok\n" ));
 	// Do basic HTTP parsing:
 	BString result;
 	result.Append(buf, 12).Remove(0,9);
@@ -153,8 +150,8 @@ int LoadFeedNet(const char* feed, char* buf, int bufsize)
 		//case 404: // File not Found
 		//case 5xx: // Server failure
 		default:
-			printf("LoadFeedNet() failed, Server response was '%d'n", http_return_code);
-			FPRINT(( "DATA: %d bytesn==n%sn==n", size, buf));
+			printf("LoadFeedNet() failed, Server response was '%d'\n", http_return_code);
+			FPRINT(( "DATA: %d bytesn==n\n%s\nn==n", size, buf));
 	}
 	
 	return -1;
