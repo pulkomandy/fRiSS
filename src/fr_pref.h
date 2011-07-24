@@ -65,7 +65,7 @@ private:
 
 	// TAB: Colors
 	BBox			*bBack, *bFore;
-	BRadioButton	*cColTransparent, *cColDesktop, *cColCustom;
+	BRadioButton	*cColTransparent, *cColDesktop, *cColCustom, *cColDefault;
 	
 	BColorControl*	cColor;
 	

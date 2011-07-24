@@ -7,7 +7,8 @@ enum ColBack_t
 {
 	ColBackCustom = 0,
 	ColBackTransparent = 1,
-	ColBackDesktop = 2
+	ColBackDesktop = 2,
+	ColBackDefault = 3
 };
 
 enum ColFore_t

@@ -2,7 +2,9 @@
 #include "load.h"
 #include "parser.h"
 #include <time.h>
+
 #include <be/StorageKit.h>
+#include <InterfaceDefs.h>
 
 // Helper window informs us about workspaces changes etc:
 #ifdef OPTIONS_USE_HELPERWINDOW
@@ -236,14 +238,14 @@ FrissView::AllAttached()
 	
 	
 	BRect br = Bounds();
-	br.InsetBy(10,10);
+	//br.InsetBy(10,10);
 	br.top += 5;
-	br.right -= 1; //B_V_SCROLL_BAR_WIDTH;
+	br.right -= B_V_SCROLL_BAR_WIDTH;
 	listview = new FListView(this,br,"listview",B_SINGLE_SELECTION_LIST,B_FOLLOW_ALL_SIDES);
 	AddChild(listview);
 
 	BRect sbr = Bounds();
-	sbr.InsetBy(10,10);
+	//sbr.InsetBy(10,10);
 	sbr.top += 5;	
 	sbr.left = sbr.right - B_V_SCROLL_BAR_WIDTH;
 	sb = new BScrollBar(sbr, "scrollbar", listview, 0, 100, B_VERTICAL);
@@ -383,9 +385,11 @@ FrissView::UpdateColors()
 	else if (config->ColBackMode == ColBackDesktop) {
 		colback = screen->DesktopColor();
 		collow = colback;
-	}
-	else {
+	} else if (config->ColBackMode == ColBackCustom) {
 		colback = config->col;
+		collow = colback;		
+	} else {
+		colback = ui_color(B_PANEL_BACKGROUND_COLOR);
 		collow = colback;
 	}
 	

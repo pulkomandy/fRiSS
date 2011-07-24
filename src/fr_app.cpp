@@ -41,14 +41,15 @@ public:
 	BWindow(frame, Title, B_TITLED_WINDOW, B_FRAME_EVENTS)
 	{	
 		BRect brect = Bounds();
-		brect.left += 100;
+		brect.left += 150;
 		myf = new FrissView(config, theList, brect);
 		AddChild(myf);
 
 		brect = Bounds();
-		brect.right = brect.left + 100;
+		brect.right = brect.left + 147;
 
-		feedList = new BListView(brect, "feedlist");
+		feedList = new BListView(brect, "feedlist", B_SINGLE_SELECTION_LIST,
+			B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM);
 		AddChild(feedList);
 
 		BMessage* m = new BMessage(msg_SelFeed);

@@ -240,7 +240,7 @@ FrissConfig::Defaults()
 	// Appearance ===============================================================
 	m_rWindow.Set(50,50,300,200);
 	
-	ColBackMode		= ColBackDesktop;
+	ColBackMode		= ColBackDefault;
 	ColForeMode		= ColForeAdapt;	
 
 	FrSetCol3( col,  51,102,152 );

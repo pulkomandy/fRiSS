@@ -129,7 +129,9 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 		bBack->AddChild( cColTransparent = new BRadioButton( b, "CBTransp", _T("Transparent background"/*" (replicants only)"*/), new BMessage( MSG_COL_CHANGED ) ) );
 		b.top += 20;
 		bBack->AddChild( cColDesktop = new BRadioButton( b, "CBDesktop", _T("Adapt to Desktop background colour"), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 30;
+		b.top += 20;
+		bBack->AddChild( cColDefault = new BRadioButton( b, "CBDefault", _T("Use default colour"), new BMessage( MSG_COL_CHANGED ) ) );
+		b.top += 20;
 		bBack->AddChild( cColCustom = new BRadioButton( b, "CBTransp", _T("Custom background colour:"), new BMessage( MSG_COL_CHANGED ) ) );
 		b.top += 20;
 		BPoint p(5,b.top);
@@ -143,6 +145,10 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 
 		case ColBackDesktop:
 			cColDesktop->SetValue(B_CONTROL_ON);
+			break;
+		
+		case ColBackDefault:
+			cColDefault->SetValue(B_CONTROL_ON);
 			break;
 			
 		default:
@@ -386,6 +392,8 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 				config->ColBackMode = ColBackTransparent;
 			else if (cColDesktop->Value() == B_CONTROL_ON)
 				config->ColBackMode = ColBackDesktop;
+			else if (cColDefault->Value() == B_CONTROL_ON)
+				config->ColBackMode = ColBackDefault;
 			else
 				config->ColBackMode = ColBackCustom;
 				
