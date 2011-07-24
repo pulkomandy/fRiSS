@@ -1,14 +1,11 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<?xml version="1.0" encoding="utf-8" />
-<?xml version="1.0" encoding="utf-8" />
-<opml>
+<?xml version="1.0" encoding="UTF-8" />
+<opml version="1.0">
 	<head>
-		<dateCreated>Tue Apr 13 22:21:59 2010</dateCreated>
+		<title>FRiSS sample feed</title>
 	</head>
 	<body>
-		<outline text="g" xmlURL="http://code.google.com/feeds/p/grafx2/updates/basic" />
-		<outline text="EmptyGroup" />
-		<outline text="hfgf" xmlURL="http://www.iscomputeron.com/index/backend.php" />
+		<outline text="Haiku Project" title="Haiku Project" type="rss" xmlUrl="http://www.haiku-os.org/rss.xml" htmlUrl="https://www.haiku-os.org" />
+		<outline text="Haiku Project blogs" title="Haiku Project blogs" type="rss" xmlUrl="http://www.haiku-os.org/blog/feed" htmlUrl="https://www.haiku-os.org/blog" />
+		<outline text="ICO: Powered by Sheep!" title="ICO: Powered by Sheep!" type="rss" xmlUrl="http://www.iscomputeron.com/index.php?format=feed&type=atom" htmlUrl="http://joomla.iscomputeron.com" />
 	</body>
 </opml>

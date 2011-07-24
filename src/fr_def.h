@@ -1,37 +1,27 @@
 #ifndef FR_DEF
 #define FR_DEF
 
-#ifdef __ZETA__
-typedef unsigned int uint;
-typedef unsigned long ulong;
-#endif
-
 #include <stdio.h>
 #include <be/AppKit.h>
 #include <be/InterfaceKit.h>
-//#include <be/support/String.h>
 #include <be/SupportKit.h>
 
 #include "fr_options.h"
 #include "xmlnode.h"
 
-
-
 #define APP_SIGNATURE	"application/x-vnd.friss"
 
 // ======= VERSION ===========================================
-//#define VER_ACTUAL	"0.5"
-#define VER_ACTUAL	"0.5 pre7"
+#define VER_ACTUAL	"0.6"
+//#define VER_ACTUAL	"0.5 pre7"
 
-#define VER_ADD		"\tthis version for testing purposes only\n"
+//#define VER_ADD		"\tthis version for testing purposes only\n"
+#define VER_ADD		"\tfeed Reader for Haiku\n"
 
 // predefine strings for output
-#ifndef	__ZETA__
-	#define VERSION_	"fRiSS Ver."VER_ACTUAL
-#else
-	#define VERSION_	"fRiSS/Zeta Ver."VER_ACTUAL
-#endif
-#define VER_HTTP	"friss/"VER_ACTUAL" (BeOS)"
+#define VERSION_	"fRiSS Ver."VER_ACTUAL
+
+#define VER_HTTP	"friss/"VER_ACTUAL" (Haiku)"
 // #define STR_ABOUT	 moved to FrissView::AboutRequested()
 
 
@@ -84,20 +74,16 @@ typedef unsigned long ulong;
 extern const char *app_signature;
 
 // ======= MAKROS ============================================
-#ifdef __ZETA__
-	#include <locale/Locale.h>
-#else
-	#ifdef OPTIONS_USE_NLANG
-		#include "nlang.h"
-	#endif
-	
-	#ifndef _T
-		#define _T(x)			x
-	#endif	
-	
-	#ifndef B_LANGUAGE_CHANGED
-		#define B_LANGUAGE_CHANGED	'_BLC'
-	#endif
+#ifdef OPTIONS_USE_NLANG
+	#include "nlang.h"
+#endif
+
+#ifndef _T
+	#define _T(x)			x
+#endif	
+
+#ifndef B_LANGUAGE_CHANGED
+	#define B_LANGUAGE_CHANGED	'_BLC'
 #endif
 
 

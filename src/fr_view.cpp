@@ -1450,8 +1450,11 @@ FrissView::AboutRequested()
 {
 	BString text("FRiSS Version " VER_ACTUAL "\n");
 	text << VER_ADD"\n";
+
+	text << "\xC2\xA9""2011 Adrien Destugues (PulkoMandy)\n";
+	text << "\tpulkomandy@pulkomandy.ath.cx\n\n";
 	
-	text << "(C)2004 Andreas Herzig (N3S)\n";
+	text << "\xC2\xA9""2004 Andreas Herzig (N3S)\n";
 	text << "\tbeos@herzig-net.de\n\n";
 	
 	text << "Original idea:\n\t0033\n\n";
@@ -1462,7 +1465,6 @@ FrissView::AboutRequested()
 	if (config!= NULL && config->Lang.Compare("enDE") != 0) {
 		text << _T("Language") << ": " << _T("FL:Language") << "\n";
 		text << "\t" << _T("FL:Translator") << "\n";
-		//text << "\tVersion " << _T("FL:Version") << "\n";
 	}
 #endif
 	
