@@ -391,7 +391,7 @@ XmlNode::IndexOfAttribute(const char* name) const
 	for (int32 i=0; i<a; i++) {
 		XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
 		
-		if (n->mName.Compare(name)==0)
+		if (n->mName.ICompare(name)==0)
 			return i;
 	}
 	

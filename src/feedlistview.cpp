@@ -109,7 +109,7 @@ FeedListItem::FeedListItem(XmlNode* n)
 	, fIcon(NULL)
 {
 	// Extract hostname from full feed URL
-	BString st(n->Attribute("xmlURL"));
+	BString st(n->Attribute("xmlUrl"));
 	st.RemoveFirst("http://");
 	st.Truncate( st.FindFirst('/') );
 	
