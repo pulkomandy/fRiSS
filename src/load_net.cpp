@@ -137,7 +137,7 @@ int LoadFeedNet(const char* feed, char* buf, int bufsize)
 			*/
 			BString redirectedUrl(buf);
 			redirectedUrl.Remove(0, redirectedUrl.FindFirst("Location:") + 9);
-			redirectedUrl.Truncate(redirectedUrl.FindFirst('n'));
+			redirectedUrl.Truncate(redirectedUrl.FindFirst('\n'));
 			
 			FPRINT(("LN: Redirected to %sn", redirectedUrl.String()));
    	

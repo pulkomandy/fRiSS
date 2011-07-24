@@ -325,7 +325,7 @@ XmlNode::AddAttribute(const char* name, const char* value)
 	for (int32 i=0; i<a; i++) {
 		n = (XmlNode*)mAttribute.ItemAt(i);
 		
-		if (n->mName.Compare(name)==0) {
+		if (n->mName.ICompare(name)==0) {
 			found = true;
 			break;
 		}
@@ -887,8 +887,8 @@ XmlNode::ParseAttributes(const char* buf)
 
 				attr->mData.SetTo(p,buf-p);
 			}
-	
-			XPRINT( 3, ("  Attr.Value = '%s'\n", attr->mData.String() ) );
+			
+			attr->mData.ReplaceAll("&amp;", "&");
 		}
 		else
 			XPRINT( 3, ("  Attr.Value ist leer.\n") );
@@ -897,8 +897,7 @@ XmlNode::ParseAttributes(const char* buf)
 		anz++;
 		
 		SkipW(buf);
-	}	
-	//puts("Parsing attributes... to do");
+	}
 	
 	return anz;
 }
