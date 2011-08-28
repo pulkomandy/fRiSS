@@ -26,7 +26,8 @@
  *		0				no items in tree (sort of error)
  *		>0				items in list
  */
-int Parse_atom( XmlNode* root, BList* list, BString& status, bool& updatesFeedList, bool addDesc)
+int Parse_atom( XmlNode* root, BList* list, BString& status,
+	bool& updatesFeedList, bool addDesc)
 {
 	PPUTS("BEGIN PARSE_ATOM");
 	XmlNode* channel = root->FindChild( "feed", NULL, true );
@@ -100,7 +101,10 @@ int Parse_atom( XmlNode* root, BList* list, BString& status, bool& updatesFeedLi
 		
 		p = item->FindChild("title");
 		if (p) {
-			fi->SetText(p->Value());
+			if(strcmp(p->Attribute("type"),"html") == 0)
+				fi->SetTitleHtml(BString(p->Value()));
+			else
+				fi->SetText(p->Value());
 			PPRINT(( "Item name is '%s'\n", p->Value() ));
 		}
 		else

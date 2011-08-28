@@ -23,6 +23,8 @@ public:
 	void		SetAddDesc(bool add=true);
 	void 		SetVisited(bool vis = true);
 	
+	void		SetTitleHtml(BString title);
+	
 	virtual void DrawItem(BView* owner, BRect frame, bool complete = false);
 
 	BString		sUrl;

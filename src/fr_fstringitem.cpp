@@ -1,4 +1,10 @@
+/* FRiSS RSS feed reader
+ * Copyright 2011, Adrien Destugues <pulkomandy@pulkomandy.ath.cx>
+ * Distributed under the terms of the MIT licence
+ */
+
 #include "fr_fstringitem.h"
+
 
 FStringItem::FStringItem() :
 	BStringItem("<empty>", 0, true)
@@ -90,6 +96,27 @@ FStringItem::SetAddDesc(bool add)
 	bAddDesc = add;
 }
 
+
+void
+FStringItem::SetTitleHtml(BString title)
+{
+	// TODO proper HTML thing, when we get a BHTMLView.
+	// For now, parse out the html stuff
+	int startMarkup, endMarkup;
+	do
+	{
+		startMarkup = title.FindFirst("<");
+		endMarkup = title.FindFirst(">");
+		if (endMarkup > startMarkup)
+		{
+			title = title.Remove(startMarkup, endMarkup - startMarkup + 1);
+		} else  if (endMarkup >= 0) {
+			// bogus html ?
+			title = title.Remove(endMarkup, 1);
+		}
+	} while (startMarkup >= 0 && endMarkup >= 0);
+	SetText(title);	
+}
 
 void
 FStringItem::DrawItem(BView* owner, BRect frame, bool complete)

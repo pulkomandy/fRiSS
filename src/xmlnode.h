@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include <be/AppKit.h>
 #include <be/InterfaceKit.h>
-//#include <be/support/String.h>
 #include <be/SupportKit.h>
 
 
