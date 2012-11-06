@@ -101,7 +101,7 @@ int Parse_atom( XmlNode* root, BList* list, BString& status,
 		
 		p = item->FindChild("title");
 		if (p) {
-			if(strcmp(p->Attribute("type"),"html") == 0)
+			if(p->Attribute("type") && strcmp(p->Attribute("type"),"html") == 0)
 				fi->SetTitleHtml(BString(p->Value()));
 			else
 				fi->SetText(p->Value());
