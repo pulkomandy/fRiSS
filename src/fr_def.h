@@ -66,8 +66,8 @@
 
 
 #define BROWSER_MIME_WEBPOSITIVE		"application/x-vnd.Haiku-WebPositive"
-#define BROWSER_MIME_FIREFOX			"application/x-vnd.Firefox"
-#define BROWSER_MIME_CUSTOM_DEFAULT		"application/x-vnd.Mozilla"
+#define BROWSER_MIME_FIREFOX			"application/x-vnd.Mozilla-Firefox"
+#define BROWSER_MIME_CUSTOM_DEFAULT		"application/x-vnd.Haiku-WebPositive"
 
 
 // ======= STUFF ===========================================

@@ -1,6 +1,9 @@
 #include "fr_view.h"
 #include "load.h"
 #include "parser.h"
+#include "frissWindow.h"
+#include "fr_ftextview.h"
+
 #include <time.h>
 
 #include <be/StorageKit.h>
@@ -238,28 +241,23 @@ FrissView::AllAttached()
 	
 	
 	BRect br = Bounds();
-	//br.InsetBy(10,10);
-	br.top += 5;
+	br.InsetBy(3,15);
 	br.right -= B_V_SCROLL_BAR_WIDTH;
-	listview = new FListView(this,br,"listview",B_SINGLE_SELECTION_LIST,B_FOLLOW_ALL_SIDES);
-	AddChild(listview);
+	br.bottom = br.top + 100;
 
-	BRect sbr = Bounds();
-	//sbr.InsetBy(10,10);
-	sbr.top += 5;	
-	sbr.left = sbr.right - B_V_SCROLL_BAR_WIDTH;
-	sb = new BScrollBar(sbr, "scrollbar", listview, 0, 100, B_VERTICAL);
-	AddChild(sb);
-	sb_hidden = true;
-	sb->Hide();
+	listview = new FListView(this, br, "listview", B_SINGLE_SELECTION_LIST,
+		B_FOLLOW_ALL_SIDES);
+
+	AddChild(listScroll = new BScrollView("scroll", listview,
+    	B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, false, true));
 	
 	listview->Hide();
-		
 	
-	BRect s(0,0,br.Width()-1,br.Height()-1);
-	tvTextView = new FTextView(this, br,"stview",s,B_FOLLOW_ALL_SIDES,B_WILL_DRAW | B_FRAME_EVENTS);
+	br.top = br.bottom;
+	br.bottom = Bounds().bottom - 5;
+
+	tvTextView = new FTextView(*this, br);
 	tvTextView->MakeSelectable(false);
-	//AddChild(tvTextView);
 	
 	sbTextView = new BScrollView("sbTextView", tvTextView, B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, false, true, B_PLAIN_BORDER);
 	AddChild(sbTextView);
@@ -267,18 +265,7 @@ FrissView::AllAttached()
 	sbTextView->Hide();
 	//ShowPreviewArea(false);
 	
-	
-	
-	// Hack/Workspace change notifying helper window:
-	#ifdef OPTIONS_USE_HELPERWINDOW
-		MyDummyWindow *x = new MyDummyWindow(this);
-		x->Show();
-		x->Hide();
-	#endif
-	
-	
 	Load(config->Index());
-	
 	
 	#ifdef OPTIONS_USE_NLANG
 		if (config->Lang.Length() != 0)
@@ -460,7 +447,9 @@ FrissView::MessageReceived(BMessage *msg)
 			pulsing = true;
 			
 			UpdateColors();
-			ReBuildPopup(theList, mList);		
+			ReBuildPopup(theList, mList);
+
+			((FrissWindow*)Window())->PopulateFeeds(theRoot);
 			break;
 			
 		case MSG_LOAD_DONE:
@@ -475,12 +464,10 @@ FrissView::MessageReceived(BMessage *msg)
 			
 		case MSG_COL_CHANGED:
 			UpdateColors();
-			UpdateScrollbar();
 			break;
 
 		case MSG_SB_CHANGED:
 			UpdateWindowMode();
-			UpdateScrollbar();
 			break;			
 		
 		case MSG_WORKSPACE:
@@ -905,7 +892,6 @@ FrissView::LoadDone()
 	pulses = 0;
 	pulsing = true;
 	
-	UpdateScrollbar();
 	Invalidate();
 	listview->Invalidate();
 }
@@ -1029,7 +1015,7 @@ FrissView::StartPopup(BPoint point)
 		return;
 
 	if (miGo!=NULL && mi==miGo) {
-		NodeLaunch( (FStringItem*)listview->ItemAt(idx) );
+		Launch( (FStringItem*)listview->ItemAt(idx) );
 	}
 	else if (mi == miInfo) {
 		NodeViewInformation( (FStringItem*)listview->ItemAt(idx) );
@@ -1106,26 +1092,12 @@ FrissView::ItemSelected(FStringItem* fi)
 	}
 }
 
-void
-FrissView::Launch(FStringItem* fi)
-{
-	if (!fi) {
-		Error("DEBUG: FV::Launch() fails because a NULL pointer is detected");
-		return;
-	}
 
+void FrissView::OpenURL(BString url)
+{
 	char *argv[2];
-	
 	BString app;
-	
 	int BrowserType = config->BrowserType;
-	
-	//
-	if (currentFeed) {
-		const char* bb = currentFeed->Attribute(OPML_OVERRIDE_BROWSER);
-		if (bb)
-			BrowserType = atoi(bb);
-	}
 	
 	switch (BrowserType) {
 		case BrowserCustom:
@@ -1141,30 +1113,33 @@ FrissView::Launch(FStringItem* fi)
 			app = BROWSER_MIME_WEBPOSITIVE;
 	}
 	
-	BString url(fi->Url());
 	argv[0] = (char*)url.String();
 	argv[1] = 0;
-	
-	printf("URL ist '%s'\n", argv[0]);
-	
+
 	status_t status = be_roster->Launch( app.String(), 1, argv );
 	//printf("Result is: %i\n", (int)status);
 	
 	if (status == B_OK || status == B_ALREADY_RUNNING) {
-		// seems to be fine
-		
-		// mark item as visited:
-		//fi->SetVisited();
-		//listview->Invalidate();
 		listview->DeselectAll();
-				
-		// add URL to visitedList:
-		// TODO:
-	}
-	else {
-		(new BAlert( _T("Error"), _T("Error: The browser could not be started :-("), _T("Ok") ))->Go();
+	} else {
+		BString message = _T("Error: The browser could not be started :-(\n");
+		message << strerror(status);
+		(new BAlert( _T("Error"), message, _T("Ok") ))->Go();
 	}
 }
+
+
+void
+FrissView::Launch(FStringItem* fi)
+{
+	if (!fi) {
+		Error("DEBUG: FV::Launch() fails because a NULL pointer is detected");
+		return;
+	}
+
+	OpenURL(fi->Url());
+}
+
 
 void
 FrissView::Error(const char* err)
@@ -1210,38 +1185,18 @@ FrissView::FrameResized(float width, float height)
 	BBox::FrameResized(width,height);
 	
 	UpdateWindowMode();
-	UpdateScrollbar();
 }
 
 
 void
 FrissView::UpdateWindowMode()
 {
-/*
-	if (replicant)
-		return;
-*/
-
-/*
-	if (currentWindowMode == config->WindowMode)
-		return;
-*/
-				
 #ifdef OPTIONS_WINDOW_MODE
 	BRect br = Bounds();
 
-	/*
-	if (config->WindowMode == WindowModeFull) {
-		// do stuff
-		currentWindowMode = WindowModeFull;
-		return;
-	}
-	*/	
-	
 	if (config->WindowMode == WindowModePreview) {
 		sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-		listview->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-		sb->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );	
+		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 
 		// max visible area:
 		br.InsetBy(10,10);
@@ -1254,19 +1209,13 @@ FrissView::UpdateWindowMode()
 		
 		ShowPreviewArea(true);
 		
-		if (!sb_hidden)
-			br.right -= B_V_SCROLL_BAR_WIDTH;
-		
-		listview->MoveTo(br.left,br.top);
-		listview->ResizeTo(br.Width(), height);
-		
-		sb->ResizeTo(B_V_SCROLL_BAR_WIDTH, height);
+		listScroll->MoveTo(br.left,br.top);
+		listScroll->ResizeTo(br.Width(), height);
 		
 		currentWindowMode = WindowModePreview;
 		
 		sbTextView->SetResizingMode( B_FOLLOW_BOTTOM | B_FOLLOW_LEFT_RIGHT );
-		listview->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT_RIGHT );
-		sb->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_RIGHT );
+		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT_RIGHT );
 		
 		return;
 	}
@@ -1275,7 +1224,6 @@ FrissView::UpdateWindowMode()
 	{
 		sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 		listview->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-		sb->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 	
 		ShowPreviewArea(false);
 		
@@ -1292,68 +1240,14 @@ FrissView::UpdateWindowMode()
 		listview->MoveTo(br.left,br.top);
 		listview->ResizeTo(br.Width(), br.Height() );
 		
-
-		
-		sb->ResizeTo(B_V_SCROLL_BAR_WIDTH, br.Height() );
-			
 		currentWindowMode = WindowModeSimple;
 		
 		sbTextView->SetResizingMode( B_FOLLOW_ALL_SIDES );
 		listview->SetResizingMode( B_FOLLOW_ALL_SIDES );
-		sb->SetResizingMode( B_FOLLOW_TOP_BOTTOM | B_FOLLOW_RIGHT );		
 		return;	
 	}
 
 #endif
-}
-
-void
-FrissView::UpdateScrollbar()
-{
-	float min,max;
-	if (!sb) {
-		//puts("sb ist tot!");
-		return;
-	}
-	
-	if (config->ScrollbarMode == ScrollbarModeOn) {
-		if (sb_hidden) {
-			sb->Show();
-			sb_hidden = false;
-			
-			listview->ResizeBy( -B_V_SCROLL_BAR_WIDTH, 0 );
-		}
-	}
-	else if (config->ScrollbarMode == ScrollbarModeOff) {
-		if (!sb_hidden) {
-			sb->Hide();
-			sb_hidden = true;
-			
-			listview->ResizeBy( B_V_SCROLL_BAR_WIDTH, 0 );
-		}
-	}
-	else {
-		// Automatic
-		sb->GetRange(&min, &max);
-		
-		//printf("SB:  Range: %f %f\n", min, max);
-		if (min == 0.0f && max == 0.0f) {
-			if (!sb_hidden) {
-				sb->Hide();
-				sb_hidden = true;
-				
-				listview->ResizeBy( B_V_SCROLL_BAR_WIDTH, 0 );
-			}
-		}
-		else {
-			if (sb_hidden) {
-				sb->Show();
-				sb_hidden = false;
-				
-				listview->ResizeBy( -B_V_SCROLL_BAR_WIDTH, 0 );
-			}
-		}
-	}
 }
 
 FrissConfig*
@@ -1475,62 +1369,40 @@ FrissView::AboutRequested()
 
 
 void
-FrissView::NodeLaunch(FStringItem* node)
-{
-	Launch(node);
-}
-
-void
 FrissView::NodeViewInformation(FStringItem* node)
 {
-	BString d(_T("No information available"));
-	
-	int32 linkoffset = 999999;
-	int32 linklen = 0;
-	
-	if (node) {
-		d = "";
-		BString title( node->Title() );
-		BString desc( node->Desc() );
-		BString link( node->Url() );
-		
-		if (desc.Length()==0)
-			desc = _T("<no description available>");
-		if (link.Length()==0)
-			link = _T("<no link available>");
-
-		d << _T("Title") << ":\n" << title.String() << "\n\n";
-		d << _T("Desc") << ":\n" << desc.String() << "\n\n";
-		d << _T("Link") << ":\n";
-		linkoffset = d.Length();
-		linklen = link.Length();
-		d << link.String();
-	}
-	
-	
 	if (config->WindowMode == WindowModeSimple) {
+		// TODO we are likely better off making our own window with an
+		// FTextView inside instead of using that mess.
+		BString d(_T("No information available"));
+
+		if (node) {
+			d = "";
+			BString title( node->Title() );
+			BString desc( node->Desc() );
+			BString link( node->Url() );
+
+			if (desc.Length()==0)
+				desc = _T("<no description available>");
+			if (link.Length()==0)
+				link = _T("<no link available>");
+
+			d << _T("Title") << ":\n" << title.String() << "\n\n";
+			d << _T("Desc") << ":\n" << desc.String() << "\n\n";
+			d << _T("Link") << ":\n";
+			d << link.String();
+		}
 	
 		BAlert *alert = new BAlert(_T("Information"), d.String(), _T("Ok"));
 		alert->SetShortcut(0, B_ESCAPE);
 		alert->ResizeTo(400,300);
 		alert->Go();
 	}
-	else {	
-		rgb_color linkcol;
-		linkcol.red = 0; linkcol.green = 0; linkcol.blue=255; linkcol.alpha = 0;
-		
-		BFont linkfont(be_plain_font);
-		linkfont.SetFace(B_UNDERSCORE_FACE | B_NEGATIVE_FACE);
-		
-		tvTextView->SetText( d.String() );
-		tvTextView->linkoffset = linkoffset;
-		tvTextView->linklen = linklen;		
-		tvTextView->fi = node;
-		tvTextView->SetStylable(true);
-		tvTextView->SetFontAndColor(linkoffset,linkoffset+linklen, &linkfont, B_FONT_ALL, &linkcol );
-		
-		//printf("-> %d %d\n", linkoffset, linklen);
-	}	
+	else if(node) {
+		tvTextView->SetContents(node->Title(), node->Desc(), node->Url());
+	} else {
+		tvTextView->SetText(_T("No information available"));
+	}
 }
 
 

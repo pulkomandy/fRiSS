@@ -1,5 +1,7 @@
 SubDir src ;
 
+C++FLAGS = $(C++FLAGS) -g ;
+
 Main friss :
 	frissconfig.cpp
 	

@@ -7,13 +7,15 @@
 #include <NetEndpoint.h>
 #include <TranslationUtils.h>
 
-#define FPRINT(x) printf x
+#ifdef TRACE_LISTVIEW
+	#define FPRINT(x) printf x
+#else
+	#define FPRINT(x)
+#endif
 
 char* getFavicon(BString st, size_t& size)
 {
 	size = 0;
-
-	printf("getting favicon from %s\n", st.String());
 
 	BNetAddress *addr;
 	try {
@@ -156,10 +158,13 @@ FeedListItem::FeedListItem(XmlNode* n)
 
 void FeedListItem::DrawItem(BView* owner, BRect frame, bool complete)
 {
-	BStringItem::DrawItem(owner, frame, complete);
+	BRect textFrame = frame;
+	textFrame.left += 16 + 2 * 5;
+	BStringItem::DrawItem(owner, textFrame, complete);
 
 	// draw the icon
-	frame.left = frame.right - 16;
+	frame.left += 4;
+	frame.right = frame.left + 16;
 
 	if (fIcon != NULL && fIcon->IsValid()) {
 		owner->SetDrawingMode(B_OP_OVER);

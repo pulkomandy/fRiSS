@@ -9,15 +9,11 @@
 #include "fr_pref.h"
 #include "fr_feedloader.h"
 #include "fr_flistview.h"
-#include "fr_ftextview.h"
 #include "fr_fstringitem.h"
 #include "xmlnode.h"
 
-#ifdef __ZETA__
-	#include <be/locale/LanguageNotifier.h>
-#endif
-
 extern const char *app_signature;
+class FTextView;
 
 class FrissView : public BBox
 {
@@ -52,7 +48,10 @@ public:
 	void StartPopup(BPoint point);
 	
 	void ItemSelected(FStringItem* fi);
+
 	void Launch(FStringItem* fi);
+	// TODO move this method to somewhere where it makes more sense
+	void OpenURL(BString url);
 	
 	virtual void Draw(BRect frame);
 	
@@ -68,7 +67,6 @@ public:
 	bool			InitialVisitedLink(const char* pfad);
 	void			VisitRef(entry_ref* ref);
 	
-	void			NodeLaunch(FStringItem* node);
 	void			NodeViewInformation(FStringItem* node);
 		
 private:
@@ -77,9 +75,6 @@ private:
 	
 	// Updates the window, like hiding/unhiding the preview pane etc
 	void UpdateWindowMode();
-	
-	// Hides the scrollbar if it's not neccesary
-	void UpdateScrollbar();
 	
 	// Changes all colors
 	void UpdateColors();
@@ -128,8 +123,8 @@ private:
 	BScrollView*	sbTextView;
 	
 	bool			sb_hidden;
-	BScrollBar*		sb;
 	FListView*		listview;
+	BScrollView*	listScroll;
 	
 	FrFeedLoader*	feedloader;
 	thread_id		feedid;

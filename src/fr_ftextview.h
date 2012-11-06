@@ -1,22 +1,43 @@
 #ifndef FR_FTEXTVIEW
 #define FR_FTEXTVIEW
 
+#include "fr_view.h"
 #include "fr_def.h"
 #include "fr_fstringitem.h"
 
 class FTextView : public BTextView
 {
 public:
-	FTextView(BView* parentView, BRect br,const char* name,BRect innerRect,int resMode,int flags);
+	FTextView(FrissView& parentView, BRect br);
+	~FTextView();
 	
-	virtual void MouseDown(BPoint point);
-	virtual void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
-	
-	int32 linkoffset, linklen;
-	FStringItem* fi;
+	void AttachedToWindow();
+	void FrameResized(float width, float height);
+	void MouseDown(BPoint point);
+	void SetContents(const BString& title, const BString& contents,
+		const BString& link);
 	
 private:
-	BView*	parent;
+	FrissView& parent;
+
+	struct tLink {
+		const int32 linkoffset;
+		const int32 linklen;
+		const BString target;
+
+		tLink(int32 off, int32 len, BString trg)
+			: linkoffset(off)
+			, linklen(len)
+			, target(trg)
+		{
+		}
+	};
+
+	BList links;
+
+	static bool isInit;
+	static text_run_array linkStyle;
+	static text_run_array titleStyle;
 };
 
 
