@@ -1,7 +1,6 @@
 FRISS DOCUMENTATION - FUTURE / FEATURE REQUEST / TODO
 
 CRITICAL / IN PROGRESS:
-	- FIXME: Firefox lädt nen Schrott und nicht die richtige Seite, vorallem, wenn bereits ein Fenster offen ist oder auch nicht. "Signature in rsrc doesn't match constructor arg. (application/x-vnd.Mozilla,application/x-vnd.Firefox)  "
 	- FIXME: Crash als Replicant beim Beenden des Containers/Shelfer
 	- fix "reload timer" issue
 		- actual minutes instead of ticks

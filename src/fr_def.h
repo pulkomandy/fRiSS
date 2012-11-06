@@ -12,17 +12,14 @@
 #define APP_SIGNATURE	"application/x-vnd.friss"
 
 // ======= VERSION ===========================================
-#define VER_ACTUAL	"0.6"
-//#define VER_ACTUAL	"0.5 pre7"
+#define VER_ACTUAL	"0.7"
 
-//#define VER_ADD		"\tthis version for testing purposes only\n"
 #define VER_ADD		"\tfeed Reader for Haiku\n"
 
 // predefine strings for output
 #define VERSION_	"fRiSS Ver."VER_ACTUAL
 
 #define VER_HTTP	"friss/"VER_ACTUAL" (Haiku)"
-// #define STR_ABOUT	 moved to FrissView::AboutRequested()
 
 
 // ======= MESSAGES ========================================

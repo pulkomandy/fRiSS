@@ -1345,8 +1345,8 @@ FrissView::AboutRequested()
 	BString text("FRiSS Version " VER_ACTUAL "\n");
 	text << VER_ADD"\n";
 
-	text << "\xC2\xA9""2011 Adrien Destugues (PulkoMandy)\n";
-	text << "\tpulkomandy@pulkomandy.ath.cx\n\n";
+	text << "\xC2\xA9""2010-2012 Adrien Destugues (PulkoMandy)\n";
+	text << "\tpulkomandy@pulkomandy.tk\n\n";
 	
 	text << "\xC2\xA9""2004 Andreas Herzig (N3S)\n";
 	text << "\tbeos@herzig-net.de\n\n";

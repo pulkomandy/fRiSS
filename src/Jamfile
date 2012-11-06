@@ -1,6 +1,6 @@
 SubDir src ;
 
-C++FLAGS = $(C++FLAGS) -g ;
+# C++FLAGS = $(C++FLAGS) -g ;
 
 Main friss :
 	frissconfig.cpp
@@ -38,5 +38,3 @@ if $(OS) = HAIKU {
 BELIBS = -lbe -lnetwork -lbnetapi -ltracker -ltextencoding -lstdc++.r4 -ltranslation ;
 
 LINKLIBS on friss = $(BELIBS) ;
-
-File ../bin/common/apps/friss/friss : friss ;

@@ -1,11 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
+<?xml version="1.0" encoding="utf-8" />
 <?xml version="1.0" encoding="UTF-8" />
 <opml version="1.0">
 	<head>
-		<title>FRiSS sample feed</title>
+		<title>Abonnements de PulkoMandy dans Google Reader</title>
 	</head>
 	<body>
+		<outline text="Avian’s Blog" title="Avian’s Blog" type="rss" xmlUrl="http://www.tablix.org/~avian/blog/atom.xml" htmlUrl="http://www.tablix.org/~avian/blog/" />
+		<outline text="Google Alerts - grafx2 -&quot;nec core&quot;" title="Google Alerts - grafx2 -&quot;nec core&quot;" type="rss" xmlUrl="http://www.google.com/reader/public/atom/user/17362184002103587184/state/com.google/alerts/16487832607225648859" htmlUrl="http://www.google.com/reader/view/user%2F17362184002103587184%2Fstate%2Fcom.google%2Falerts%2F16487832607225648859" />
+		<outline text="gp2x File Archive" title="gp2x File Archive" type="rss" xmlUrl="http://dl.openhandhelds.org/gp2x/rss20.php" htmlUrl="http://dl.openhandhelds.org/gp2x.htm" />
+		<outline text="Grimware" title="Grimware" type="rss" xmlUrl="http://grimware.org/feed.php" htmlUrl="http://grimware.org/" />
 		<outline text="Haiku Project" title="Haiku Project" type="rss" xmlUrl="http://www.haiku-os.org/rss.xml" htmlUrl="https://www.haiku-os.org" />
 		<outline text="Haiku Project blogs" title="Haiku Project blogs" type="rss" xmlUrl="http://www.haiku-os.org/blog/feed" htmlUrl="https://www.haiku-os.org/blog" />
 		<outline text="ICO: Powered by Sheep!" title="ICO: Powered by Sheep!" type="rss" xmlUrl="http://www.iscomputeron.com/index.php?format=feed&type=atom" htmlUrl="http://joomla.iscomputeron.com" />
+		<outline text="kevtris.org" title="kevtris.org" type="rss" xmlUrl="http://blog.kevtris.org/?feed=atom" htmlUrl="http://blog.kevtris.org/" />
+		<outline text="News DevLynx" title="News DevLynx" type="rss" xmlUrl="http://devlynx.ti-fr.com/devlynx_rss.php" htmlUrl="http://www.google.com/reader/view/feed%2Fhttp%3A%2F%2Fdevlynx.ti-fr.com%2Fdevlynx_rss.php" />
+		<outline text="Hackaday" xmlURL="http://feeds2.feedburner.com/hackaday/LgoM" />
 	</body>
 </opml>
