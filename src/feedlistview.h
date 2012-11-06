@@ -10,7 +10,11 @@ class FeedListItem: public BStringItem
 	public:
 		FeedListItem(XmlNode*);
 		void DrawItem(BView* owner, BRect frame, bool complete);
+		void Update(BView* owner, const BFont* font);
 
 	private:
+		static status_t GetIcon(void* cookie);
+
 		BBitmap* fIcon;
+		BView* fParent;
 };

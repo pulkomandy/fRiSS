@@ -104,12 +104,21 @@ char* getFavicon(BString st, size_t& size)
 
 }
 
-FeedListItem::FeedListItem(XmlNode* n)
-	: BStringItem(n->Attribute("text"))
-	, fIcon(NULL)
+
+typedef struct {
+	FeedListItem* item;
+	XmlNode* node;
+} Cookie;
+
+
+/* static */
+status_t FeedListItem::GetIcon(void* cookie)
 {
+	Cookie* data = (Cookie*)cookie;
+	FeedListItem* item = data->item;
+
 	// Extract hostname from full feed URL
-	BString st(n->Attribute("xmlUrl"));
+	BString st(data->node->Attribute("xmlUrl"));
 	st.RemoveFirst("http://");
 	st.Truncate( st.FindFirst('/') );
 	
@@ -117,8 +126,31 @@ FeedListItem::FeedListItem(XmlNode* n)
 	char* icon = getFavicon(st, icoSize);
 	if (icoSize > 0 && icon != NULL) {
 		BMemoryIO m(icon, icoSize);
-		fIcon = BTranslationUtils::GetBitmap(&m);
+		item->fIcon = BTranslationUtils::GetBitmap(&m);
+		if (item->fParent) {
+			item->fParent->LockLooper();
+			item->fParent->Invalidate();
+			item->fParent->UnlockLooper();
+		}
 	}
+
+	delete data;
+	return B_OK;
+}
+
+
+FeedListItem::FeedListItem(XmlNode* n)
+	: BStringItem(n->Attribute("text"))
+	, fIcon(NULL)
+	, fParent(NULL)
+{
+	Cookie* cookie = new Cookie();
+	cookie->item = this;
+	cookie->node = n;
+
+	thread_id thread = spawn_thread(GetIcon, "iconGetter", B_LOW_PRIORITY,
+		cookie);
+	resume_thread(thread);
 }
 
 
@@ -133,4 +165,11 @@ void FeedListItem::DrawItem(BView* owner, BRect frame, bool complete)
 		owner->SetDrawingMode(B_OP_OVER);
 		owner->DrawBitmap(fIcon, frame);
 	}
+}
+
+
+void FeedListItem::Update(BView* owner, const BFont* font)
+{
+	fParent = owner;
+	BStringItem::Update(owner, font);
 }
