@@ -1194,6 +1194,11 @@ FrissView::UpdateWindowMode()
 #ifdef OPTIONS_WINDOW_MODE
 	BRect br = Bounds();
 
+	if (sb_hidden)
+		listScroll->ScrollBar(B_VERTICAL)->Hide();
+	else
+		listScroll->ScrollBar(B_VERTICAL)->Show();
+
 	if (config->WindowMode == WindowModePreview) {
 		sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
@@ -1223,7 +1228,7 @@ FrissView::UpdateWindowMode()
 	// else: SimpleMode
 	{
 		sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-		listview->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
+		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 	
 		ShowPreviewArea(false);
 		
@@ -1234,16 +1239,14 @@ FrissView::UpdateWindowMode()
 		sbTextView->MoveTo(br.left,br.top);
 		sbTextView->ResizeTo(br.Width(), br.Height() );
 				
-		if (!sb_hidden)
-			br.right -= B_V_SCROLL_BAR_WIDTH;
 		
-		listview->MoveTo(br.left,br.top);
-		listview->ResizeTo(br.Width(), br.Height() );
+		listScroll->MoveTo(br.left,br.top);
+		listScroll->ResizeTo(br.Width(), br.Height() );
 		
 		currentWindowMode = WindowModeSimple;
 		
 		sbTextView->SetResizingMode( B_FOLLOW_ALL_SIDES );
-		listview->SetResizingMode( B_FOLLOW_ALL_SIDES );
+		listScroll->SetResizingMode( B_FOLLOW_ALL_SIDES );
 		return;	
 	}
 
