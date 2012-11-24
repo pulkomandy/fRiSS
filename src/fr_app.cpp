@@ -20,9 +20,13 @@ void FrissWindow::MessageReceived(BMessage* message)
 			break;
 		case msg_EditFeed:
 		{
+			int item = feedList->CurrentSelection();
+			if (item < 0)
+				break;
+
 			BPoint p(30,30);
 			p = ConvertToScreen(p);
-			(new FPrefEditWindow(this, Xfeeds->ItemAt(feedList->CurrentSelection()), p, true))->Show();
+			(new FPrefEditWindow(this, Xfeeds->ItemAt(item), p, true))->Show();
 			break;
 		}
 		default:
