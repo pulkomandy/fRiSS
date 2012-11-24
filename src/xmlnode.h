@@ -4,6 +4,8 @@
 #include "fr_options.h"
 
 #include <stdio.h>
+#include <cctype>
+
 #include <be/AppKit.h>
 #include <be/InterfaceKit.h>
 #include <be/SupportKit.h>

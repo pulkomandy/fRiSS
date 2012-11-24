@@ -408,9 +408,9 @@ FrissView::UpdateColors()
 	listview->SetHighColor(colfore);	// Text
 	listview->SetLowColor(collow);		// Textbackground
 	
-	tvTextView->SetViewColor(colback);
+	//tvTextView->SetViewColor(colback);
 	//tvTextView->SetHighColor(colfore);
-	tvTextView->SetLowColor(collow);
+	//tvTextView->SetLowColor(collow);
 	
 	tvTextView->SetFontAndColor( be_plain_font, B_FONT_ALL, &colfore );
 

@@ -10,15 +10,12 @@
 
 #ifdef TRACE_XML
 	#define XPRINT( lvl, x ) if(lvl>=XML_FUNC) printf x
+	#define myName			mName.String()
 #else
 	#define XPRINT( lvl, x )
 #endif
 
-#define SkipW( x ) 	while (x && *x && (*x=='\r' || *x=='\n' || *x=='\t' || *x==' ')) x++;
-#define myName			mName.String()
-#define anzChildren		mChild.CountItems()
-#define anzAttribute	mAttribute.CountItems()
-#define anzAttributes	mAttribute.CountItems()
+#define SkipW( x ) 	while (x && *x && isspace(*x)) x++;
 
 
 uint32	XmlNode::encoding = XML_ENCODING_NONE;
@@ -68,9 +65,9 @@ XmlNode::XmlNode(const char* buf, XmlNode* parent) :
 		buf = c->Parse(buf);
 	}
 	
-	if (!buf)
+	if (!buf) {
 		XPRINT(0,("Parse error\n"));
-	else
+	} else
 		XPRINT(0,("XmlNode(buf,parent): ok\n"));
 }
 
@@ -135,7 +132,7 @@ XmlNode::Archive(BMessage *msg, bool deep) const
 	msg->AddInt32("type", mType);
 	msg->AddString("data", mData.String());
 		
-	int a = Attributes(), c = anzChildren;
+	int a = Attributes(), c = mChild.CountItems();
 	msg->AddInt32("attributes", a);
 	
 	for (int i=0; i<a; i++) {
@@ -205,6 +202,8 @@ XmlNode::SetName(const char* name)
 	SetText(name);
 }
 
+
+// FIXME Type() is not OOP !
 uint32
 XmlNode::Type() const
 {
@@ -214,7 +213,7 @@ XmlNode::Type() const
 const char*
 XmlNode::Value() const
 {
-	if (mType == XML_TYPE_SINGLE)
+	if (mType == XML_TYPE_SINGLE || mType == XML_TYPE_STRING)
 		return mData.String();
 	else
 		return NULL;
@@ -223,6 +222,7 @@ XmlNode::Value() const
 int
 XmlNode::ValueAsInt() const
 {
+	// FIXME Kind is not OOP
 	if (mType == XML_TYPE_SINGLE)
 		return atoi(mData.String());
 	else
@@ -316,7 +316,7 @@ XmlNode::AddAttribute(const char* name, const char* value)
 {
 	if (!name || !value) return;
 	
-	int32 a = anzAttributes;
+	int32 a = mAttribute.CountItems();
 	
 	XmlNode* n = NULL;
 	bool found = false;
@@ -354,7 +354,7 @@ XmlNode::AddAttribute(const char* name, int value)
 status_t
 XmlNode::RemoveAttribute(uint32 index)
 {
-	if (index >= (uint32)anzAttribute)
+	if (index >= (uint32)mAttribute.CountItems())
 		return B_BAD_INDEX;
 		
 	XmlNode* node = (XmlNode*)mAttribute.RemoveItem(index);
@@ -386,7 +386,7 @@ XmlNode::RemoveAllAttributes()
 uint32
 XmlNode::IndexOfAttribute(const char* name) const
 {
-	int32 a = anzAttributes;
+	int32 a = mAttribute.CountItems();
 	
 	for (int32 i=0; i<a; i++) {
 		XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
@@ -415,7 +415,7 @@ XmlNode::AddChild(XmlNode* Child, int pos)
 	Child->mParent = this;
 	mType	= XML_TYPE_NODE;
 	
-	if (pos >= 0 && pos < anzChildren)
+	if (pos >= 0 && pos < mChild.CountItems())
 		mChild.AddItem(Child, pos);
 	else	
 		mChild.AddItem(Child);
@@ -436,7 +436,7 @@ XmlNode::RemoveChild(XmlNode* me)
 void
 XmlNode::RemoveAllChildren()
 {
-	void* attr;
+void* attr;
 	for (int32 i=0; (attr = mChild.ItemAt(i)); i++)
 		delete static_cast<XmlNode*>(attr);
 		
@@ -446,7 +446,7 @@ XmlNode::RemoveAllChildren()
 XmlNode*
 XmlNode::DetachChild(uint32 index)
 {
-	uint32 anz = anzChildren;
+	uint32 anz = mChild.CountItems();
 	if (index >= anz)
 		return NULL;
 	
@@ -465,7 +465,7 @@ XmlNode::ItemAt(uint32 index) const
 uint32
 XmlNode::IndexOf(XmlNode* child) const
 {
-	for (int a = anzChildren, i=0; i<a; i++) {
+	for (int a = mChild.CountItems(), i=0; i<a; i++) {
 		if (mChild.ItemAt(i) == child)
 			return i;	
 	}
@@ -771,10 +771,7 @@ XmlNode::Parse(const char* buf)
 #endif
 		// Replace the remaining HTML-entities:
 		mData.ReplaceAll("&quot;", "\"");
-		mData.ReplaceAll("&#8222;", "\"");	// DieZeit schmeisst mit HTML-Entities um sich...
-		mData.ReplaceAll("&#8220;", "\"");
 		mData.ReplaceAll("&#039;", "'");
-		mData.ReplaceAll("&#8211;", "--");
 		
 		mData.ReplaceAll("&lt;", "<");
 		mData.ReplaceAll("&gt;", ">");
@@ -789,15 +786,43 @@ XmlNode::Parse(const char* buf)
 		mData.ReplaceAll("&#214;", "Ö");
 		mData.ReplaceAll("&#220;", "Ü");
 	
-				
-		/*
-		mData.ReplaceAll("&#8211;", "--");
-		mData.ReplaceAll("&#8211;", "--");
-		*/
-		
+		int nextOffset = -1;
+		while((nextOffset = mData.FindFirst("&#", nextOffset + 1)) != B_ERROR)
+		{
+			char dest[5];
+			char source[8];
+			strncpy(source, mData.String() + nextOffset, 7);
+			uint32_t codepoint = strtol(mData.String() + nextOffset + 2,
+					NULL, 10);
+
+			if(codepoint < 0x80)
+			{
+				dest[0] = codepoint;
+				dest[1] = 0;
+			} else if(codepoint < 0x800) {
+				dest[0] = codepoint >> 6  & 0x1F | 0xC0;
+				dest[1] = codepoint & 0x3F | 0x80;
+				dest[2] = 0;
+			} else if(codepoint < 0x010000) {
+				dest[0] = codepoint >> 12  & 0xF | 0xE0;
+				dest[1] = codepoint >> 6  & 0x3F | 0x80;
+				dest[2] = codepoint & 0x3F | 0x80;
+				dest[3] = 0;
+			} else {
+				dest[0] = codepoint >> 18  & 0x7 | 0xF0;
+				dest[1] = codepoint >> 12  & 0x3F | 0x80;
+				dest[2] = codepoint >> 6  & 0x3F | 0x80;
+				dest[3] = codepoint & 0x3F | 0x80;
+				dest[4] = 0;
+			}
+
+			mData.ReplaceAll(source, dest);
+
+		}
+
 		// VERY LAST ONE:
 		mData.ReplaceAll("&amp;", "&");		// does not work always...
-		
+
 		// this node is done.
 		XPRINT(2,("'%s'\n", mData.String() ));
 	}
@@ -910,53 +935,67 @@ XmlNode::Display(int level) const
 	for (int i=0;i<level;i++)
 		printf("\t");
 	
-	if (mType == XML_TYPE_NODE) {
-		if (Attributes()==0)
-			printf("<%s>\n", mName.String() );
-		else {
-			printf("<%s\n", mName.String() );
+	switch(mType)
+	{
+		case XML_TYPE_NODE:
+		{
+			if (Attributes()==0)
+				printf("<%s>\n", mName.String() );
+			else {
+				printf("<%s\n", mName.String() );
 
-			for (int32 i=0, a=Attributes();i<a;i++) {
-				for (int ti=0;ti<level+1;ti++)
-					printf("\t");
-				
-				XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
-				printf("%s = %s\n", n->Name(), n->Value());
+				for (int32 i=0, a=Attributes();i<a;i++) {
+					for (int ti=0;ti<level+1;ti++)
+						printf("\t");
+
+					XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
+					printf("%s = %s\n", n->Name(), n->Value());
+				}
+				for (int ti=0;ti<level;ti++) printf("\t");
+				printf(">\n");
 			}
-			for (int ti=0;ti<level;ti++) printf("\t");
-			printf(">\n");
+
+
+			for (int32 i=0, a=Children();i<a;i++)
+				ItemAt(i)->Display(level+1);
+
+			for (int i=0;i<level;i++)
+				printf("\t");
+			printf("</%s>\n", mName.String() );
+
+			break;
 		}
-		
-	
-		for (int32 i=0, a=Children();i<a;i++)
-			ItemAt(i)->Display(level+1);
+		case XML_TYPE_SINGLE:
+		{
+			if (Attributes()==0)
+				printf("<%s", mName.String() );
+			else {
+				printf("<%s\n", mName.String() );
 
-		for (int i=0;i<level;i++)
-			printf("\t");
-		printf("</%s>\n", mName.String() );
-	}
-	else if (mType == XML_TYPE_SINGLE) {
-		if (Attributes()==0)
-			printf("<%s", mName.String() );
-		else {
-			printf("<%s\n", mName.String() );
+				for (int32 i=0, a=Attributes();i<a;i++) {
+					for (int ti=0;ti<level+1;ti++) printf("\t");
 
-			for (int32 i=0, a=Attributes();i<a;i++) {
-				for (int ti=0;ti<level+1;ti++) printf("\t");
-				
-				XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
-				printf("%s = %s\n", n->Name(), n->Value());
+					XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
+					printf("%s = %s\n", n->Name(), n->Value());
+				}
+				for (int ti=0;ti<level;ti++) printf("\t");
 			}
-			for (int ti=0;ti<level;ti++) printf("\t");
+
+			if (mData.Length()>0)
+				printf(">%s</%s>\n", mData.String(), mName.String() );
+			else
+				printf("/>\n");
+
+			break;
 		}
-		
-		if (mData.Length()>0)
-			printf(">%s</%s>\n", mData.String(), myName );
-		else
-			printf("/>\n");
+
+		case XML_TYPE_STRING:
+			puts(mData.String());
+			break;
+		case XML_TYPE_COMMENT:
+			printf("<!--|%s|-->\n", mData.String() );
+			break;
 	}
-	else if (mType == XML_TYPE_COMMENT)
-		printf("<!--|%s|-->\n", mData.String() );
 }
 
 
@@ -971,15 +1010,15 @@ XmlNode::SaveToFile(const char* filename) const
 
 	BString dummy("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n\n");
 	write(ref, dummy.String(), dummy.Length());
-	
+
 	int c = Children();	
 	for (int i=0; i<c; i++) {
 		ItemAt(i)->SaveNode(ref, 0);
 	}
-	
+
 	//dummy = "</xml>\n";
 	//write(ref, dummy.String(), dummy.Length());
-	
+
 	close(ref);
 	return true;
 }
@@ -991,18 +1030,18 @@ XmlNode::SaveNode(int ref, int depth) const
 {
 	BString s; 			// s is reused later!
 	TabS(depth);
-	
+
 	if (mType == XML_TYPE_COMMENT) {
 		s << "<!-- " << mData.String() << " -->\n";
 		write(ref, s.String(), s.Length());
-		
+
 		return true;
 	}
 
 	// Name
 	s << "<" << Name();
 	write(ref, s.String(), s.Length());	
-		
+
 	// attributes
 	int a = Attributes();
 	if (a>0) {
@@ -1044,7 +1083,7 @@ XmlNode::SaveNode(int ref, int depth) const
 		}
 		else {
 			s = ">";
-			s << mData.String() << "</" << myName << ">\n";
+			s << mData.String() << "</" << mName.String() << ">\n";
 			write(ref, s.String(), s.Length());
 		}
 	}
@@ -1209,12 +1248,12 @@ XmlNode::Duplicate()
 	node->mMarked = mMarked;
 	node->SetText(Text());
 
-	for (int i=0, a=anzAttributes; i<a; i++) {
+	for (int i=0, a=mAttribute.CountItems(); i<a; i++) {
 		XmlNode* child = ((XmlNode*)mAttribute.ItemAt(i))->Duplicate();
 		node->mAttribute.AddItem(child);
 	}
 	
-	for (int i=0, c=anzChildren; i<c; i++) {
+	for (int i=0, c=mChild.CountItems(); i<c; i++) {
 		XmlNode* child = ((XmlNode*)mChild.ItemAt(i))->Duplicate();
 		node->mChild.AddItem(child);
 	}

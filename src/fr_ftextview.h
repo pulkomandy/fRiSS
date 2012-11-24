@@ -14,12 +14,11 @@ public:
 	void AttachedToWindow();
 	void FrameResized(float width, float height);
 	void MouseDown(BPoint point);
+	void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
 	void SetContents(const BString& title, const BString& contents,
 		const BString& link);
 	
 private:
-	FrissView& parent;
-
 	struct tLink {
 		const int32 linkoffset;
 		const int32 linklen;
@@ -32,6 +31,12 @@ private:
 		{
 		}
 	};
+
+	void Render(XmlNode* node, text_run_array& textStyle);
+	tLink* GetLinkAt(BPoint point);
+
+	FrissView& parent;
+
 
 	BList links;
 

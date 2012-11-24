@@ -1,4 +1,7 @@
 #include "fr_ftextview.h"
+
+#include <Cursor.h>
+
 #include "fr_view.h"
 
 bool FTextView::isInit = false;
@@ -38,6 +41,9 @@ void FTextView::AttachedToWindow()
 		titleStyle.count = 1;
 		titleStyle.runs[0].font = be_bold_font;
 	}
+
+	SetViewColor(make_color(255,255,255));
+	SetLowColor(make_color(255,255,255));
 }
 
 
@@ -46,6 +52,22 @@ FTextView::FrameResized(float width, float height)
 {
 	SetTextRect(BRect(0,0,width, height));
 	BTextView::FrameResized(width, height);
+}
+
+FTextView::tLink* 
+FTextView::GetLinkAt(BPoint point)
+{
+	int32 offset = OffsetAt(point);
+		
+	tLink* aLink;
+	for(int i = 0; aLink = (tLink*)links.ItemAt(i); i++)
+	{
+		if (offset >= aLink->linkoffset
+				&& offset < aLink->linkoffset + aLink->linklen) {
+			return aLink;
+		}
+	}
+	return NULL;
 }
 
 
@@ -69,17 +91,119 @@ FTextView::MouseDown(BPoint point)
 	}		
 	else {
 		// See if we hit one of the links
-		int32 offset = OffsetAt(point);
-		
-		tLink* aLink;
-		for(int i = 0; aLink = (tLink*)links.ItemAt(i); i++)
+		tLink* aLink = GetLinkAt(point);
+
+		if (aLink)
+			parent.OpenURL(aLink->target);
+		else
+			BTextView::MouseDown(point);
+	}
+}
+
+
+void FTextView::MouseMoved(BPoint point, uint32 transit, const BMessage* message)
+{
+	static BCursor* cursor = new BCursor(B_CURSOR_ID_FOLLOW_LINK);
+
+	if(transit == B_EXITED_VIEW || transit == B_OUTSIDE_VIEW)
+	{
+		SetViewCursor(B_CURSOR_SYSTEM_DEFAULT);
+		return;
+	}
+
+	if(GetLinkAt(point)) {
+		SetViewCursor(cursor);
+	} else {
+		SetViewCursor(B_CURSOR_SYSTEM_DEFAULT);
+	}
+}
+
+
+void FTextView::Render(XmlNode* node, text_run_array& textStyle)
+{
+	switch(node->Type())
+	{
+		case XML_TYPE_NODE:
 		{
-			if (offset >= aLink->linkoffset &&
-					offset < aLink->linkoffset + aLink->linklen) {
-				parent.OpenURL(aLink->target);
-			} else
-				BTextView::MouseDown(point);
+			text_run_array oldStyle = textStyle;
+
+			const char* name = node->Name();
+			if(strcmp(name,"") == 0) {
+				// Ok, this is our root node....
+			} else if(strcmp(name,"li") == 0) {
+				Insert("\n\xE2\x80\xA2", &textStyle);
+			} else if(strcmp(name,"p") == 0) {
+				Insert("\n");
+			} else {
+				printf("FIXME unhandled node %s\n", name);
+			}
+
+			// TODO node.mAttribute (list of XmlNodes)
+			int32 count = node->Children();
+			for(int32 i = 0; i < count; i++)
+			{
+				Render(node->ItemAt(i), textStyle);
+			}
+
+			textStyle = oldStyle;
+			break;
 		}
+
+		case XML_TYPE_SINGLE:
+		{
+			int32 linkstart = -1;
+			text_run_array oldStyle = textStyle;
+			const char* name = node->Name();
+
+			if(strcmp(name,"a") == 0) {
+				linkstart = TextLength();
+				textStyle.runs[0].color = make_color(0, 0, 255);
+			} else if(strcmp(name,"b") == 0) {
+				textStyle.runs[0].font = be_bold_font;
+
+			} else if(strcmp(name,"br/") == 0 || strcmp(name, "br") == 0) {
+				// FIXME the parser shouldn't feed us br/ as the node name...
+				Insert("\n");
+			} else if(strcmp(name,"h3") == 0) {
+				textStyle.runs[0].font.SetSize(be_plain_font->Size() * 1.5f);
+				Insert("\n");
+			} else if(strcmp(name,"hr") == 0) {
+				// FIXME do something nicer with these...
+				Insert("\n----------------------------");
+			} else if(strcmp(name,"p") == 0) {
+				Insert("\n");
+			} else if(strcmp(name,"strong") == 0) {
+				textStyle.runs[0].font = be_bold_font;
+			} else {
+				printf("FIXME unhandled single node %s\n", name);
+			}
+
+			Insert(node->Value(), &textStyle);
+
+			if(linkstart >= 0) {
+				int32 linklen = strlen(node->Value());
+				links.AddItem(new tLink(linkstart, linklen, node->Attribute("href")));
+			}
+
+			textStyle = oldStyle;
+
+			Insert(" ");
+			break;
+		}
+
+		case XML_TYPE_STRING:
+		{
+			Insert(node->Value(), &textStyle);
+			break;
+		}
+
+		case XML_TYPE_COMMENT:
+			// Comments are ignored
+			break;
+
+		default:
+			puts("FIXME unknown node type !");
+			break;
 	}
 }
 
@@ -95,66 +219,49 @@ void FTextView::SetContents(const BString& title, const BString& contents,
 
 	// Insert the title
 	Insert(title.String(), &titleStyle);
+	Insert("\n");
+
+	int32 linkoffset = TextLength();
+	int32 linklen = link.Length();
+	Insert(link.String(), &linkStyle);
+	links.AddItem(new tLink(linkoffset, linklen, link));
+
 	Insert("\n\n");
 
 	// TODO consider using a BWebView when it becomes available
-	// For now just do some crappy search and replace to make the thing 
-	// somewhat readable...
+
+	// Parse the contents as XML to interpret html tags
+	// TODO maybe we should get the XML node from the caller instead of a
+	// flattened string to parse again ?
+	XmlNode body(contents.String(), NULL);
+
+	// Now browse the XML tree and add stuff to the view
+	/*
+	puts(contents.String());
+	puts("--- XML CONTENTS ---");
+	body.Display();
+	puts("--- END XML CONTENTS ---");
+	*/
+	
 	text_run_array textStyle;
 	textStyle.count = 1;
 	textStyle.runs[0].font = be_plain_font;
 	textStyle.runs[0].offset = 0;
 	textStyle.runs[0].color = make_color(0,0,0);
 
+	// Handle text-only RSS feeds
+	if(body.Children() == 0 || body.Children() == 1 && strcmp(body.ItemAt(0)->Name(), "") == 0) {
+		Insert(contents, &textStyle);
+	} else
+		Render(&body, textStyle);
+#if 0
+	// For now just do some crappy search and replace to make the thing 
+	// somewhat readable...
+
 	typedef struct {
 		char* from;
 		char* to;
 	} transform;
-
-	static const transform replacement[] = {
-		{"<p>", ""}, {"</p>", "\n\n"}, {"<br>", "\n"}, {"<br />", "\n"},
-		{"<ul>", "\n"}, {"<li>", "\xe2\x80\xa2"}, {"</li>", "\n"},
-		{"</ul>", "\n"}, {"<hr />", "\n-------------------\n"},
-		{"&amp;", "&"}, {"&quot;", "\""}, {"&eacute;", "é"}
-	};
-
-	BString contentsParsed = contents;
-	for(int i = sizeof(replacement) / sizeof(transform); --i >= 0;)
-		contentsParsed.ReplaceAll(replacement[i].from, replacement[i].to);
-
-	int nextOffset = -1;
-	while((nextOffset = contentsParsed.FindFirst("&#", nextOffset + 1)) != B_ERROR)
-	{
-		char dest[5];
-		char source[8];
-		strncpy(source, contentsParsed.String() + nextOffset, 7);
-		uint32_t codepoint = strtol(contentsParsed.String() + nextOffset + 2,
-			NULL, 10);
-
-		if(codepoint < 0x80)
-		{
-			dest[0] = codepoint;
-			dest[1] = 0;
-		} else if(codepoint < 0x800) {
-			dest[0] = codepoint >> 6  & 0x1F | 0xC0;
-			dest[1] = codepoint & 0x3F | 0x80;
-			dest[2] = 0;
-		} else if(codepoint < 0x010000) {
-			dest[0] = codepoint >> 12  & 0xF | 0xE0;
-			dest[1] = codepoint >> 6  & 0x3F | 0x80;
-			dest[2] = codepoint & 0x3F | 0x80;
-			dest[3] = 0;
-		} else {
-			dest[0] = codepoint >> 18  & 0x7 | 0xF0;
-			dest[1] = codepoint >> 12  & 0x3F | 0x80;
-			dest[2] = codepoint >> 6  & 0x3F | 0x80;
-			dest[3] = codepoint & 0x3F | 0x80;
-			dest[4] = 0;
-		}
-
-		contentsParsed.ReplaceAll(source, dest);
-
-	}
 
 	// Now attempt to do some formatting !
 	typedef struct {
@@ -176,27 +283,9 @@ void FTextView::SetContents(const BString& title, const BString& contents,
 	emfont.SetFace(B_ITALIC_FACE);
 
 	static const tag bold[] = {
-		{"<b>", "</b>", be_bold_font},
 		{"<strong>", "</strong>", be_bold_font},
 		{"<em>", "</em>", &emfont}
 	};
-
-	for(int i = sizeof(bold) / sizeof(tag); --i >= 0;) {
-		nextOffset == -1;
-		while((nextOffset = contentsParsed.FindFirst(bold[i].from,
-			nextOffset + 1)) != B_ERROR)
-		{
-			Range* r = new Range();
-			r->start = nextOffset;
-			contentsParsed.RemoveFirst(bold[i].from);
-			r->end = contentsParsed.FindFirst(bold[i].to, nextOffset + 1);
-			contentsParsed.RemoveFirst(bold[i].to);
-
-			r->font = bold[i].style;
-
-			list.AddItem(r);
-		}
-	}
 
 	int32 linkoffset = TextLength();
 
@@ -244,10 +333,5 @@ void FTextView::SetContents(const BString& title, const BString& contents,
 		delete r;
 	}
 
-	linkoffset = TextLength();
-
-	int32 linklen = link.Length();
-	Insert(link.String(), &linkStyle);
-
-	links.AddItem(new tLink(linkoffset, linklen, link));
+#endif
 }
