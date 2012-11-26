@@ -33,12 +33,17 @@ private:
 	};
 
 	void Render(XmlNode* node, text_run_array& textStyle);
+
+	void RenderHeading(int level, text_run_array& textStyle);
+	void RenderLi(text_run_array& textStyle);
+
 	tLink* GetLinkAt(BPoint point);
 
 	FrissView& parent;
 
 
 	BList links;
+	int itemNumber; // for <ol> enumerations
 
 	static bool isInit;
 	static text_run_array linkStyle;

@@ -119,6 +119,29 @@ void FTextView::MouseMoved(BPoint point, uint32 transit, const BMessage* message
 }
 
 
+void FTextView::RenderHeading(int level, text_run_array& textStyle)
+{
+	float multiplier = 1.8f;
+	multiplier -= level / 10.0f;
+	textStyle.runs[0].font.SetSize(be_plain_font->Size() * multiplier);
+	Insert("\n");
+}
+
+
+void FTextView::RenderLi(text_run_array& textStyle)
+{
+	if (itemNumber == 0)
+		Insert("\n\xE2\x80\xA2", &textStyle);
+	else {
+		BString txt("\n");
+		txt << itemNumber;
+		txt << ". ";
+		Insert(txt, &textStyle);
+		itemNumber++;
+	}
+}
+
+
 void FTextView::Render(XmlNode* node, text_run_array& textStyle)
 {
 	switch(node->Type())
@@ -130,10 +153,18 @@ void FTextView::Render(XmlNode* node, text_run_array& textStyle)
 			const char* name = node->Name();
 			if(strcmp(name,"") == 0) {
 				// Ok, this is our root node....
+			} else if(strcmp(name,"br") == 0) {
+				// TODO Which attributes or subelements could be useful ?
+				Insert("\n");
 			} else if(strcmp(name,"li") == 0) {
-				Insert("\n\xE2\x80\xA2", &textStyle);
+				RenderLi(textStyle);
+			} else if(strcmp(name, "ol") == 0) {
+				itemNumber = 1; // Start counting
+				// TODO handle nested ol (need to save&restore itemNumber)
 			} else if(strcmp(name,"p") == 0) {
 				Insert("\n");
+			} else if(strcmp(name, "ul") == 0) {
+				itemNumber = 0; // li will use bullets
 			} else {
 				printf("FIXME unhandled node %s\n", name);
 			}
@@ -164,14 +195,23 @@ void FTextView::Render(XmlNode* node, text_run_array& textStyle)
 			} else if(strcmp(name,"br/") == 0 || strcmp(name, "br") == 0) {
 				// FIXME the parser shouldn't feed us br/ as the node name...
 				Insert("\n");
+			} else if(strcmp(name,"em") == 0) {
+				textStyle.runs[0].font.SetFace(B_ITALIC_FACE);
+			} else if(strcmp(name,"h2") == 0) {
+				RenderHeading(2, textStyle);
 			} else if(strcmp(name,"h3") == 0) {
-				textStyle.runs[0].font.SetSize(be_plain_font->Size() * 1.5f);
-				Insert("\n");
+				RenderHeading(3, textStyle);
+			} else if(strcmp(name,"h4") == 0) {
+				RenderHeading(4, textStyle);
 			} else if(strcmp(name,"hr") == 0) {
 				// FIXME do something nicer with these...
 				Insert("\n----------------------------");
+			} else if(strcmp(name,"li") == 0) {
+				RenderLi(textStyle);
 			} else if(strcmp(name,"p") == 0) {
 				Insert("\n");
+			} else if(strcmp(name,"pre") == 0) {
+				textStyle.runs[0].font = be_fixed_font;
 			} else if(strcmp(name,"strong") == 0) {
 				textStyle.runs[0].font = be_bold_font;
 			} else {
