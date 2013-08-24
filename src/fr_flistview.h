@@ -22,6 +22,9 @@ public:
 private:
 	BView*		fv;
 	unsigned long		m_buttons;
+
+	// Only for window mode:
+	BDragger* 		myd;
 };
 
 #endif

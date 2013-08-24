@@ -85,7 +85,7 @@ private:
 	void	ReBuildPopup(XmlNode *node, BMenu* menu);
 
 	// Teil2 des Loaders
-	void LoadDone();
+	void LoadDone(char* data);
 	
 	void OnWorkspaceChanged();
 	
@@ -129,8 +129,6 @@ private:
 	FrFeedLoader*	feedloader;
 	thread_id		feedid;
 	
-	// Only for window mode:
-	BDragger* 		myd;
 
 	// we just store a pointer to the config struct because
 	// FrissMasterView likes to have it on Shutdown in order to

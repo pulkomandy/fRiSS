@@ -7,6 +7,11 @@ FListView::FListView(BView* thefv, BRect f, const char *name,
 {
 	fv = thefv;
 	transparent = false;	
+
+	f.left = f.right - 8;
+	f.top = f.bottom - 8;
+	myd = new BDragger(f, this, B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM );
+	AddChild(myd);		
 }
 
 

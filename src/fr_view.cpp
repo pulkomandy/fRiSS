@@ -41,7 +41,7 @@ FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
 	r.OffsetTo(B_ORIGIN);
 	r.top = r.bottom-7;
 	r.left = r.right - 7;		
-	myd = new BDragger( r, this, B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM, B_WILL_DRAW );
+	BDragger* myd = new BDragger( r, this, B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM, B_WILL_DRAW );
 	AddChild(myd);
 	
 	// Only transparency for replicants:
@@ -78,7 +78,6 @@ FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
 FrissView::FrissView(BMessage *archive) :
 	BBox(archive)
 {
-	myd = NULL;
 	replicant = true;
 	
 	// 
@@ -134,8 +133,6 @@ FrissView::FrissView(BMessage *archive) :
 	r.OffsetTo(B_ORIGIN);
 	r.top = r.bottom-7;
 	r.left = r.right - 7;		
-	myd = new BDragger( r, this, B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM );
-	AddChild(myd);		
 }
 
 FrissView::~FrissView()
@@ -233,7 +230,7 @@ FrissView::AllAttached()
 	tlist = new BList();
 	
 	// Feedloader loads files from disk and net
-	feedloader = new FrFeedLoader(this, buf);
+	feedloader = new FrFeedLoader(this);
 	feedid = feedloader->Run();
 
 	// Views:
@@ -453,8 +450,13 @@ FrissView::MessageReceived(BMessage *msg)
 			break;
 			
 		case MSG_LOAD_DONE:
-			LoadDone();
+		{
+			void* data = NULL;
+			msg->FindPointer("data", &data);
+			LoadDone((char*)data);
+			free(data);
 			break;
+		}
 			
 		case MSG_LOAD_FAIL:
 			pulsing = true;
@@ -767,7 +769,7 @@ FrissView::LoadPrev()
 
 
 void
-FrissView::LoadDone()
+FrissView::LoadDone(char* buf)
 {
 	BString	status;
 	int		anz = 0;

@@ -3,7 +3,7 @@
 class FrFeedLoader : public BLooper
 {
 public:
-	FrFeedLoader(BView* parentView, char* buf);
+	FrFeedLoader(BView* parentView);
 	
 	virtual void	MessageReceived(BMessage *msg);
 	
@@ -15,6 +15,5 @@ private:
 	void Load();
 	
 	BView*	parent;
-	char*	pBuf;
 	bool	stateLoading;
 };

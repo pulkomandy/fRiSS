@@ -9,11 +9,10 @@
 	#define FPRINT(x)
 #endif
 
-FrFeedLoader::FrFeedLoader(BView* parentView, char* buf) :
+FrFeedLoader::FrFeedLoader(BView* parentView) :
 	BLooper("feedloader", B_NORMAL_PRIORITY, B_LOOPER_PORT_DEFAULT_CAPACITY)
 {
 	parent = parentView;
-	pBuf = buf;
 	stateLoading = false;
 }
 
@@ -47,21 +46,17 @@ FrFeedLoader::Load()
 	stateLoading = true;
 	FPRINT(("FL: getting busy\n"));
 	
-	int bufsize = BUFSIZE;
-	int n;
-	
-	if (sUrl.Compare("file://",7)==0)
-		n = LoadFeedFile(sUrl.String(),pBuf,bufsize-1);
-	else if (sUrl.Compare("http://",7)==0)
-		n = LoadFeedNet(sUrl.String(),pBuf,bufsize-1);
+	size_t bufsize;
+	char* buf = LoadFeedNet(sUrl.String(),bufsize);
 		
 	FPRINT(("FL: loading done: %i\n", n));
 	
 	stateLoading = false;
 	
-	if (n > 0) {
-		pBuf[n]=0;
-		parent->Window()->PostMessage(MSG_LOAD_DONE,parent);
+	if (buf) {
+		BMessage* msg = new BMessage(MSG_LOAD_DONE);
+		msg->AddPointer("data", buf);
+		parent->Window()->PostMessage(msg, parent);
 	}
 	else
 		parent->Window()->PostMessage(MSG_LOAD_FAIL,parent);
