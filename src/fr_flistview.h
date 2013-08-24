@@ -15,16 +15,11 @@ public:
 	virtual void MouseDown(BPoint point);
 	
 	// Transparency:
-	virtual void Draw(BRect frame);
-	void TranspSetUp(bool transp);
 	bool		transparent;
 
 private:
 	BView*		fv;
 	unsigned long		m_buttons;
-
-	// Only for window mode:
-	BDragger* 		myd;
 };
 
 #endif

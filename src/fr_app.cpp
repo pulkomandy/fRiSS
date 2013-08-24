@@ -45,8 +45,8 @@ FrissWindow::FrissWindow(FrissConfig* config, XmlNode* theList, BRect frame,
 	background->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(background);
 
-	brect.InsetBy(5,5);
 	brect.left += 150;
+	brect.top += 5;
 	myf = new FrissView(config, theList, brect);
 	background->AddChild(myf);
 

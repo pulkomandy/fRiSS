@@ -118,6 +118,7 @@ FStringItem::SetTitleHtml(BString title)
 	SetText(title);	
 }
 
+#if 0
 void
 FStringItem::DrawItem(BView* owner, BRect frame, bool complete)
 {
@@ -168,6 +169,7 @@ FStringItem::DrawItem(BView* owner, BRect frame, bool complete)
 	owner->SetHighColor(saveH);
 	owner->SetLowColor(saveL);
 }
+#endif
 
 
 int compare_func(const BListItem* firstArg, const BListItem* secondArg)

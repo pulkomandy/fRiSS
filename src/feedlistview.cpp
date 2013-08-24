@@ -88,7 +88,7 @@ FeedListItem::FeedListItem(XmlNode* n)
 void FeedListItem::DrawItem(BView* owner, BRect frame, bool complete)
 {
 	BRect textFrame = frame;
-	textFrame.left += 16 + 2 * 5;
+	textFrame.left += 16 + 5;
 	BStringItem::DrawItem(owner, textFrame, complete);
 
 	// draw the icon

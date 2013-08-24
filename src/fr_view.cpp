@@ -19,7 +19,7 @@
 
 
 FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
-	BBox(frame, "fRiSS", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED | B_FRAME_EVENTS, B_FANCY_BORDER)
+	BBox(frame, "fRiSS", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED | B_FRAME_EVENTS, B_NO_BORDER)
 {
 	// Important
 	config = newconf;
@@ -46,32 +46,6 @@ FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
 	
 	// Only transparency for replicants:
 	replicant = false;	
-	
-	// rest of initialisation will happen in AllAttached()
-	
-	#if (__ZETA || OPTIONS_USE_NLANG)
-	entry_ref ref; 
-	if ( B_OK == be_roster->FindApp(APP_SIGNATURE, &ref) ) {
-		BPath path(&ref);
-		BString appname = path.Leaf();
-		path.GetParent(&path);
-		path.Append("Language/Dictionaries");
-		#ifdef __ZETA__
-			path.Append(appname.String());
-			be_locale.LoadLanguageFile(path.Path());
-		#else
-			strDebug = config->Lang;
-			
-			no_locale.Init(path.Path());
-			if (config->Lang.Length()>0)
-				no_locale.LoadFileID(config->Lang.String());
-		#endif
-	}
-	else 
-		strDebug = "Path not found";
-	#else
-		strDebug = "No language support";
-	#endif	
 }
 
 
@@ -238,8 +212,7 @@ FrissView::AllAttached()
 	
 	
 	BRect br = Bounds();
-	br.InsetBy(3,15);
-	br.right -= B_V_SCROLL_BAR_WIDTH;
+	br.InsetBy(3,5);
 	br.bottom = br.top + 100;
 
 	listview = new FListView(this, br, "listview", B_SINGLE_SELECTION_LIST,
@@ -251,7 +224,7 @@ FrissView::AllAttached()
 	listview->Hide();
 	
 	br.top = br.bottom;
-	br.bottom = Bounds().bottom - 5;
+	br.bottom = Bounds().bottom;
 
 	tvTextView = new FTextView(*this, br);
 	tvTextView->MakeSelectable(false);
@@ -260,7 +233,6 @@ FrissView::AllAttached()
 	AddChild(sbTextView);
 	
 	sbTextView->Hide();
-	//ShowPreviewArea(false);
 	
 	Load(config->Index());
 	
@@ -401,22 +373,11 @@ FrissView::UpdateColors()
 	SetHighColor(colfore);	// Textcolor
 	SetLowColor(collow);	// Text background =!= ViewColor
 
-	listview->SetViewColor(colback);	//
-	listview->SetHighColor(colfore);	// Text
-	listview->SetLowColor(collow);		// Textbackground
-	
-	//tvTextView->SetViewColor(colback);
-	//tvTextView->SetHighColor(colfore);
-	//tvTextView->SetLowColor(collow);
-	
 	tvTextView->SetFontAndColor( be_plain_font, B_FONT_ALL, &colfore );
 
 	//puts("Invalidate?");		
 
 	Invalidate();
-	if (!listview->IsHidden())
-		listview->Invalidate();
-	
 	if (!sbTextView->IsHidden())
 		tvTextView->Invalidate();
 
@@ -1176,9 +1137,6 @@ FrissView::Draw(BRect frame)
 		// Ganz normal:
 		BBox::Draw(frame);
 	}	
-
-//	if (myd)
-//		myd->Invalidate();
 }
 
 void
@@ -1206,13 +1164,13 @@ FrissView::UpdateWindowMode()
 		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 
 		// max visible area:
-		br.InsetBy(10,10);
-		br.top += 5;
-		br.right -= 1; //B_V_SCROLL_BAR_WIDTH;    x1x
+		br.InsetBy(10,4);
+		br.top += 10;
+		br.right += 5;
 
-		float height = br.Height() / 2 - 5;
+		float height = br.Height() / 3 - 5;
 		sbTextView->MoveTo(br.left, br.top+height+10);
-		sbTextView->ResizeTo(br.Width(), height);
+		sbTextView->ResizeTo(br.Width(), br.bottom - (br.top + height + 10));
 		
 		ShowPreviewArea(true);
 		

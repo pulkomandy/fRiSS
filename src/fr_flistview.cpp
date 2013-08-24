@@ -10,8 +10,6 @@ FListView::FListView(BView* thefv, BRect f, const char *name,
 
 	f.left = f.right - 8;
 	f.top = f.bottom - 8;
-	myd = new BDragger(f, this, B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM );
-	AddChild(myd);		
 }
 
 
@@ -52,41 +50,4 @@ FListView::MouseDown(BPoint point)
 	else if ((m_buttons & 0x4) == 0x4) {
 		((FrissView*)fv)->LoadNext();
 	}
-	else {
-		BString text;
-		
-		text << _T("The mouse button you just pressed is not yet supported in friss.") << "\n\n";
-		text << _T("Please send a mail to beos@herzig-net.de and notify me about the following mouse button code: ") << m_buttons <<"\n\n";
-		text << _T("Thank you");
-		(new BAlert(_T("Unexpected Event"), text.String(), _T("Ok")))->Go();
-	}
-}
-
-void
-FListView::Draw(BRect frame)
-{
-#if ALLOW_TRANSP
-	if (!transparent) {
-		SetDrawingMode(B_OP_COPY);
-		BListView::Draw(frame);
-	}
-	else {
-		FrissView* f = (FrissView*) fv;
-		if (f->bitmap) {
-			BRect t(Bounds());
-			ConvertToParent(&t);
-			DrawBitmap(f->bitmap, t, Bounds());
-		}
-		SetViewColor(B_TRANSPARENT_COLOR);
-		BListView::Draw(frame);
-	}
-#else
-	BListView::Draw(frame);
-#endif
-}
-
-void
-FListView::TranspSetUp(bool transp)
-{
-	transparent = transp;
 }

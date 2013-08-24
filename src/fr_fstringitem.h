@@ -25,7 +25,7 @@ public:
 	
 	void		SetTitleHtml(BString title);
 	
-	virtual void DrawItem(BView* owner, BRect frame, bool complete = false);
+	//virtual void DrawItem(BView* owner, BRect frame, bool complete = false);
 
 	BString		sUrl;
 	BString		sDesc;
