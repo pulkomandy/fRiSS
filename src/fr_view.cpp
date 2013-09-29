@@ -576,21 +576,15 @@ FrissView::FindItem(int index, int& is, XmlNode* node)
 void
 FrissView::Load(uint32 idx, XmlNode* direct)
 {
-	if (!theList) {
-		Error(_T("Error: we do not have a list!"));
-		return;
-	}
+	assert(theList != NULL);
 	if (theList->Children() == 0) {
-		Error(_T("Error: Please add some feeds in the Preferences Window!"));
+		Error(_T("Please add some feeds in the Preferences Window!"));
 		return;
 	}
 	
 	// Load
 	pulsing = false;
 	
-	//printf("Suche Item #%d\n", idx);
-
-
 	int x = 0;
 	XmlNode* fi;
 	
