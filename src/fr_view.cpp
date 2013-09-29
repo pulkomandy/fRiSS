@@ -4,10 +4,11 @@
 #include "frissWindow.h"
 #include "fr_ftextview.h"
 
+#include <assert.h>
 #include <time.h>
 
-#include <be/StorageKit.h>
 #include <InterfaceDefs.h>
+#include <StorageKit.h>
 
 // Helper window informs us about workspaces changes etc:
 #ifdef OPTIONS_USE_HELPERWINDOW
@@ -73,32 +74,6 @@ FrissView::FrissView(BMessage *archive) :
 	archive->FindMessage("feeds", &list);
 	theRoot = new XmlNode(&list);
 	theList = theRoot->FindChild("body", NULL, true);
-
-	
-	#if (__ZETA || OPTIONS_USE_NLANG)
-	entry_ref ref; 
-	if ( B_OK == be_roster->FindApp(APP_SIGNATURE, &ref) ) {
-		BPath path(&ref);
-		BString appname = path.Leaf();
-		path.GetParent(&path);
-		path.Append("Language/Dictionaries");
-		#ifdef __ZETA__
-			path.Append(appname.String());
-			be_locale.LoadLanguageFile(path.Path());
-		#else
-			strDebug = config->Lang;
-
-			no_locale.Init(path.Path());
-			
-			if (config->Lang.Length()>0)
-				no_locale.LoadFileID(config->Lang.String());
-		#endif
-	}
-	else 
-		strDebug = "Path not found";
-	#else
-		strDebug = "No language support";
-	#endif
 	
 	// don't resize any more (this sucks in Shelfer)
 	SetResizingMode(ResizingMode() & !B_FOLLOW_RIGHT & !B_FOLLOW_BOTTOM);	
@@ -1128,16 +1103,11 @@ FrissView::UpdateWindowMode()
 {
 #ifdef OPTIONS_WINDOW_MODE
 	BRect br = Bounds();
-
-	if (sb_hidden)
-		listScroll->ScrollBar(B_VERTICAL)->Hide();
-	else
-		listScroll->ScrollBar(B_VERTICAL)->Show();
+	
+	sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
+	listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
 
 	if (config->WindowMode == WindowModePreview) {
-		sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-
 		// max visible area:
 		br.InsetBy(10,4);
 		br.top += 10;
@@ -1162,9 +1132,6 @@ FrissView::UpdateWindowMode()
 	
 	// else: SimpleMode
 	{
-		sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-	
 		ShowPreviewArea(false);
 		
 		br.InsetBy(10,10);

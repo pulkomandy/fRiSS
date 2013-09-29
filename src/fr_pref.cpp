@@ -211,29 +211,12 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 
 		br.OffsetBy(0,80);
 		
-		BPopUpMenu* men = new BPopUpMenu(_T("ScrollbarMode"));
-
-		men->AddItem( miAu = new BMenuItem( _T("Automatic"), new BMessage( MSG_SB_CHANGED ) ) );
-		men->AddItem( miOn = new BMenuItem( _T("Show always"), new BMessage( MSG_SB_CHANGED ) ) );
-		men->AddItem( miOf = new BMenuItem( _T("Hide always"), new BMessage( MSG_SB_CHANGED ) ) );
-		
-		bbMisc->AddChild( mfScrollbar=new BMenuField( br, "ScrollbarMode", _T("Show scrollbar"), men ) );
-		
-		if (config->ScrollbarMode == ScrollbarModeOn)
-			miOn->SetMarked(true);
-		else if (config->ScrollbarMode == ScrollbarModeOff)
-			miOf->SetMarked(true);
-		else
-			miAu->SetMarked(true);
-
-		men = NULL;
-		
 		/* --- */
 		br.OffsetBy(0,30);
 		
 #ifdef	OPTIONS_WINDOW_MODE
 
-		men = new BPopUpMenu(_T("WindowMode"));
+		BPopUpMenu* men = new BPopUpMenu(_T("WindowMode"));
 
 		men->AddItem( miSimple = new BMenuItem( _T("Simple"),
 			new BMessage( MSG_SB_CHANGED ) ) );
@@ -424,14 +407,6 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 			break;
 			
 		case MSG_SB_CHANGED:
-			// Save ScrollBarMode:			
-			if (miAu->IsMarked())
-				config->ScrollbarMode = ScrollbarModeAuto;
-			else if (miOn->IsMarked())
-				config->ScrollbarMode = ScrollbarModeOn;
-			else
-				config->ScrollbarMode = ScrollbarModeOff;
-			
 			if (mfWindowMode) {
 				/*if (miFull->IsMarked())
 					config->WindowMode = WindowModePreview;//WindowModeFull; //todo

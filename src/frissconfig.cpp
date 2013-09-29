@@ -34,8 +34,6 @@ FrissConfig::FrissConfig(BMessage* archive)
 	if (archive->FindData("ColFore", B_RGB_COLOR_TYPE, &pColor, &iSize) == B_OK)
 		memcpy(&high, pColor, iSize);
 	
-	archive->FindInt32("ScrollbarMode", (int32*)&ScrollbarMode);
-	
 	archive->FindInt32("BrowserType", (int32*)&BrowserType);
 	archive->FindString("BrowserMime", &BrowserMime);
 	
@@ -59,8 +57,6 @@ FrissConfig::Archive(BMessage *msg, bool deep) const
 	msg->AddInt32("ColForeMode", (int)ColForeMode);
 	msg->AddData("ColBack", B_RGB_COLOR_TYPE, &col, sizeof(col), true, 1);
 	msg->AddData("ColFore", B_RGB_COLOR_TYPE, &high, sizeof(high), true, 1);
-	
-	msg->AddInt32("ScrollbarMode", (int)ScrollbarMode);
 	
 	msg->AddInt32("BrowserType", BrowserType);
 	msg->AddString("BrowserMime", BrowserMime);
@@ -137,9 +133,6 @@ FrissConfig::Load( const char* path )
 	 	high.blue = f->AttributeAsInt("blue");	
 	}
 	
-	if ((f = root->GetChild("settings/window/scrollbar")) != NULL)
-		ScrollbarMode = (ScrollbarMode_t) f->ValueAsInt();
-	
 	if ((f = root->GetChild("settings/window/windowmode")) != NULL)
 		WindowMode = (WindowMode_t) f->ValueAsInt();
 
@@ -200,8 +193,6 @@ FrissConfig::Save( const char* path )
 	f->AddAttribute("green", high.green);
 	f->AddAttribute("blue", high.blue);	
 	
-	fs->CreateChild("window/scrollbar", (int)ScrollbarMode);
-	
 	fs->CreateChild("window/windowmode", (int)WindowMode);
 
 	fs->CreateChild("browser/mode", (int)BrowserType);
@@ -217,7 +208,7 @@ FrissConfig::Defaults()
 {
 	// generic/misc =============================================================
 	m_iVersion		= 6;
-	RefreshRate		= 30;
+	RefreshRate		= 3 * 120;
 	RefreshAdvances = false;
 	Lang			= "enDE";
 	
@@ -245,8 +236,6 @@ FrissConfig::Defaults()
 
 	FrSetCol3( col,  51,102,152 );
 	FrSetCol3( high, 0,0,0 );
-	
-	ScrollbarMode	= ScrollbarModeAuto;
 	
 	WindowMode		= WindowModePreview;
 	

@@ -17,13 +17,6 @@ enum ColFore_t
 	ColForeAdapt = 1
 };
 
-enum ScrollbarMode_t
-{
-	ScrollbarModeAuto = 0,
-	ScrollbarModeOn = 1,
-	ScrollbarModeOff = 2
-};
-
 enum BrowserType_t
 {
 	BrowserDefault = 0,
@@ -88,8 +81,6 @@ public:
 
 	rgb_color		col;	// background color
 	rgb_color		high;	// text color
-	
-	ScrollbarMode_t ScrollbarMode;
 	
 	WindowMode_t	WindowMode;
 	
