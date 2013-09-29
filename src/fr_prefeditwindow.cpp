@@ -6,13 +6,17 @@
 #define WIN_HEIGHT	200
 
 
-FPrefEditWindow::FPrefEditWindow(BWindow* parent, XmlNode* itemNode, BPoint point, bool bItem)
-	: BWindow(BRect(point.x, point.y, point.x+WIN_WIDTH, point.y+WIN_HEIGHT), "Edit Item", B_MODAL_WINDOW, B_NOT_RESIZABLE | B_WILL_DRAW | B_FRAME_EVENTS)
+FPrefEditWindow::FPrefEditWindow(BWindow* parent, XmlNode* itemNode,
+		BPoint point, bool bItem)
+	: BWindow(BRect(point.x, point.y, point.x+WIN_WIDTH, point.y+WIN_HEIGHT),
+		"Edit Item", B_MODAL_WINDOW,
+		B_NOT_RESIZABLE | B_WILL_DRAW | B_FRAME_EVENTS)
 {
 	SetLook(B_TITLED_WINDOW_LOOK);
 	SetFeel(B_MODAL_APP_WINDOW_FEEL);
 	
-	AddChild( bbox = new BBox( Bounds(), "bbox", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, B_NO_BORDER ) );
+	AddChild(bbox = new BView(Bounds(), "bbox", B_FOLLOW_ALL_SIDES, B_WILL_DRAW));
+	bbox->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 
 	item = itemNode;
 	mParent = parent;
@@ -23,19 +27,21 @@ FPrefEditWindow::FPrefEditWindow(BWindow* parent, XmlNode* itemNode, BPoint poin
 	tr.InsetBy(5,5);
 	tr.bottom = tr.top + 20;
 
-
 	// Text fields	
-	bbox->AddChild( tName = new BTextControl(tr, "tName", _T("Name"), "", new BMessage(CMD_CHECK)) );
+	bbox->AddChild(tName = new BTextControl(tr, "tName", _T("Name"), "",
+		new BMessage(CMD_CHECK)) );
 	tName->SetDivider(50);
 
 	if (isItem) {		
 		tr.OffsetBy(0,25);
 		
-		bbox->AddChild( tUrl = new BTextControl(tr, "tUrl", _T("URL"), "http://", new BMessage(CMD_CHECK)) );
+		bbox->AddChild(tUrl = new BTextControl(tr, "tUrl", _T("URL"), "http://",
+			new BMessage(CMD_CHECK)) );
 		tUrl->SetDivider(50);
 		
 		tr.OffsetBy(0,25);
-		bbox->AddChild( cItemAddDesc = new BCheckBox(tr, "cAddDesc", _T("Add Description to title"), NULL) );
+		bbox->AddChild( cItemAddDesc = new BCheckBox(tr, "cAddDesc",
+			_T("Add Description to title"), NULL) );
 		
 		tr.OffsetBy(0,45);
 		BPopUpMenu* men = new BPopUpMenu(_T("BrowserSelect_"));
@@ -125,7 +131,6 @@ FPrefEditWindow::Save()
 {
 	// Save name and update Label:
 	item->AddAttribute(OPML_TITLE, tName->Text());
-	item->SetText(tName->Text());
 	
 	if (isItem) {
 		item->AddAttribute(OPML_URL, tUrl->Text());

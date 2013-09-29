@@ -1,5 +1,6 @@
 #include "fr_ftextview.h"
 
+#include <assert.h>
 #include <Cursor.h>
 
 #include "fr_view.h"
@@ -9,8 +10,9 @@ text_run_array FTextView::linkStyle;
 text_run_array FTextView::titleStyle;
 
 FTextView::FTextView(FrissView& parentView, BRect br) :
-	BTextView(br, "stview", BRect(0, 0, br.Width() - B_V_SCROLL_BAR_WIDTH - 10,
-		br.Height() - 1), B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS)
+	BTextView(br, "Feed item text view", BRect(0, 0,
+			br.Width() - B_V_SCROLL_BAR_WIDTH - 10, br.Height() - 1),
+		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS)
 	, parent(parentView)
 {
 }
@@ -19,7 +21,7 @@ FTextView::FTextView(FrissView& parentView, BRect br) :
 FTextView::~FTextView()
 {
 	tLink* aLink;
-	for(int i = 0; aLink = (tLink*)links.ItemAt(i); i++)
+	for(int i = 0; (aLink = (tLink*)links.ItemAt(i)); i++)
 		delete aLink;
 }
 
@@ -60,7 +62,7 @@ FTextView::GetLinkAt(BPoint point)
 	int32 offset = OffsetAt(point);
 		
 	tLink* aLink;
-	for(int i = 0; aLink = (tLink*)links.ItemAt(i); i++)
+	for(int i = 0; (aLink = (tLink*)links.ItemAt(i)); i++)
 	{
 		if (offset >= aLink->linkoffset
 				&& offset < aLink->linkoffset + aLink->linklen) {
@@ -142,7 +144,7 @@ void FTextView::RenderLi(text_run_array& textStyle)
 }
 
 
-void FTextView::Render(XmlNode* node, text_run_array& textStyle)
+void FTextView::Render(const XmlNode* const node, text_run_array& textStyle)
 {
 	switch(node->Type())
 	{
@@ -242,17 +244,15 @@ void FTextView::Render(XmlNode* node, text_run_array& textStyle)
 			break;
 
 		default:
-			puts("FIXME unknown node type !");
+			assert(false);
 			break;
 	}
 }
 
 
-void FTextView::SetContents(const BString& title, const BString& contents,
+void FTextView::SetContents(const BString& title, const XmlNode& body,
 	const BString& link)
 {
-	int current_offset = 0;
-
 	// First of all, clear the view
 	SetText(NULL);
 	SetStylable(true);
@@ -270,108 +270,12 @@ void FTextView::SetContents(const BString& title, const BString& contents,
 
 	// TODO consider using a BWebView when it becomes available
 
-	// Parse the contents as XML to interpret html tags
-	// TODO maybe we should get the XML node from the caller instead of a
-	// flattened string to parse again ?
-	XmlNode body(contents.String(), NULL);
-
 	// Now browse the XML tree and add stuff to the view
-	/*
-	puts(contents.String());
-	puts("--- XML CONTENTS ---");
-	body.Display();
-	puts("--- END XML CONTENTS ---");
-	*/
-	
 	text_run_array textStyle;
 	textStyle.count = 1;
 	textStyle.runs[0].font = be_plain_font;
 	textStyle.runs[0].offset = 0;
 	textStyle.runs[0].color = make_color(0,0,0);
 
-	// Handle text-only RSS feeds
-	if(body.Children() == 0 || body.Children() == 1 && strcmp(body.ItemAt(0)->Name(), "") == 0) {
-		Insert(contents, &textStyle);
-	} else
-		Render(&body, textStyle);
-#if 0
-	// For now just do some crappy search and replace to make the thing 
-	// somewhat readable...
-
-	typedef struct {
-		char* from;
-		char* to;
-	} transform;
-
-	// Now attempt to do some formatting !
-	typedef struct {
-		int start;
-		int end;
-		const BFont* font;
-		rgb_color color;
-	} Range;
-
-	BList list;
-
-	typedef struct {
-		char* from;
-		char* to;
-		const BFont* style;
-	} tag;
-
-	BFont emfont(be_plain_font);
-	emfont.SetFace(B_ITALIC_FACE);
-
-	static const tag bold[] = {
-		{"<strong>", "</strong>", be_bold_font},
-		{"<em>", "</em>", &emfont}
-	};
-
-	int32 linkoffset = TextLength();
-
-	// Parse links
-	nextOffset == -1;
-	while((nextOffset = contentsParsed.FindFirst("<a href=\"",
-		nextOffset + 1)) != B_ERROR)
-	{
-		Range* r = new Range();
-		r->start = nextOffset;
-
-		// The string now has the url at offset, followed by ">, then the link 
-		// text.
-		r->end = contentsParsed.FindFirst("\"", nextOffset + 9);
-		
-		// Now we need to remove everything between start and end+2 to leave
-		// only the link text.
-		BString url;
-		contentsParsed.CopyInto(url, r->start + 9, r->end - (r->start + 9));
-		printf("URL > %s\n",url.String());
-
-		r->end = contentsParsed.FindFirst(">", nextOffset + 1);
-		contentsParsed.Remove(r->start, r->end + 1 - r->start);
-
-		r->end = contentsParsed.FindFirst("</a>", nextOffset + 1);
-		contentsParsed.RemoveFirst("</a>");
-
-		r->font = &linkStyle.runs[0].font;
-		r->color = make_color(0, 0, 255);
-
-		links.AddItem(new tLink(r->start + linkoffset, r->end - r->start, url));
-		list.AddItem(r);
-	}
-
-	// Insert the parsed contents and set the style on it
-	Insert(contentsParsed.String(), &textStyle);
-	Insert("\n\n");
-
-	Range* r;
-	while((r = (Range*)list.FirstItem()))
-	{
-		SetFontAndColor(r->start + linkoffset, r->end + linkoffset,
-			r->font, B_FONT_ALL, &r->color);
-		list.RemoveItem(r);
-		delete r;
-	}
-
-#endif
+	Render(&body, textStyle);
 }

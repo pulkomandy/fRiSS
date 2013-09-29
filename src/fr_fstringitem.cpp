@@ -6,16 +6,19 @@
 #include "fr_fstringitem.h"
 
 
-FStringItem::FStringItem() :
-	BStringItem("<empty>", 0, true)
+FStringItem::FStringItem()
+	: BStringItem("<empty>", 0, true)
+	, sDesc(NULL)
 {
 	visited = false;
 	bAddDesc = false;
 }
 
-FStringItem::FStringItem(const char *text, const char *url, uint32 level, bool expanded,bool addDescFlag) :
+FStringItem::FStringItem(const char *text, const char *url, uint32 level,
+		bool expanded, bool addDescFlag) :
 	BStringItem(text, level, expanded),
-	sUrl(url)
+	sUrl(url),
+	sDesc(NULL)
 {
 	visited = false;
 	bAddDesc = addDescFlag;
@@ -42,10 +45,10 @@ FStringItem::Url() const
 	return sUrl.String();
 }
 
-const char*
+const XmlNode* const
 FStringItem::Desc() const
 {
-	return sDesc.String();
+	return sDesc;
 }
 
 const char*
@@ -67,7 +70,7 @@ FStringItem::SetUrl(const char* url)
 }
 
 void
-FStringItem::SetDesc(const char* desc)
+FStringItem::SetDesc(const XmlNode* const desc)
 {
 	sDesc = desc;
 }
@@ -118,69 +121,7 @@ FStringItem::SetTitleHtml(BString title)
 	SetText(title);	
 }
 
-#if 0
-void
-FStringItem::DrawItem(BView* owner, BRect frame, bool complete)
-{
-	rgb_color saveH = owner->HighColor();
-	rgb_color saveL = owner->LowColor();
-	rgb_color colorB, colorF;
-
-	if (IsSelected()) {
-		colorB = owner->HighColor();
-		colorF = owner->ViewColor();
-	}
-	else {
-		colorB = owner->ViewColor();
-		colorF = owner->HighColor();
-	}
-
-	if (IsSelected() || complete) {
-		owner->SetHighColor(colorB);
-		owner->FillRect(frame);
-	}
-
-	/*
-	if (visited) {
-		colorF.red = 127;
-		colorF.green = 0;
-		colorF.blue = 0;
-		colorF.alpha = 0;
-	}
-	*/
-	
-	owner->MovePenTo(frame.left+4, frame.bottom-2);
-
-	owner->SetHighColor(colorF);
-	owner->SetLowColor(colorB);
-
-	float radius = (frame.bottom - frame.top) / 6;
-	BPoint pos( frame.left+radius+2, frame.top + (frame.bottom-frame.top) / 2 );
-	pattern pat = B_SOLID_HIGH;
-	if (!visited)
-		owner->FillEllipse(pos, radius, radius, pat);
-	//else
-	//	owner->StrokeEllipse(pos, radius, radius, pat);
-	
-	owner->MovePenBy(2*radius+4, 0);
-	owner->DrawString(Text());
-	
-	// restore Highcolor:
-	owner->SetHighColor(saveH);
-	owner->SetLowColor(saveL);
-}
-#endif
-
-
 int compare_func(const BListItem* firstArg, const BListItem* secondArg)
-{
-	FStringItem *a = (FStringItem*) firstArg;
-	FStringItem *b = (FStringItem*) secondArg;	
-	
-	return strcmp(a->Text(), b->Text());
-}
-
-int compare_func(const void* firstArg, const void* secondArg)
 {
 	FStringItem *a = (FStringItem*) firstArg;
 	FStringItem *b = (FStringItem*) secondArg;	

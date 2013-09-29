@@ -12,32 +12,28 @@ public:
 	
 	const char* Title() const;
 	const char* Url() const;
-	const char* Desc() const;
+	const XmlNode* const Desc() const;
 	const char*	Date() const;
 	bool		Visited() const;
 	bool		IsAddDesc() const;
 	
 	void		SetUrl(const char* url);
-	void		SetDesc(const char* desc);
+	void		SetDesc(const XmlNode* const node);
 	void		SetDate(const char* date);
 	void		SetAddDesc(bool add=true);
 	void 		SetVisited(bool vis = true);
 	
 	void		SetTitleHtml(BString title);
 	
-	//virtual void DrawItem(BView* owner, BRect frame, bool complete = false);
-
-	BString		sUrl;
-	BString		sDesc;
-	
 private:
 	bool		bAddDesc;
 	bool		visited;
 	
+	BString		sUrl;
+	const XmlNode*	sDesc;
 	BString		sDate;
 };
 
 int compare_func(const BListItem* firstArg, const BListItem* secondArg);
-int compare_func(const void* firstArg, const void* secondArg);
 
 #endif

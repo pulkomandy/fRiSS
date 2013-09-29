@@ -7,8 +7,9 @@
 
 #include "fr_fstringitem.h"
 
-#include <time.h>
+#include <assert.h>
 #include <stdlib.h>
+#include <time.h>
 
 //#define TRACE_PARSER
 #ifdef TRACE_PARSER
@@ -22,23 +23,14 @@
 #define Error(x) {status=x;return -1;}
 #endif
 
-int compare_func_date(const void* firstArg, const void* secondArg)
+int compare_func_date(const FStringItem* a, const FStringItem* b)
 {
-	const FStringItem *a = *((const FStringItem**)(firstArg));
-	const FStringItem *b = *((const FStringItem**)(secondArg));	
-	
-	if (!a || !b) {
-		puts("WTF?");
-		return 0;
-	}
+	assert(a != NULL && b != NULL);
 
 	const char* da = a->Date();
 	const char* db = b->Date();
 
-	if (!da || !db) {
-		puts("WTF2?");
-		return 0;
-	}
+	assert(da != NULL && db != NULL);
 	
 	return -strcmp(da, db);
 }
@@ -52,11 +44,9 @@ int compare_func_date(const void* firstArg, const void* secondArg)
 	} while (line && line[0]==';') 
 
 
-int Parse_ics( char* buf, BList* list, BString& status, bool& updatesFeedList)
+int Parse_ics( char* buf, BObjectList<FStringItem>* list, BString& status)
 {
 	puts("BEGIN PARSE_ICS");
-
-	updatesFeedList = false;
 
 	char* line;
 	int	lnr = 0;
@@ -91,6 +81,8 @@ int Parse_ics( char* buf, BList* list, BString& status, bool& updatesFeedList)
 			//if (lst.Compare(line)!=0)
 			FPRINT(( "%i\t%s\n", mode, lst.String() ));
 	
+			XmlNode desc(NULL, "p");
+				// FIXME will be destroyed while fi still references it
 			
 			switch (mode) {
 				case 0: // Suche BEGIN:VEVENT
@@ -185,7 +177,8 @@ int Parse_ics( char* buf, BList* list, BString& status, bool& updatesFeedList)
 						
 						fi->SetText( title.String() );
 						fi->SetUrl("about:blank");
-						fi->SetDesc(Description.String());
+						desc.SetValue(Description);
+						fi->SetDesc(&desc); // Reference after delete
 						
 						fi->SetDate(DTStart.String());
 						

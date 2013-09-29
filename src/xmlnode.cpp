@@ -1,6 +1,8 @@
 #include "fr_options.h"
 
 #include "xmlnode.h"
+
+#include <assert.h>
 #include <stdlib.h>
 
 #include <File.h>
@@ -20,39 +22,23 @@
 
 uint32	XmlNode::encoding = XML_ENCODING_NONE;
 
-XmlNode::XmlNode(const char* name) :
-	BStringItem(name),
-	mName(name),
-	mData("")
-{
-	mParent	= NULL;
-	mType	= XML_TYPE_SIMPLE;
-	mMarked = false;
-	
-	p = NULL;
-}
-
-
-XmlNode::XmlNode(XmlNode* parent, const char* name, uint32 level, bool expanded) :
-	BStringItem(name, level, expanded),
+XmlNode::XmlNode(XmlNode* parent, const char* name) :
 	mName(name),
 	mData("")
 {
 	mParent	= parent;
-	mType	= XML_TYPE_NODE;
-	mMarked = false;
+	mType	= XML_TYPE_SINGLE;
 
 	p = NULL;	
 }
 
 XmlNode::XmlNode(const char* buf, XmlNode* parent) :
-	BStringItem("root"),
 	mName(""),
-	mData("")
+	mData(""),
+	mChild(20, false)
 {
 	mParent	= parent;
 	mType	= XML_TYPE_NODE;
-	mMarked = false;
 	
 	p = NULL;	
 	
@@ -73,21 +59,18 @@ XmlNode::XmlNode(const char* buf, XmlNode* parent) :
 
 
 XmlNode::XmlNode(BMessage *archive) :
-	BStringItem(archive),
 	mName(""),
 	mData("")
 {
 	// Init
 	mParent = NULL;
 	mType	= XML_TYPE_SIMPLE;
-	mMarked	= false;	
 	p = NULL;	
 
 	// auspacken:
 	archive->FindString("name", &mName);
 	archive->FindString("data", &mData);
 	archive->FindInt32("type", (int32*)&mType);
-	archive->FindBool("marked", &mMarked);
 
 	// Parent wird von aussen gesetzt, hier nur default:
 	mParent = NULL;
@@ -117,6 +100,51 @@ XmlNode::XmlNode(BMessage *archive) :
 	}
 
 	//encoding = 
+}
+
+
+XmlNode::XmlNode(const XmlNode& source)
+	: mName(source.Name())
+{
+	mParent = source.mParent;
+
+	mType = source.mType;
+	mData = source.mData;
+
+	for (int i = 0, a = source.mAttribute.CountItems(); i<a; i++) {
+		XmlNode* child = new XmlNode(*(XmlNode*)source.mAttribute.ItemAt(i));
+		mAttribute.AddItem(child);
+	}
+	
+	for (int i=0, c=source.mChild.CountItems(); i<c; i++) {
+		XmlNode* child = new XmlNode(*(XmlNode*)source.mChild.ItemAt(i));
+		AddChild(child);
+	}
+}
+
+
+XmlNode& XmlNode::operator=(const XmlNode& source)
+{
+	mParent = source.mParent;
+	mName = source.mName;
+
+	mType = source.mType;
+	mData = source.mData;
+
+	RemoveAllAttributes();
+	RemoveAllChildren();
+
+	for (int i = 0, a = source.mAttribute.CountItems(); i<a; i++) {
+		XmlNode* child = new XmlNode(*(XmlNode*)source.mAttribute.ItemAt(i));
+		mAttribute.AddItem(child);
+	}
+	
+	for (int i=0, c=source.mChild.CountItems(); i<c; i++) {
+		XmlNode* child = new XmlNode(*(XmlNode*)source.mChild.ItemAt(i));
+		AddChild(child);
+	}
+
+	return *this;
 }
 
 
@@ -180,13 +208,17 @@ XmlNode::Instantiate(BMessage *data)
 
 XmlNode::~XmlNode()
 {
+	// Detach from parent
+	if (mParent) {
+		mParent->RemoveChild(this);
+		mParent = NULL;
+	}
+
 	// clean up lists and delete children
 	RemoveAllAttributes();
 	RemoveAllChildren();
 	
 	// finally, remove from parent:
-	if (mParent)
-		mParent->RemoveChild(this);
 }
 
 const char*
@@ -199,7 +231,6 @@ void
 XmlNode::SetName(const char* name)
 {
 	mName = name;
-	SetText(name);
 }
 
 
@@ -210,13 +241,10 @@ XmlNode::Type() const
 	return mType;
 }
 
-const char*
+const BString&
 XmlNode::Value() const
 {
-	if (mType == XML_TYPE_SINGLE || mType == XML_TYPE_STRING)
-		return mData.String();
-	else
-		return NULL;
+	return mData;
 }
 
 int
@@ -236,7 +264,7 @@ XmlNode::Parent() const
 }
 
 void
-XmlNode::SetValue( const char* value)
+XmlNode::SetValue(const BString& value)
 {
 	if (mType == XML_TYPE_SINGLE)
 		mData = value;
@@ -252,7 +280,7 @@ XmlNode::Attributes() const
 }
 
 const char*
-XmlNode::AttributeKey(uint32 index) const
+XmlNode::AttributeKey(int32 index) const
 {
 	if (index<0 || index>=mAttribute.CountItems())
 		return NULL;
@@ -263,7 +291,7 @@ XmlNode::AttributeKey(uint32 index) const
 }
 
 const char*
-XmlNode::Attribute(uint32 index) const
+XmlNode::Attribute(int32 index) const
 {
 	if (index<0 || index>=mAttribute.CountItems())
 		return NULL;
@@ -424,23 +452,25 @@ XmlNode::AddChild(XmlNode* Child, int pos)
 void
 XmlNode::RemoveChild(uint32 index)
 {
-	mChild.RemoveItem(index);
+	mChild.RemoveItemAt(index);
 }
 
 void
 XmlNode::RemoveChild(XmlNode* me)
 {
+	assert(me->mParent == this);
 	mChild.RemoveItem(me);
 }
 
 void
 XmlNode::RemoveAllChildren()
 {
-void* attr;
-	for (int32 i=0; (attr = mChild.ItemAt(i)); i++)
-		delete static_cast<XmlNode*>(attr);
-		
-	mChild.MakeEmpty();
+	while(Children() > 0)
+	{
+		XmlNode* child = mChild.ItemAt(0);
+		assert(child->mParent == this);
+		delete child; // removes itself from the list
+	}
 }
 
 XmlNode*
@@ -451,6 +481,7 @@ XmlNode::DetachChild(uint32 index)
 		return NULL;
 	
 	XmlNode* node = (XmlNode*)mChild.ItemAt(index);
+	assert(node->mParent == this);
 	node->mParent = NULL;
 	mChild.RemoveItem(node);
 	return node;
@@ -465,9 +496,12 @@ XmlNode::ItemAt(uint32 index) const
 uint32
 XmlNode::IndexOf(XmlNode* child) const
 {
+
 	for (int a = mChild.CountItems(), i=0; i<a; i++) {
-		if (mChild.ItemAt(i) == child)
-			return i;	
+		if (mChild.ItemAt(i) == child) {
+			assert(child->mParent == this);
+			return i;
+		}
 	}
 	
 	return XMLNODE_NONE;
@@ -489,7 +523,7 @@ XmlNode::FindChild(const char* name, XmlNode* prev, bool recursive)
 	
 	if (prev) {
 		b = mChild.IndexOf(prev);
-		XPRINT(1,("Prev: %li = #%i\n", prev, b));
+		XPRINT(1,("Prev: %p = #%li\n", prev, b));
 		if (b<0) {
 			XPRINT(1, ("Xml: There is no such predecessor!\n"));
 			return NULL;
@@ -503,7 +537,7 @@ XmlNode::FindChild(const char* name, XmlNode* prev, bool recursive)
 	for (int32 i=b; i<a; i++) {
 		XmlNode* n = ItemAt(i);
 		
-		XPRINT(1,("Teste Kind #%i (%s)\n",i,n->Name() ));
+		XPRINT(1,("Teste Kind #%li (%s)\n",i,n->Name() ));
 		
 		if (n->mName.Compare(name)==0)
 			return n;
@@ -516,7 +550,7 @@ XmlNode::FindChild(const char* name, XmlNode* prev, bool recursive)
 		
 		for (int32 i=0; i<a; i++) {
 			XmlNode* n = ItemAt(i);
-			XPRINT(1,("Verzweige zu %i (%s)\n",i,n->Name() ));
+			XPRINT(1,("Verzweige zu %li (%s)\n",i,n->Name() ));
 			
 			n = n->FindChild(name,NULL,true);
 			if (n)
@@ -559,7 +593,7 @@ XmlNode::Parse(const char* buf)
 				XPRINT(2,("CDATA"));
 				p = buf+9;
 				buf+=5;
-				while (*buf && !(*(buf-2)==']' && *(buf-1)==']' & *(buf)=='>'))
+				while (*buf && !(*(buf-2)==']' && *(buf-1)==']' && *(buf)=='>'))
 					buf++;
 				
 				mType = XML_TYPE_STRING;
@@ -584,7 +618,6 @@ XmlNode::Parse(const char* buf)
 		mName.SetTo(p,buf-p);
 		mName.RemoveAll("\r");
 		XPRINT(2,("New Item is '%s'\n", myName ));
-		SetText(mName.String());
 		
 		int attrs = 0;
 		
@@ -776,6 +809,7 @@ XmlNode::Parse(const char* buf)
 		mData.ReplaceAll("&lt;", "<");
 		mData.ReplaceAll("&gt;", ">");
 		mData.ReplaceAll("&apos;", "'");
+		mData.ReplaceAll("&nbsp;", "\xC2\xA0");
 		
 		mData.ReplaceAll("&#228;", "ä");	// Danke an SWR3
 		mData.ReplaceAll("&#246;", "ö");
@@ -792,6 +826,7 @@ XmlNode::Parse(const char* buf)
 			char dest[5];
 			char source[8];
 			strncpy(source, mData.String() + nextOffset, 7);
+			source[7] = 0;
 			uint32_t codepoint = strtol(mData.String() + nextOffset + 2,
 					NULL, 10);
 
@@ -800,19 +835,19 @@ XmlNode::Parse(const char* buf)
 				dest[0] = codepoint;
 				dest[1] = 0;
 			} else if(codepoint < 0x800) {
-				dest[0] = codepoint >> 6  & 0x1F | 0xC0;
-				dest[1] = codepoint & 0x3F | 0x80;
+				dest[0] = (codepoint >> 6  & 0x1F) | 0xC0;
+				dest[1] = (codepoint & 0x3F) | 0x80;
 				dest[2] = 0;
 			} else if(codepoint < 0x010000) {
-				dest[0] = codepoint >> 12  & 0xF | 0xE0;
-				dest[1] = codepoint >> 6  & 0x3F | 0x80;
-				dest[2] = codepoint & 0x3F | 0x80;
+				dest[0] = (codepoint >> 12  & 0xF) | 0xE0;
+				dest[1] = (codepoint >> 6  & 0x3F) | 0x80;
+				dest[2] = (codepoint & 0x3F) | 0x80;
 				dest[3] = 0;
 			} else {
-				dest[0] = codepoint >> 18  & 0x7 | 0xF0;
-				dest[1] = codepoint >> 12  & 0x3F | 0x80;
-				dest[2] = codepoint >> 6  & 0x3F | 0x80;
-				dest[3] = codepoint & 0x3F | 0x80;
+				dest[0] = (codepoint >> 18  & 0x7) | 0xF0;
+				dest[1] = (codepoint >> 12  & 0x3F) | 0x80;
+				dest[2] = (codepoint >> 6  & 0x3F) | 0x80;
+				dest[3] = (codepoint & 0x3F) | 0x80;
 				dest[4] = 0;
 			}
 
@@ -835,8 +870,7 @@ XmlNode::Parse(const char* buf)
 void
 XmlNode::Display() const
 {
-	for (int32 i=0, a=Children();i<a;i++)
-		ItemAt(i)->Display(0);
+	Display(0);
 }
 
 
@@ -876,7 +910,6 @@ XmlNode::ParseAttributes(const char* buf)
 		attr->mType = XML_TYPE_SIMPLE;
 		
 		attr->mName.SetTo(p,buf-p);
-		attr->SetText(attr->Name());
 		XPRINT( 3, ("  Attr.Name = '%s'\n", attr->mName.String() ) );
 		
 		if (*buf == '=') {
@@ -949,7 +982,7 @@ XmlNode::Display(int level) const
 						printf("\t");
 
 					XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
-					printf("%s = %s\n", n->Name(), n->Value());
+					printf("%s = %s\n", n->Name(), n->Value().String());
 				}
 				for (int ti=0;ti<level;ti++) printf("\t");
 				printf(">\n");
@@ -976,7 +1009,7 @@ XmlNode::Display(int level) const
 					for (int ti=0;ti<level+1;ti++) printf("\t");
 
 					XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
-					printf("%s = %s\n", n->Name(), n->Value());
+					printf("%s = %s\n", n->Name(), n->Value().String());
 				}
 				for (int ti=0;ti<level;ti++) printf("\t");
 			}
@@ -1208,13 +1241,13 @@ XmlNode::CreateChild(const char* path, const char* value)
 
 	// no matching child:	
 	if (recurse) {
-		XmlNode* node = new XmlNode(e.String());
+		XmlNode* node = new XmlNode(this, e.String());
 		AddChild(node);
 
 		return node->CreateChild(d.String(), value);
 	}
 	else {
-		XmlNode* node = new XmlNode(path);
+		XmlNode* node = new XmlNode(this, path);
 		AddChild(node);
 		
 		if (value)
@@ -1235,98 +1268,9 @@ XmlNode::CreateChild(const char* path, int value)
 bool
 XmlNode::RemoveChild(const char* path)
 {
-	return false;
+	assert(false);
 }
 
-
-XmlNode*
-XmlNode::Duplicate()
-{
-	XmlNode* node = new XmlNode(mParent, Name(), OutlineLevel(), IsExpanded());
-	node->mType = mType;
-	node->mData = mData;
-	node->mMarked = mMarked;
-	node->SetText(Text());
-
-	for (int i=0, a=mAttribute.CountItems(); i<a; i++) {
-		XmlNode* child = ((XmlNode*)mAttribute.ItemAt(i))->Duplicate();
-		node->mAttribute.AddItem(child);
-	}
-	
-	for (int i=0, c=mChild.CountItems(); i<c; i++) {
-		XmlNode* child = ((XmlNode*)mChild.ItemAt(i))->Duplicate();
-		node->mChild.AddItem(child);
-	}
-	
-	return node;
-}
-
-
-void
-XmlNode::DrawItem(BView* owner, BRect frame, bool complete)
-{
-	rgb_color saveH = owner->HighColor();
-	rgb_color saveL = owner->LowColor();
-	rgb_color colorB, colorF;
-	
-	rgb_color hui;
-	if (mMarked) {
-		hui.red=64; hui.green=64; hui.blue=160; hui.alpha=0;
-	}
-	else
-		hui = owner->HighColor();
-
-	if (IsSelected()) {
-		colorB = hui;
-		colorF = owner->ViewColor();
-	}
-	else {
-		colorB = owner->ViewColor();
-		colorF = hui;
-	}
-
-	if (IsSelected() || complete) {
-		owner->SetHighColor(colorB);
-		owner->FillRect(frame);
-	}
-
-
-	owner->MovePenTo(frame.left+4, frame.bottom-2);
-	
-	if (mMarked) {
-		owner->SetHighColor(colorF);
-		owner->SetLowColor(colorB);
-		
-		BFont saveFont;
-		owner->GetFont(&saveFont);
-		owner->SetFont(be_bold_font);
-		
-		owner->DrawString(Text());
-		owner->SetFont(&saveFont);
-	}	
-	else {
-		owner->SetHighColor(colorF);
-		owner->SetLowColor(colorB);
-		owner->DrawString(Text());
-	}
-	
-	// restore Highcolor:
-	owner->SetHighColor(saveH);
-	owner->SetLowColor(saveL);
-}
-
-
-void
-XmlNode::SetMarked(bool mark)
-{
-	mMarked = mark;
-}
-
-bool
-XmlNode::Marked()
-{
-	return mMarked;
-}
 
 void
 XmlNode::Comment(const char* commentstring)

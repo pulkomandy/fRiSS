@@ -41,7 +41,7 @@ public:
 	
 	// Load or Re-Load or Invoke the loading of a feed
 	// Parameter idx is the index in config->list
-	void Load(int idx, XmlNode* direct = NULL);
+	void Load(uint32 idx, XmlNode* direct = NULL);
 	void LoadNext();
 	void LoadPrev();
 	
@@ -88,9 +88,6 @@ private:
 	void LoadDone(char* data);
 	
 	void OnWorkspaceChanged();
-	
-	virtual void AboutRequested();
-	
 	
 	// display tvTextView
 	void	ShowPreviewArea(bool show=true);
@@ -154,7 +151,7 @@ private:
 	char*			buf;
 	
 	// List for Output
-	BList*			tlist;
+	BObjectList<FStringItem>* tlist;
 	
 	// Running as replicant?
 	bool replicant;

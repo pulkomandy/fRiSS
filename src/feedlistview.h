@@ -1,7 +1,8 @@
-/* Copyright 2010, Adrien Destugues <pulkomandy@pulkomandy.ath.cx>
+/* Copyright 2010-2013, Adrien Destugues <pulkomandy@pulkomandy.tk>
  * Distributed under the terms of the MIT Licence */
 
-#pragma once
+#ifndef __FEEDLISTVIEW
+#define __FEEDLISTVIEW
 
 #include "xmlnode.h"
 
@@ -18,3 +19,5 @@ class FeedListItem: public BStringItem
 		BBitmap* fIcon;
 		BView* fParent;
 };
+
+#endif

@@ -79,8 +79,6 @@ int LoadFile(char* aBuf, int iBufsize, const char* szArgs)
 		argv[i] = 0;
 
 
-	int arglen = strlen(szArgs);
-
 	char *buf = strdup(szArgs);
 	char *b = buf;
 	

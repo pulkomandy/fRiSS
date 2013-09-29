@@ -201,7 +201,7 @@ FrissView::AllAttached()
 	
 	// "Global" Buffer for data and items:
 	buf = (char*)calloc(BUFSIZE,1);
-	tlist = new BList();
+	tlist = new BObjectList<FStringItem>();
 	
 	// Feedloader loads files from disk and net
 	feedloader = new FrFeedLoader(this);
@@ -270,9 +270,8 @@ FrissView::AllAttached()
 		no_locale.BuildLangMenu(mLang, config->Lang.String());
 	#endif	
 	pop->AddSeparatorItem();
-	BString version(_T("About"));
-	version << " " << VERSION_;
-	pop->AddItem( miAbout = new BMenuItem( version.String(), NULL /*,'A', B_CONTROL_KEY*/ ) );
+	pop->AddItem(miAbout = new BMenuItem(_T("About fRiSS" B_UTF8_ELLIPSIS),
+		NULL /*,'A', B_CONTROL_KEY*/ ) );
 #ifdef N3S_DEBUG
 	if (replicant) {
 		pop->AddSeparatorItem();
@@ -459,9 +458,7 @@ FrissView::MessageReceived(BMessage *msg)
 				#ifdef OPTIONS_USE_NLANG
 				pop->ItemAt(9)->SetLabel( _T("Language") );
 				#endif
-				BString version(_T("About"));
-				version << " " << VERSION_;
-				miAbout->SetLabel( version.String() );
+				miAbout->SetLabel(_T("About fRiSS"B_UTF8_ELLIPSIS));
 			}
 			break;
 
@@ -508,7 +505,7 @@ FrissView::MessageReceived(BMessage *msg)
 			break;
 			
 		case B_ABOUT_REQUESTED:
-			AboutRequested();
+			be_app->AboutRequested();
 			break;
 		
 		default:
@@ -577,7 +574,7 @@ FrissView::FindItem(int index, int& is, XmlNode* node)
 
 
 void
-FrissView::Load(int idx, XmlNode* direct)
+FrissView::Load(uint32 idx, XmlNode* direct)
 {
 	if (!theList) {
 		Error(_T("Error: we do not have a list!"));
@@ -598,9 +595,7 @@ FrissView::Load(int idx, XmlNode* direct)
 	XmlNode* fi;
 	
 	if (!direct) {
-		if (idx<0)
-			idx = config->m_iAnz - 1;
-		else if (idx >= config->m_iAnz)
+		if (idx >= config->m_iAnz)
 			idx = 0;
 
 		fi = FindItem(idx, x, theList);
@@ -682,9 +677,9 @@ FrissView::Load(int idx, XmlNode* direct)
 
 		// Liste leeren:
 		int anz = listview->CountItems();
-		for (int32 i = 0; i < anz; i++ )
-			delete listview->ItemAt(i);
-		listview->MakeEmpty();
+		for (int i = 0; i < anz; i++ ) {
+			delete listview->RemoveItem(0L);
+		}
 		
 		pulsing = false;
 
@@ -735,7 +730,6 @@ FrissView::LoadDone(char* buf)
 	BString	status;
 	int		anz = 0;
 	bool	addDesc = false;
-	bool	updateFeedList = false;
 	BString currentType;
 
 	if (!currentFeed) {
@@ -755,7 +749,7 @@ FrissView::LoadDone(char* buf)
 		if (currentType.ICompare(".ICS")==0) {
 			// iCal / Sunbird ICS
 			#ifndef OPTIONS_NO_ICS
-				anz = Parse_ics(buf, tlist, status, updateFeedList);	
+				anz = Parse_ics(buf, tlist, status);
 			#else
 				anz = -1;
 				status = _T("ICS is not supported in this build");
@@ -771,14 +765,14 @@ FrissView::LoadDone(char* buf)
 			if (x) {
 				// assume it's RSS or RDF Xml style
 				
-				anz = Parse_rss(root, tlist, status, updateFeedList, addDesc);
+				anz = Parse_rss(root, tlist, status, addDesc);
 			}
 			else {
 				x = root->FindChild("feed");
 				
 				if (x) {
 					#ifndef OPTIONS_NO_ATOM
-						anz = Parse_atom(root, tlist, status, updateFeedList, addDesc);	
+						anz = Parse_atom(root, tlist, status, addDesc);	
 					#else
 						anz = -1;
 						status = _T("ATOM is not supported in this build");
@@ -819,26 +813,13 @@ FrissView::LoadDone(char* buf)
 		SetLabel( title.String() );	
 	}	
 	
-	if (updateFeedList) {
-		/*FStringItem* fi =*/ (FStringItem*)tlist->RemoveItem((int32)0);
-		// Update 
-		// well, can't do that in OPML...
-		/*
-		XmlNode* li = (FStringItem*)config.list->ItemAt(config.index);
-		//printf("LoadDone:\n\tName:\t%s\n\tUrl:\t%s\n\tDesc:\t%s\n\n", fi->Text(), fi->Url(), fi->Desc() );
-		li->SetDesc( fi->Desc() );
-		delete fi;
-		*/
-	}
-		
 	tvTextView->SetText("");
 	
 	listview->MakeEmpty();
 	int a = tlist->CountItems();
 	for (int i=0;i<a;i++) {
-		listview->AddItem( (BListItem*)tlist->ItemAt(i) );
+		listview->AddItem( dynamic_cast<BListItem*>(tlist->ItemAt(i)));
 	}	
-	//listview->AddList(tlist);
 	
 	// set visited:
 	InitialVisitedLink("/boot/home/config/settings/NetPositive/History");
@@ -997,7 +978,7 @@ FrissView::StartPopup(BPoint point)
 		// now we're "blocked" until the pref window sends 'PREF' to us
 	}
 	else if (mi == miAbout) {
-		AboutRequested();
+		be_app->AboutRequested();
 	}
 //#//ifdef N3S_DEBUG	
 	else if (miDebug!=NULL && mi == miDebug) {
@@ -1302,56 +1283,24 @@ FrissView::OnWorkspaceChanged()
 	Window()->UpdateIfNeeded();
 }
 
-void 
-FrissView::AboutRequested()
-{
-	BString text("FRiSS Version " VER_ACTUAL "\n");
-	text << VER_ADD"\n";
-
-	text << "\xC2\xA9""2010-2012 Adrien Destugues (PulkoMandy)\n";
-	text << "\tpulkomandy@pulkomandy.tk\n\n";
-	
-	text << "\xC2\xA9""2004 Andreas Herzig (N3S)\n";
-	text << "\tbeos@herzig-net.de\n\n";
-	
-	text << "Original idea:\n\t0033\n\n";
-	
-#if (!OPTIONS_USE_NLANG && !__ZETA__)
-	text << "R5 version without language support\n";
-#else	
-	if (config!= NULL && config->Lang.Compare("enDE") != 0) {
-		text << _T("Language") << ": " << _T("FL:Language") << "\n";
-		text << "\t" << _T("FL:Translator") << "\n";
-	}
-#endif
-	
-	BAlert* alert = new BAlert("About fRiSS", text.String(), _T("Ok"));
-	alert->SetShortcut( 0, B_ESCAPE );
-	alert->Go();
-}		
-
-
 void
 FrissView::NodeViewInformation(FStringItem* node)
 {
 	if (config->WindowMode == WindowModeSimple) {
-		// TODO we are likely better off making our own window with an
-		// FTextView inside instead of using that mess.
+		// FIXME we are better off making our own window with an FTextView.
+		// There is no way to render the (x)html content of feeds inside a
+		// BAlert...
 		BString d(_T("No information available"));
 
 		if (node) {
 			d = "";
 			BString title( node->Title() );
-			BString desc( node->Desc() );
 			BString link( node->Url() );
 
-			if (desc.Length()==0)
-				desc = _T("<no description available>");
 			if (link.Length()==0)
 				link = _T("<no link available>");
 
 			d << _T("Title") << ":\n" << title.String() << "\n\n";
-			d << _T("Desc") << ":\n" << desc.String() << "\n\n";
 			d << _T("Link") << ":\n";
 			d << link.String();
 		}
@@ -1362,7 +1311,7 @@ FrissView::NodeViewInformation(FStringItem* node)
 		alert->Go();
 	}
 	else if(node) {
-		tvTextView->SetContents(node->Title(), node->Desc(), node->Url());
+		tvTextView->SetContents(node->Title(), *node->Desc(), node->Url());
 	} else {
 		tvTextView->SetText(_T("No information available"));
 	}

@@ -22,12 +22,12 @@ resource app_signature "application/x-vnd.friss";
 
 resource app_version {
 	major  = 0,
-	middle = 5,
-	minor  = 7,
+	middle = 8,
+	minor  = 0,
 
 	variety = B_APPV_BETA,
 	internal = 0,
 
-	short_info = "friss",
-	long_info = "RSS, ATOM, and others feeds reader"
+	short_info = "fRiSS",
+	long_info = "RSS, ATOM, and other feeds reader"
 };

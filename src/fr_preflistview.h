@@ -14,11 +14,11 @@ public:
 	
 	virtual void MessageReceived(BMessage* msg);
 	
-	void BuildView(XmlNode *node, int level=0);
+	void BuildView(XmlNode *node, int level=0, BListItem* parent = NULL);
 	
 	virtual void MouseDown(BPoint point);
 	
-	void Sort(XmlNode* sort);
+	void Sort(BListItem* sort);
 
 private:
 	XmlNode*	root;

@@ -1,17 +1,20 @@
 #include "fr_pref.h"
+
+#include <assert.h>
+#include <stdlib.h>
+
+#include <FilePanel.h>
+#include <Entry.h>
+#include <Path.h>
+
+#include "frissconfig.h"
 #include "fr_fstringitem.h"
 
-#include <be/storage/FilePanel.h>
-#include <be/storage/Entry.h>
-#include <be/storage/Path.h>
 
-
-#include <stdlib.h>
-#include "frissconfig.h"
-
-
-FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect frame, const char* Title)
-	: BWindow(frame, Title, B_MODAL_WINDOW, B_NOT_RESIZABLE | B_WILL_DRAW | B_FRAME_EVENTS)
+FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
+		BRect frame, const char* Title)
+	: BWindow(frame, Title, B_MODAL_WINDOW,
+		B_NOT_RESIZABLE | B_WILL_DRAW | B_FRAME_EVENTS)
 {
 	SetLook(B_TITLED_WINDOW_LOOK);
 	SetFeel(B_MODAL_APP_WINDOW_FEEL);
@@ -37,7 +40,7 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 	
 	// Background...
 	r = Bounds();
-	BBox* bvx = new BBox(r, "", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, B_NO_BORDER);
+	BView* bvx = new BView(r, "", B_FOLLOW_ALL_SIDES, B_WILL_DRAW);
 	bvx->SetViewColor(216,216,216);
 	AddChild(bvx);
 	
@@ -79,15 +82,18 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 		BRect br(5, wr.bottom-30, 0, 0/*wr.bottom-10*/);
 		br.right = br.left + buttonsize;
 		
-		bbFeeds->AddChild( bAdd = new BButton(br,"BAdd",_T("New Item..."),new BMessage(CMD_ADD_ITEM) ) );
+		bbFeeds->AddChild( bAdd = new BButton(br,"BAdd",_T("New Item..."),
+			new BMessage(CMD_ADD_ITEM) ) );
 		bAdd->ResizeToPreferred();
 		
 		br.OffsetBy(bAdd->Bounds().Width()+10,0);
-		bbFeeds->AddChild( bEdi = new BButton(br,"BEdi",_T("Edit"),new BMessage(CMD_EDIT_ITEM)) );
+		bbFeeds->AddChild( bEdi = new BButton(br,"BEdi",_T("Edit"),
+			new BMessage(CMD_EDIT_ITEM)) );
 		bEdi->ResizeToPreferred();
 		
 		br.OffsetBy(bEdi->Bounds().Width()+10,0);
-		bbFeeds->AddChild( bRem = new BButton(br,"BRem",_T("Remove"),new BMessage(CMD_REMOVE_ITEM)) );
+		bbFeeds->AddChild( bRem = new BButton(br,"BRem",_T("Remove"),
+			new BMessage(CMD_REMOVE_ITEM)) );
 		bRem->ResizeToPreferred();
 		
 		// Remove and Edit have to be enabled by selecting an entry
@@ -229,11 +235,15 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 
 		men = new BPopUpMenu(_T("WindowMode"));
 
-		men->AddItem( miSimple = new BMenuItem( _T("Simple"), new BMessage( MSG_SB_CHANGED ) ) );
-		men->AddItem( miPreview = new BMenuItem( _T("Preview"), new BMessage( MSG_SB_CHANGED ) ) );
-		//men->AddItem( miFull = new BMenuItem( _T("Full"), new BMessage( MSG_SB_CHANGED ) ) );
+		men->AddItem( miSimple = new BMenuItem( _T("Simple"),
+			new BMessage( MSG_SB_CHANGED ) ) );
+		men->AddItem( miPreview = new BMenuItem( _T("Preview"),
+			new BMessage( MSG_SB_CHANGED ) ) );
+		//men->AddItem( miFull = new BMenuItem( _T("Full"),
+		//	new BMessage( MSG_SB_CHANGED ) ) );
 		
-		bbMisc->AddChild( mfWindowMode=new BMenuField( br, "WindowMode", _T("Window mode"), men ) );
+		bbMisc->AddChild( mfWindowMode=new BMenuField( br, "WindowMode",
+			_T("Window mode"), men ) );
 		
 		/*
 		if (config->WindowMode == WindowModeFull)
@@ -260,13 +270,17 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList, BRect
 		br = boxBrowser->Bounds();
 		br.top += 10; br.InsetBy(5,5);
 		br.bottom = 20;
-		boxBrowser->AddChild( cBrowserNetP = new BRadioButton(br, "cBrowserNetP", _T("WebPositive"), NULL) );
+		boxBrowser->AddChild( cBrowserNetP = new BRadioButton(br,
+			"cBrowserNetP", _T("WebPositive"), NULL) );
 		br.OffsetBy(0,20);
-		boxBrowser->AddChild( cBrowserFox = new BRadioButton(br, "cBrowserFox", _T("Mozilla Firefox"), NULL) );
+		boxBrowser->AddChild( cBrowserFox = new BRadioButton(br,
+			"cBrowserFox", _T("Mozilla Firefox"), NULL) );
 		br.OffsetBy(0,30);
-		boxBrowser->AddChild( cBrowserCustom = new BRadioButton(br, "cBrowserCustom", _T("Custom"), NULL) );
+		boxBrowser->AddChild( cBrowserCustom = new BRadioButton(br,
+			"cBrowserCustom", _T("Custom"), NULL) );
 		br.OffsetBy(0,20);
-		boxBrowser->AddChild( tBrowserMime = new BTextControl(br, "tBrowser", _T("Browser MIME-Type"), config->BrowserMime.String(), NULL) );	
+		boxBrowser->AddChild( tBrowserMime = new BTextControl(br, "tBrowser",
+			_T("Browser MIME-Type"), config->BrowserMime.String(), NULL) );	
 		
 		switch (config->BrowserType) {
 			case BrowserCustom:
@@ -303,8 +317,8 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 	
 		case MSG_P_ITEM_UPDATED:
 			{
-				// FPrefEditWindow has updated the item and we now have to invalidate the
-				// list to reflect the changes
+				// FPrefEditWindow has updated the item and we now have to
+				// invalidate the list to reflect the changes
 				
 				bv->Invalidate();
 			}
@@ -313,9 +327,9 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 		case CMD_ADD_ITEM:
 			// Changed behaviour: Add new XmlNode and open Edit for it
 			{
-				XmlNode* newItem = new XmlNode("outline");
+				XmlNode* newItem = new XmlNode(theList, "outline");
 				EditItem(newItem);
-				bv->AddItem(newItem);
+				bv->AddItem(new BStringItem(newItem->Name()));
 				theList->AddChild(newItem);
 				bv->FullListSortItems(&compare_func);
 				break;
@@ -326,7 +340,7 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 		case CMD_EDIT_ITEM:
 			{
 				if (editi == bv->CurrentSelection()) {
-					item = (XmlNode*)bv->ItemAt(editi);
+					item = dynamic_cast<XmlNode*>(theList->ItemAt(editi));
 					EditItem(item);
 				}
 			}
@@ -334,7 +348,7 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 
 		case CMD_REMOVE_ITEM:
 			if ((selected = bv->CurrentSelection())>=0) {
-				item = (XmlNode*)bv->ItemAt(selected);
+				item = dynamic_cast<XmlNode*>(theList->ItemAt(selected));
 				bv->RemoveItem(selected);
 				delete item;
 				editi = -1;
@@ -381,7 +395,7 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 				msg->FindPoint("point", &point);
 				int32 idx;
 				msg->FindInt32("index", &idx);
-				XmlNode* node = (XmlNode*)bv->ItemAt(idx);
+				XmlNode* node = dynamic_cast<XmlNode*>(bv->ItemAt(idx));
 				ItemPopup(node, point);
 			}
 			break;	
@@ -487,27 +501,33 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 bool
 FrissPrefWin::QuitRequested()
 {
-	//TODO : all of this should be checked while the user makes change, not on closing the window...
+	// TODO : all of this should be checked while the user makes change, not on
+	// closing the window...
 	config->m_iAnz = bv->CountItems();
 
 	// refresh rate	
 	int min = atoi(tRefresh->Text());
 	if (tRefrAdv->Value() == B_CONTROL_OFF && min < REFRESH_MIN_NORM) {
 		char buffer[1000];
-		sprintf(buffer, _T("The refresh rate is set to low.\n\nMinimum is %i minutes.\nRecommended: %i (~%i hours)"), REFRESH_MIN_NORM, REFRESH_REC_NORM, REFRESH_REC_NORM / 60);
+		sprintf(buffer, _T("The refresh rate is set to low.\n\n"
+			"Minimum is %i minutes.\nRecommended: %i (~%i hours)"),
+			REFRESH_MIN_NORM, REFRESH_REC_NORM, REFRESH_REC_NORM / 60);
 		(new BAlert(_T("Warning"),buffer,_T("Ok")))->Go();
 		return false;
 	}
 	if (tRefrAdv->Value() == B_CONTROL_ON && min < REFRESH_MIN_ADVC) {
 		char buffer[1000];
-		sprintf(buffer, _T("The feed advance rate is set to low.\n\nMinimum is %i minutes.\nRecommended: %i"), REFRESH_MIN_ADVC, REFRESH_REC_ADVC);
+		sprintf(buffer, _T("The feed advance rate is set to low.\n\n"
+			"Minimum is %i minutes.\nRecommended: %i"), REFRESH_MIN_ADVC,
+			REFRESH_REC_ADVC);
 		(new BAlert(_T("Warning"),buffer,_T("Ok")))->Go();
 		return false;
 	}	
 	
 	// we simply cannot allow an empty list
 	if (config->m_iAnz == 0) {
-		(new BAlert(_T("Warning"),_T("Your feed list must not be empty!"),_T("Ok")))->Go();
+		(new BAlert(_T("Warning"),_T("Your feed list must not be empty!"),
+			_T("Ok")))->Go();
 		return false;
 	}
 	
@@ -548,8 +568,10 @@ FrissPrefWin::OpenImportFileDialog()
 {
 	m_iImpExpMode = 1;
 	
-	if (!m_pFileOpenPanel)
-		m_pFileOpenPanel = new BFilePanel(B_OPEN_PANEL, mess, NULL, 0, false, NULL, NULL, true, true);
+	if (!m_pFileOpenPanel) {
+		m_pFileOpenPanel = new BFilePanel(B_OPEN_PANEL, mess, NULL, 0, false,
+			NULL, NULL, true, true);
+	}
 		
 	m_pFileOpenPanel->Show();
 }
@@ -564,7 +586,7 @@ FrissPrefWin::Import(XmlNode* parent, entry_ref* ref)
 	BPath path;
 	e.GetPath(&path);
 	
-	XmlNode* loader = new XmlNode("");
+	XmlNode* loader = new XmlNode(NULL, "");
 	loader->LoadFile(path.Path());
 	
 	XmlNode* opml = loader->FindChild("opml", NULL, true);
@@ -593,9 +615,11 @@ FrissPrefWin::OpenExportFileDialog()
 {
 	m_iImpExpMode = 2;
 	
-	if (!m_pFileSavePanel)
-		m_pFileSavePanel = new BFilePanel(B_SAVE_PANEL, mess, NULL, 0, false, NULL, NULL, true, true);
-		
+	if (!m_pFileSavePanel) {
+		m_pFileSavePanel = new BFilePanel(B_SAVE_PANEL, mess, NULL, 0, false,
+			NULL, NULL, true, true);
+	}
+
 	m_pFileSavePanel->Show();
 }
 
@@ -631,17 +655,21 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 	m_iImpExpMode = 0;
 
 	BPopUpMenu*	popup = new BPopUpMenu("popup",false,false,B_ITEMS_IN_COLUMN);
-	BMenuItem *miCollapse = NULL, *miRemove = NULL, *miEdit = NULL, *miAddSubfolder = NULL;
-	BMenuItem *miDup = NULL, *miAddItem = NULL, *miExport = NULL, *miImport = NULL;
+	BMenuItem *miCollapse = NULL, *miRemove = NULL, *miEdit = NULL,
+		*miAddSubfolder = NULL;
+	BMenuItem *miDup = NULL, *miAddItem = NULL, *miExport = NULL,
+		*miImport = NULL;
 	BMenuItem *miSort = NULL;
 
 	if (node) {
-		bv->Select(bv->IndexOf(node), false);
+		int idx = theList->IndexOf(node);
+		bv->Select(idx, false);
+		BStringItem* item = dynamic_cast<BStringItem*>(bv->ItemAt(idx));
 		
 		if (node->Attribute(OPML_URL)==NULL) {
 			folder = true;
 			
-			if (!node->IsExpanded()) {
+			if (!item->IsExpanded()) {
 				popup->AddItem( miCollapse = new BMenuItem( _T("Expand"), NULL ) );
 				collapsed = true;
 			}
@@ -688,10 +716,12 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 	if (!ret)
 		return;
 	
+	int idx = theList->IndexOf(node);
+
 	if (ret == miEdit)
 		EditItem(node);
 	else if (ret == miRemove) {
-		bv->RemoveItem(node);
+		bv->RemoveItem(idx);
 		node->Parent()->RemoveChild(node);
 		bv->Invalidate();
 	}
@@ -701,22 +731,20 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 				XmlNode* newnode;
 				
 				if (node) {
-					newnode = new XmlNode(node->Parent(), "outline", node->OutlineLevel()+1, true);
+					newnode = new XmlNode(node->Parent(), "outline");
 					node->AddChild(newnode,0);
-					bv->AddUnder(newnode, node);
+					bv->AddUnder(bv->FullListItemAt(idx), new BStringItem(newnode->Name()));
 				}
 				else {
 					newnode = new XmlNode(theList, "outline");
 					theList->AddChild(newnode);
-					bv->AddItem(newnode);
+					bv->AddItem(new BStringItem(newnode->Name()));
 				}
 
-				BString s(_T("New Item"));
-				newnode->AddAttribute(OPML_TITLE, s.String());
-				newnode->SetText(s.String());
+				newnode->AddAttribute(OPML_TITLE, _T("New Item"));
 				newnode->AddAttribute(OPML_URL, "http://");
 				
-				bv->Select(bv->IndexOf(newnode),false);
+				bv->Select(theList->IndexOf(newnode),false);
 				
 				bv->Invalidate();
 				
@@ -726,21 +754,20 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 				XmlNode* newnode;
 				
 				if (node) {
-					newnode = new XmlNode(node->Parent(), "outline", node->OutlineLevel()+1, true);
+					newnode = new XmlNode(node->Parent(), "outline");
 					node->Parent()->AddChild(newnode, node->Parent()->IndexOf(node)+1);
-					bv->AddItem(newnode, bv->IndexOf(node)+bv->CountItemsUnder(node, false)+1);
+					bv->AddItem(new BStringItem(newnode->Name()),
+						theList->IndexOf(node)+bv->CountItemsUnder(
+							bv->FullListItemAt(idx), false)+1);
 				}
 				else {
 					newnode = new XmlNode(theList, "outline");
 					theList->AddChild(newnode);
-					bv->AddItem(newnode);
+					bv->AddItem(new BStringItem(newnode->Name()));
 				}
 
-				newnode->SetMarked();
-				BString s(_T("New Folder"));
-				newnode->AddAttribute(OPML_TITLE, s.String());
-				newnode->SetText(s.String());				
-				bv->Select(bv->IndexOf(newnode),false);
+				newnode->AddAttribute(OPML_TITLE, _T("New Folder"));
+				bv->Select(theList->IndexOf(newnode),false);
 				
 				bv->Invalidate();
 				
@@ -764,24 +791,23 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 			}			
 			else if (ret==miCollapse) {
 				if (collapsed)
-					bv->Expand(node);
+					bv->Expand(bv->FullListItemAt(idx));
 				else
-					bv->Collapse(node);
+					bv->Collapse(bv->FullListItemAt(idx));
 				
 				bv->Invalidate();				
 			}
 			else if (ret==miSort)
-				bv->Sort(node);
+				bv->Sort(bv->FullListItemAt(idx));
 		}
 		else { // Items
 			if (ret == miDup) {
-				XmlNode* newnode = node->Duplicate();
+				XmlNode* newnode = new XmlNode(*node);
 				BString s(newnode->Attribute(OPML_TITLE));
 				s << " " << _T("(copy)");
 				newnode->AddAttribute(OPML_TITLE, s.String());
-				newnode->SetText(s.String());
 				node->Parent()->AddChild(newnode, node->Parent()->IndexOf(node)+1);
-				bv->AddItem(newnode, bv->IndexOf(node)+1);
+				bv->AddItem(new BStringItem(newnode->Name()), idx+1);
 				bv->Invalidate();
 			}
 		}
@@ -792,14 +818,8 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 void
 FrissPrefWin::EditItem(XmlNode* item)
 {
-	if (!item)
-		return;
-
-	BRect br( bv->ItemFrame(bv->IndexOf(item)));
-	bv->ConvertToScreen(&br);
-	
-	FPrefEditWindow* pf = pf = new FPrefEditWindow(this, item, BPoint(br.left, br.top), !item->Marked());
-	pf->Show();
+	assert(item != NULL);
+	(new FPrefEditWindow(this, item, Frame().LeftTop()))->Show();
 }
 
 

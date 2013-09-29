@@ -44,45 +44,45 @@ PrefListView::MessageReceived(BMessage* msg)
 {
 	switch (msg->what) {
 		case 'ITEM':
-			{
-				puts("We have a winner, supposably ;-)");
-				BPoint dropzone;
-				msg->FindPoint("_drop_point_", &dropzone);
-				dropzone = ConvertFromScreen(dropzone);
-				
-				int32 i, nr;
-				msg->FindInt32("Item", &i);
-				msg->FindInt32("Item_nr", &nr);
-				
-				XmlNode* Item = (XmlNode*)i;
-				XmlNode* toItem = dynamic_cast<XmlNode*>(ItemAt(IndexOf(dropzone)));
-				
-				// Only proceed if valid
-				if (toItem && Item && toItem!=Item) {
-					XmlNode* parent = Item->Parent();
-					
-					uint32 index = parent->IndexOf(Item);
-					uint32 toIndex = toItem->Parent()->IndexOf(toItem);
-					if (index<toIndex)
-						toIndex++;
-					
-					parent->DetachChild(index);
-					
-					if (toItem->Attribute(OPML_URL)!=NULL) {
-						toItem->Parent()->AddChild(Item, toIndex);
-					}
-					else {
-						toItem->AddChild(Item,0);
-					}
-					
-					MakeEmpty();
-					BuildView(root);
-					
-					Invalidate();
+		{
+			puts("We have a winner, supposably ;-)");
+			BPoint dropzone;
+			msg->FindPoint("_drop_point_", &dropzone);
+			dropzone = ConvertFromScreen(dropzone);
+
+			int32 i, nr;
+			msg->FindInt32("Item", &i);
+			msg->FindInt32("Item_nr", &nr);
+
+			XmlNode* Item = (XmlNode*)i;
+			XmlNode* toItem = dynamic_cast<XmlNode*>(ItemAt(IndexOf(dropzone)));
+
+			// Only proceed if valid
+			if (toItem && Item && toItem!=Item) {
+				XmlNode* parent = Item->Parent();
+
+				uint32 index = parent->IndexOf(Item);
+				uint32 toIndex = toItem->Parent()->IndexOf(toItem);
+				if (index<toIndex)
+					toIndex++;
+
+				parent->DetachChild(index);
+
+				if (toItem->Attribute(OPML_URL)!=NULL) {
+					toItem->Parent()->AddChild(Item, toIndex);
 				}
+				else {
+					toItem->AddChild(Item,0);
+				}
+
+				MakeEmpty();
+				BuildView(root);
+
+				Invalidate();
 			}
-			break;
-			
+		}
+		break;
+
 		default:
 			BOutlineListView::MessageReceived(msg);
 	}
@@ -90,8 +90,8 @@ PrefListView::MessageReceived(BMessage* msg)
 
 
 
-void
-PrefListView::BuildView(XmlNode *node, int level)
+	void
+PrefListView::BuildView(XmlNode *node, int level, BListItem* parent)
 {
 	if (!node) {
 		puts("Rebuild mit NULL?!");
@@ -99,29 +99,27 @@ PrefListView::BuildView(XmlNode *node, int level)
 	}
 
 	int anz = node->Children();
-	
+
 	//printf("BuildView: %s %d einträge\n", node->Attribute("text"), anz);
-	
+
 	if (anz>0) {
 		if (level==0) {
 			for (int i=0;i<anz;i++) {
 				XmlNode* c = (XmlNode*)node->ItemAt(i);
 				const char* t = c->Attribute("text");
-				
-				c->SetText( t );
-				
-				bool b;
-				
+
+				BStringItem* item = new BStringItem(t);
+				item->SetText( t );
+
 				if (level>0)
-					b = AddUnder(c, c->Parent());
+					AddUnder(item, parent);
 				else
-					b = AddItem(c);
-					
+					AddItem(item);
+
 				//printf("Hinzufügen war %d\n", b);
-				
+
 				if (c->Children()>0) {
-					c->SetMarked();
-					BuildView(c, level+1);
+					BuildView(c, level+1, item);
 				}
 			}
 			DeselectAll();
@@ -130,21 +128,19 @@ PrefListView::BuildView(XmlNode *node, int level)
 			for (int i=anz-1;i>=0;i--) {
 				XmlNode* c = (XmlNode*)node->ItemAt(i);
 				const char* t = c->Attribute("text");
-				
-				c->SetText( t );
-				
-				bool b;
-				
+
+				BStringItem* item = new BStringItem(t);
+				item->SetText( t );
+
 				if (level>0)
-					b = AddUnder(c, c->Parent());
+					AddUnder(item, parent);
 				else
-					b = AddItem(c);
-					
+					AddItem(item);
+
 				//printf("Hinzufügen war %d\n", b);
-				
+
 				if (c->Children()>0) {
-					c->SetMarked();
-					BuildView(c, level+1);
+					BuildView(c, level+1, item);
 				}
 			}
 		}
@@ -192,10 +188,8 @@ int sortX(const BListItem* itemA, const BListItem* itemB)
 }
 
 void
-PrefListView::Sort(XmlNode* node)
+PrefListView::Sort(BListItem* node)
 {
 	SortItemsUnder(node, false, &sortX);
 }
-
-
 

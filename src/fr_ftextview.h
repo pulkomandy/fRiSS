@@ -15,7 +15,7 @@ public:
 	void FrameResized(float width, float height);
 	void MouseDown(BPoint point);
 	void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
-	void SetContents(const BString& title, const BString& contents,
+	void SetContents(const BString& title, const XmlNode& contents,
 		const BString& link);
 	
 private:
@@ -32,7 +32,7 @@ private:
 		}
 	};
 
-	void Render(XmlNode* node, text_run_array& textStyle);
+	void Render(const XmlNode* const node, text_run_array& textStyle);
 
 	void RenderHeading(int level, text_run_array& textStyle);
 	void RenderLi(text_run_array& textStyle);

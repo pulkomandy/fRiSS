@@ -3,6 +3,7 @@
 #include "feedlistview.h"
 #include "frissWindow.h"
 
+#include <AppFileInfo.h>
 #include <FindDirectory.h>
 #include <Path.h>
 #include <unistd.h>
@@ -77,7 +78,7 @@ void FrissWindow::PopulateFeeds(XmlNode* theList)
 	feedList->MakeEmpty();
 
 	Xfeeds = theList->FindChild("body", NULL, true);
-	for (int i = 0; i < Xfeeds->Children(); i++) {
+	for (uint32 i = 0; i < Xfeeds->Children(); i++) {
 		FeedListItem* it = new FeedListItem(Xfeeds->ItemAt(i));
 		feedList->AddItem(it);
 	}
@@ -106,123 +107,124 @@ void FrissWindow::Save(FrissConfig* conf, XmlNode* root)
 
 class MyApplication : public BApplication
 {
-	private:
-		FrissWindow *theWindow;
-
 	public:
 		MyApplication(const char *signature) :
-			BApplication(signature) {
+			BApplication(signature)
+		{}
 
-				// Creates the window and sets the title with the application name. 
-				BRect		windowRect;
-				BPath		path;
-				FrissConfig*	config = new FrissConfig();
-				//config_t	config;
-				XmlNode*	x_root = new XmlNode( NULL, "" );
-				bool		ok = false;
+		void ReadyToRun() {
+			// Creates the window and sets the title with the application name. 
+			BRect		windowRect;
+			BPath		path;
+			FrissConfig*	config = new FrissConfig();
+			//config_t	config;
+			XmlNode*	x_root = new XmlNode( NULL, "" );
+			bool		ok = false;
 
-				if (find_directory (B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
-					path.Append("friss_settings.xml");
+			if (find_directory (B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
+				path.Append("friss_settings.xml");
 
-					ok = config->Load( path.Path() );
-				}
+				ok = config->Load( path.Path() );
+			}
 
-				if (!ok) { // Defaults:
-					puts("Reverting to failsafe.");
+			if (!ok) { // Defaults:
+				puts("Reverting to failsafe.");
 
-					config->Defaults();
-				}
+				config->Defaults();
+			}
 
-				windowRect = config->GetWindowRect();
+			windowRect = config->GetWindowRect();
 
-				if (!x_root->LoadFile( config->Feedlist.String() )) {
-			config->m_iAnz = 4;
-			config->SetIndex(0);
-			FailsafeFeeds(x_root);
+			if (!x_root->LoadFile( config->Feedlist.String() )) {
+				config->m_iAnz = 4;
+				config->SetIndex(0);
+				FailsafeFeeds(x_root);
+			}	
+
+			BString title("fRiSS ");
+			title << version();
+			theWindow = new FrissWindow(config,x_root,windowRect, title.String());
+			theWindow->Show();
+		}
+
+		virtual void MessageReceived(BMessage *msg)
+		{
+			BApplication::MessageReceived(msg);
+		}
+
+		void AboutRequested()
+		{
+			// FIXME use BAboutBox
+			BString text("FRiSS Version ");
+			text << version();
+			text <<	"\n";
+
+			text << "\xC2\xA9""2010-2013 Adrien Destugues (PulkoMandy)\n";
+			text << "\tpulkomandy@pulkomandy.tk\n\n";
+
+			text << "\xC2\xA9""2004 Andreas Herzig (N3S)\n";
+			text << "\tbeos@herzig-net.de\n\n";
+
+			text << "Original idea:\n\t0033\n\n";
+
+			// FIXME translation credits
+#if 0
+			if (config!= NULL && config->Lang.Compare("enDE") != 0) {
+				text << _T("Language") << ": " << _T("FL:Language") << "\n";
+				text << "\t" << _T("FL:Translator") << "\n";
+			}
+#endif
+
+			BAlert* alert = new BAlert("About fRiSS", text.String(), _T("Ok"));
+			alert->SetShortcut( 0, B_ESCAPE );
+			alert->Go();
 		}	
 
-		theWindow = new FrissWindow(config,x_root,windowRect,VERSION_);
-		theWindow->Show();
-	}
-	
-	void FailsafeFeeds(XmlNode* root)
-	{
-		time_t now = time(NULL);
-		BString d(ctime(&now));
-		d.RemoveSet("\t\r\n");
-		root->CreateChild("opml/head/dateCreated", d.String());
-			
-		XmlNode *body = root->CreateChild("opml/body");
-		
+	private:
+		void FailsafeFeeds(XmlNode* root)
 		{
-			XmlNode *node = new XmlNode("outline");
-			node->AddAttribute("text", "Fortune");
-			node->AddAttribute("xmlURL", "fortune");
-			body->AddChild(node);
+			// Just create an empty feed list
+			time_t now = time(NULL);
+			BString d(ctime(&now));
+			d.RemoveSet("\t\r\n");
+			root->CreateChild("opml/head/dateCreated", d.String());
+			root->CreateChild("opml/body");
 		}
-		{
-			XmlNode *node = new XmlNode("outline");
-			node->AddAttribute("text", "LOCAL mini");
-			node->AddAttribute("xmlURL", "file:///boot/projects/friss/samples_xml/mini.xml");
-			body->AddChild(node);
-		}		
-		/*{
-			XmlNode* bex = new XmlNode("outline");
-			bex->AddAttribute("text", "BeOS");
-			body->AddChild(bex);
-			
-			{			
-				XmlNode *node = new XmlNode("outline");
-				node->AddAttribute("text", "bebits");
-				node->AddAttribute("xmlURL", "http://www.bebits.com/backend/recent.rdf");
-				bex->AddChild(node);
-			}
-			{
-				XmlNode *node = new XmlNode("outline");
-				node->AddAttribute("text", "isComputerOn");
-				node->AddAttribute("xmlURL", "http://www.iscomputeron.com/index/backend.php");
-				bex->AddChild(node);
-			}
-		}
-		{
-			XmlNode* bex = new XmlNode("outline");
-			bex->AddAttribute("text", "Media");
-			body->AddChild(bex);
-			{			
-				XmlNode *node = new XmlNode("outline");
-				node->AddAttribute("text", "ORF1");
-				node->AddAttribute("xmlURL", "http://rss.orf.at/orf1.xml");
-				node->AddAttribute("x-addDesc", "true");
-				bex->AddChild(node);
-			}
-			{
-				XmlNode *node = new XmlNode("outline");
-				node->AddAttribute("text", "ORF2");
-				node->AddAttribute("xmlURL", "http://rss.orf.at/orf2.xml");
-				node->AddAttribute("x-addDesc", "true");
-				bex->AddChild(node);
-			}
-		}*/
-		{
-			XmlNode* bex = new XmlNode("outline");
-			bex->AddAttribute("text", "EmptyGroup");
-			body->AddChild(bex);	
-		}
-			/*
-			config.list->AddItem( new FStringItem("Fortune","fortune") );		
-			config.list->AddItem( new FStringItem("bebits","http://www.bebits.com/backend/recent.rdf") );
-			config.list->AddItem( new FStringItem("isComputerOn","http://www.iscomputeron.com/index/backend.php") );
-			config.list->AddItem( new FStringItem("BeosJournal","http://www.beosjournal.org/recent.rdf") );
-			config.list->AddItem( new FStringItem("OSNews", "http://www.osnews.com/files/recent.rdf") );
-			//config.list->AddItem( new FStringItem("Heise Newsticker","http://www.heise.de/newsticker/heise.rdf") );
-			*/
 
-	}
-	
-	virtual void MessageReceived(BMessage *msg)
-	{
-		BApplication::MessageReceived(msg);
-	}
+		const char* version() {
+			app_info appInfo;
+			BFile file;
+			BAppFileInfo appFileInfo;
+
+			be_app->GetAppInfo(&appInfo);
+			file.SetTo(&appInfo.ref, B_READ_WRITE);
+			appFileInfo.SetTo(&file);
+
+			BString version;
+
+			version_info info;
+			appFileInfo.GetVersionInfo(&info, B_APP_VERSION_KIND);
+			version << info.major;
+			version << '.';
+			version << info.middle;
+			version << '.';
+			version << info.minor;
+
+			switch(info.variety)
+			{
+				case B_BETA_VERSION:
+					version << "\xCE\xB2";
+			}
+
+			if(info.internal > 0) {
+				version << info.internal;
+			}
+
+			return version.String();
+		}	
+
+	private:
+		FrissWindow *theWindow;
 };
 
 int main()

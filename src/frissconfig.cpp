@@ -164,7 +164,7 @@ FrissConfig::Save( const char* path )
 	fs = root->CreateChild("settings");
 	fs->AddAttribute("version", m_iVersion);
 
-	f = new XmlNode("comment");
+	f = new XmlNode(fs, "comment");
 	f->Comment("This file is auto-generated. See documentation for help.");
 	fs->AddChild(f);
 	
@@ -181,31 +181,31 @@ FrissConfig::Save( const char* path )
 
 	fs->CreateChild("generic/language", Lang.String());
 	fs->CreateChild("generic/feedfile", Feedlist.String());	
-	
+
 	f = fs->CreateChild("window/position");
 	f->AddAttribute("x", m_rWindow.left);
 	f->AddAttribute("y", m_rWindow.top);
 	f->AddAttribute("width", m_rWindow.Width());
 	f->AddAttribute("height", m_rWindow.Height());			
 	
-	f = fs->CreateChild("window/background/mode", (int)ColBackMode);
+	fs->CreateChild("window/background/mode", (int)ColBackMode);
 	f = fs->CreateChild("window/background/colour");
 	f->AddAttribute("red", col.red);
 	f->AddAttribute("green", col.green);
 	f->AddAttribute("blue", col.blue);
 	
-	f = fs->CreateChild("window/foreground/mode", (int)ColForeMode);
+	fs->CreateChild("window/foreground/mode", (int)ColForeMode);
 	f = fs->CreateChild("window/foreground/colour");
 	f->AddAttribute("red", high.red);
 	f->AddAttribute("green", high.green);
 	f->AddAttribute("blue", high.blue);	
 	
-	f = fs->CreateChild("window/scrollbar", (int)ScrollbarMode);
+	fs->CreateChild("window/scrollbar", (int)ScrollbarMode);
 	
-	f = fs->CreateChild("window/windowmode", (int)WindowMode);
-	
-	f = fs->CreateChild("browser/mode", (int)BrowserType);
-	f = fs->CreateChild("browser/mime", BrowserMime.String());
+	fs->CreateChild("window/windowmode", (int)WindowMode);
+
+	fs->CreateChild("browser/mode", (int)BrowserType);
+	fs->CreateChild("browser/mime", BrowserMime.String());
 	
 	root->SaveToFile(path);
 	delete root;	
@@ -248,7 +248,7 @@ FrissConfig::Defaults()
 	
 	ScrollbarMode	= ScrollbarModeAuto;
 	
-	WindowMode		= WindowModeSimple;
+	WindowMode		= WindowModePreview;
 	
 	// Browser ==================================================================
 

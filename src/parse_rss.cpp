@@ -22,7 +22,7 @@
  *		0				no items in tree (sort of error)
  *		>0				items in list
  */
-int Parse_rss( XmlNode* root, BList* list, BString& status, bool& updatesFeedList, bool addDesc)
+int Parse_rss( XmlNode* root, BObjectList<FStringItem>* list, BString& status, bool addDesc)
 {
 	PPUTS("BEGIN PARSE_RSS");
 	XmlNode* channel = root->FindChild( "channel", NULL, true );
@@ -43,35 +43,6 @@ int Parse_rss( XmlNode* root, BList* list, BString& status, bool& updatesFeedLis
 	
 	BString ChanLink;
 	bool	hasChanLink = false;
-
-	{
-		fi = new FStringItem;
-		
-		XmlNode* p;
-		p = channel->FindChild("title");
-		if (p)
-			fi->SetText(p->Value());
-		else
-			PPUTS("Channel has no title");
-		
-		p = channel->FindChild("link");
-		if (p) {
-			fi->SetUrl(p->Value());
-			ChanLink = p->Value();
-			hasChanLink = true;
-		}
-		else
-			PPUTS("Channel has no link");
-			
-		p = channel->FindChild("description");
-		if (p)
-			fi->SetDesc(p->Value());
-		else
-			PPUTS("Channel has no descrtion");
-	
-		list->AddItem(fi);
-		PPUTS("");
-	}
 	
 	PPRINT(( "\nNUN DIE ITEMS!\n" ));
 	
@@ -92,9 +63,9 @@ int Parse_rss( XmlNode* root, BList* list, BString& status, bool& updatesFeedLis
 	while (item) {
 		itemcount++;
 		
-		fi = new FStringItem;
 		
 		p = item->FindChild("title");
+		fi = new FStringItem();
 		if (p) {
 			fi->SetText(p->Value());
 			PPRINT(( "Item name is '%s'\n", p->Value() ));
@@ -122,10 +93,23 @@ int Parse_rss( XmlNode* root, BList* list, BString& status, bool& updatesFeedLis
 				BString a(fi->Text());
 				a << " : " << p->Value();
 				fi->SetText(a.String());
-				fi->SetDesc(p->Value());
 			}
-			else
-				fi->SetDesc(p->Value());
+
+			// The HTML data comes XML-escaped inside the description element.
+			// We have to do a second run of parsing to handle that
+			XmlNode* html = new XmlNode(p->Value(), NULL);
+				// FIXME this is leaked. Where can we delete it ?
+				// fi could check if the node it owns is a root, and delete it
+				// if so.
+
+			if(html->Children() <= 1) {
+				// Not enough markup, assume textmode feed
+				delete html;
+				html = new XmlNode(NULL, "p");
+				html->SetValue(p->Value());
+			}
+
+			fi->SetDesc(html);
 		}
 		else
 			PPUTS("Item has no description");	
@@ -138,8 +122,6 @@ int Parse_rss( XmlNode* root, BList* list, BString& status, bool& updatesFeedLis
 		item = items->FindChild("item", item);
 	}
 	
-	updatesFeedList = true;
-
 	PPUTS("END OF PARSE_RSS");	
 	return itemcount;
 }

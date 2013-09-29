@@ -32,7 +32,7 @@ private:
 	BWindow*		mParent;
 	XmlNode*		item;
 	
-	BBox*			bbox;
+	BView*			bbox;
 	
 	BButton*		bSave;
 	BButton*		bCancel;

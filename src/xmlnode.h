@@ -9,6 +9,7 @@
 #include <be/AppKit.h>
 #include <be/InterfaceKit.h>
 #include <be/SupportKit.h>
+#include <ObjectList.h>
 
 
 // NODEs have children
@@ -25,20 +26,20 @@
 
 #define XMLNODE_NONE		0xFFFFFFFF
 
-/*	Parsing begins with opening tag bracket
- *
- */
 
-class _EXPORT XmlNode : public BStringItem
+class XmlNode: public BArchivable
 {
 public:
 	// empty node with name
-	XmlNode(const char* name);
-	XmlNode(XmlNode* parent, const char* name = "", uint32 level=0, bool expanded=true);	
+	XmlNode(XmlNode* parent, const char* name = "");	
 	XmlNode(BMessage *archive);
 
 	// build tree from already loaded file:
 	XmlNode(const char* buf, XmlNode* parent);	
+
+	XmlNode(const XmlNode& other);
+
+	XmlNode& operator=(const XmlNode& other);
 
 	static BArchivable* Instatiate(BMessage* msg);
 	
@@ -57,9 +58,9 @@ public:
 	
 	XmlNode*	Parent() const;
 	
-	const char* Value() const;
+	const BString& Value() const;
 	int			ValueAsInt() const;
-	void SetValue(const char* value);
+	void SetValue(const BString& value);
 	
 	// Attributes:
 	
@@ -78,11 +79,11 @@ public:
 	int			AttributeAsInt(const char* key, int defaultValue=0) const;
 	bool		AttributeAsBool(const char* key, bool defaultValue=false) const;
 
-	const char*	Attribute(uint32 index) const;
+	const char*	Attribute(int32 index) const;
 	//int			AttributeAsInt(uint32 index, int defaultValue=0) const;
 	//bool		AttributeAsBool(uint32 index, bool defaultValue=false) const;
 
-	const char*	AttributeKey(uint32 index) const;
+	const char*	AttributeKey(int32 index) const;
 	
 	/*
 	void		SetAttribute(const char* key, const char* value);
@@ -116,12 +117,7 @@ public:
 	
 	XmlNode*	DetachChild(uint32 index);
 	
-	// returns a new node with copies of attributes and children
-	XmlNode*	Duplicate();
-
 	const char*	Parse(const char* buf);
-
-	virtual void DrawItem(BView* owner, BRect frame, bool complete = false);
 
 public:	
 	void Display() const;
@@ -144,7 +140,7 @@ public:
 	// only useful for new nodes
 	void		Comment(const char* commentstring);
 	
-protected:
+private:
 	// parses a given string and adds it to the attribute list
 	int			ParseAttributes(const char* b);
 
@@ -159,9 +155,7 @@ protected:
 	XmlNode*	mParent;
 	
 	BList		mAttribute;
-	BList		mChild;
-	
-	bool		mMarked;
+	BObjectList<XmlNode> mChild;
 	
 	// for convert_to_utf8, values declared in <be/support/UTF8.h>
 	static uint32	encoding;

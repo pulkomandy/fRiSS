@@ -11,17 +11,6 @@
 
 #define APP_SIGNATURE	"application/x-vnd.friss"
 
-// ======= VERSION ===========================================
-#define VER_ACTUAL	"0.7"
-
-#define VER_ADD		"\tfeed Reader for Haiku\n"
-
-// predefine strings for output
-#define VERSION_	"fRiSS Ver."VER_ACTUAL
-
-#define VER_HTTP	"friss/"VER_ACTUAL" (Haiku)"
-
-
 // ======= MESSAGES ========================================
 // Commands for popup
 #define CmdNext 'next'

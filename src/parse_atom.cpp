@@ -26,8 +26,8 @@
  *		0				no items in tree (sort of error)
  *		>0				items in list
  */
-int Parse_atom( XmlNode* root, BList* list, BString& status,
-	bool& updatesFeedList, bool addDesc)
+int Parse_atom( XmlNode* root, BObjectList<FStringItem>* list, BString& status,
+	bool addDesc)
 {
 	PPUTS("BEGIN PARSE_ATOM");
 	XmlNode* channel = root->FindChild( "feed", NULL, true );
@@ -49,11 +49,10 @@ int Parse_atom( XmlNode* root, BList* list, BString& status,
 	BString ChanLink;
 	bool	hasChanLink = false;
 
+#if 0
 	{
-		fi = new FStringItem;
-		
-		XmlNode* p;
-		p = channel->FindChild("title");
+		XmlNode* p = channel->FindChild("title");
+		fi = new FStringItem();
 		if (p)
 			fi->SetText(p->Value());
 		else
@@ -70,13 +69,14 @@ int Parse_atom( XmlNode* root, BList* list, BString& status,
 			
 		p = channel->FindChild("tagline");
 		if (p)
-			fi->SetDesc(p->Value());
+			fi->SetDesc(p);
 		else
 			PPUTS("Feed has no tagline");
 	
 		list->AddItem(fi);
 		PPUTS("");
 	}
+#endif
 	
 	PPRINT(( "\nNUN DIE ITEMS!\n" ));
 	
@@ -90,14 +90,14 @@ int Parse_atom( XmlNode* root, BList* list, BString& status,
 	
 	// parent is at least root
 	XmlNode* items = item->Parent();
-	XmlNode* p;
+	XmlNode* p = NULL;
 	
 	int itemcount = 0;
 	
 	while (item) {
 		itemcount++;
 		
-		fi = new FStringItem;
+		fi = new FStringItem();
 		
 		p = item->FindChild("title");
 		if (p) {
@@ -131,11 +131,23 @@ int Parse_atom( XmlNode* root, BList* list, BString& status,
 				a << " : " << p->Value();
 				fi->SetText(a.String());
 			}
-			else
-				fi->SetDesc(p->Value());
+			else {
+				const char* type = p->Attribute("type");
+				if(strcmp(type, "html") == 0) {
+					// html: not XML conformant, so it is escaped in the feed.
+					// Need to parse it, as XML will do for now.
+					XmlNode* html = new XmlNode(p->Value(), NULL);
+					fi->SetDesc(html); // FIXME memory leak
+				} else if(strcmp(type, "xhtml") == 0) {
+					fi->SetDesc(p->ItemAt(0)); // Get the div inside
+				} else {
+					// plaintext: can be handled directly
+					fi->SetDesc(p);
+				}
+			}
 		}
 		else
-			PPUTS("Item has no descrtion");	
+			PPUTS("Item has no description");	
 	
 		list->AddItem(fi);
 		
@@ -145,8 +157,6 @@ int Parse_atom( XmlNode* root, BList* list, BString& status,
 		item = items->FindChild("entry", item);
 	}
 	
-	updatesFeedList = true;
-
 	PPUTS("END OF PARSE_ATOM");	
 	return itemcount;
 }
