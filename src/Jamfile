@@ -35,6 +35,6 @@ if $(OS) = HAIKU {
 	Object friss : friss.rsrc ;
 }
 
-BELIBS = -lbe -lnetwork -lbnetapi -ltracker -ltextencoding -lstdc++ -ltranslation ;
+BELIBS = -lbe -lnetwork -lbnetapi -ltracker -ltextencoding -lstdc++.r4 -ltranslation ;
 
 LINKLIBS on friss = $(BELIBS) ;

@@ -1,7 +1,8 @@
 // BeAPI:
-#include <net/Url.h>
-#include <net/UrlSynchronousRequest.h>
-#include <net/UrlResult.h>
+#include <Url.h>
+#include <UrlProtocolRoster.h>
+#include <UrlResult.h>
+#include <UrlSynchronousRequest.h>
 
 #include <algorithm>
 
@@ -15,7 +16,8 @@
 char* LoadFeedNet(const char* feed, size_t& bufsize)
 {
 	BUrl url(feed);
-	BUrlSynchronousRequest request(url);
+	BUrlRequest* asyncRequest = BUrlProtocolRoster::MakeRequest(url);
+	BUrlSynchronousRequest request(*asyncRequest);
 	request.Perform();
 	request.WaitUntilCompletion();
 	const BUrlResult& result = request.Result();
@@ -26,5 +28,8 @@ char* LoadFeedNet(const char* feed, size_t& bufsize)
 
 	char* buf = (char*)malloc(bufsize);
 	memcpy(buf, io.Buffer(), bufsize);
+
+	delete asyncRequest;
+
 	return buf;
 }

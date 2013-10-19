@@ -5,6 +5,7 @@
 
 #include <TranslationUtils.h>
 #include <Url.h>
+#include <UrlProtocolRoster.h>
 #include <UrlSynchronousRequest.h>
 
 #ifdef TRACE_LISTVIEW
@@ -21,7 +22,8 @@ char* getFavicon(BString host, size_t& size)
 	url.SetPort(80);
 	url.SetPath("/favicon.ico");
 
-	BUrlSynchronousRequest request(url);
+	BUrlRequest* asyncrequest = BUrlProtocolRoster::MakeRequest(url);
+	BUrlSynchronousRequest request(*asyncrequest);
 	request.Perform();
 	request.WaitUntilCompletion();
 	const BUrlResult& result = request.Result();
@@ -32,6 +34,9 @@ char* getFavicon(BString host, size_t& size)
 	size = io.BufferLength();
 	char* buf = (char*)malloc(size);
 	memcpy(buf, io.Buffer(), size);
+
+	delete asyncrequest;
+
 	return buf;
 }
 
