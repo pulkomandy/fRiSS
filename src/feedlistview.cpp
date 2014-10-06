@@ -14,6 +14,18 @@
 	#define FPRINT(x)
 #endif
 
+class SynchronousListener: public BUrlProtocolListener
+{
+	public:
+		virtual	~SynchronousListener() {};
+			void	DataReceived(BUrlRequest*, const char* data, off_t position,
+					ssize_t size) {
+			result.WriteAt(position, data, size);
+		}
+		BMallocIO result;
+};
+
+
 char* getFavicon(BString host, size_t& size)
 {
 	BUrl url;
@@ -22,20 +34,18 @@ char* getFavicon(BString host, size_t& size)
 	url.SetPort(80);
 	url.SetPath("/favicon.ico");
 
-	BUrlRequest* asyncrequest = BUrlProtocolRoster::MakeRequest(url);
-	BUrlSynchronousRequest request(*asyncrequest);
-	request.Perform();
-	request.WaitUntilCompletion();
-	const BUrlResult& result = request.Result();
+	SynchronousListener listener;
+	BUrlRequest* request = BUrlProtocolRoster::MakeRequest(url, &listener);
+	request->Run();
+	while(request->IsRunning()) snooze(1000);
 
 	// FIXME the constness of the result prevents us from reading from it !
-	const BMallocIO& io = result.RawData();
 
-	size = io.BufferLength();
+	size = listener.result.BufferLength();
 	char* buf = (char*)malloc(size);
-	memcpy(buf, io.Buffer(), size);
+	memcpy(buf, listener.result.Buffer(), size);
 
-	delete asyncrequest;
+	delete request;
 
 	return buf;
 }

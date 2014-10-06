@@ -9,6 +9,18 @@
 #include "fr_def.h"
 
 
+class SynchronousListener: public BUrlProtocolListener
+{
+	public:
+		virtual	~SynchronousListener() {};
+			void	DataReceived(BUrlRequest*, const char* data, off_t position,
+					ssize_t size) {
+			result.WriteAt(position, data, size);
+		}
+		BMallocIO result;
+};
+
+
 /**
  * Load feed from url @feed, into buffer @buf of size @size.
  * Reurn size of data read, or -1 on error.
@@ -16,20 +28,18 @@
 char* LoadFeedNet(const char* feed, size_t& bufsize)
 {
 	BUrl url(feed);
-	BUrlRequest* asyncRequest = BUrlProtocolRoster::MakeRequest(url);
-	BUrlSynchronousRequest request(*asyncRequest);
-	request.Perform();
-	request.WaitUntilCompletion();
-	const BUrlResult& result = request.Result();
+	SynchronousListener listener;
+	BUrlRequest* request = BUrlProtocolRoster::MakeRequest(url, &listener);
+	request->Run();
+	while(request->IsRunning()) snooze(1000);
 
 	// FIXME the constness of the result prevents us from reading from it !
-	const BMallocIO& io = result.RawData();
-	bufsize = io.BufferLength();
+	bufsize = listener.result.BufferLength();
 
 	char* buf = (char*)malloc(bufsize);
-	memcpy(buf, io.Buffer(), bufsize);
+	memcpy(buf, listener.result.Buffer(), bufsize);
 
-	delete asyncRequest;
+	delete request;
 
 	return buf;
 }
