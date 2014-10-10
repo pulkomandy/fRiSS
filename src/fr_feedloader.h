@@ -7,12 +7,10 @@ public:
 	
 	virtual void	MessageReceived(BMessage *msg);
 	
-	BString sUrl;
-	
 	bool Busy();
 	
 private:
-	void Load();
+	void Load(BString url);
 	
 	BView*	parent;
 	bool	stateLoading;

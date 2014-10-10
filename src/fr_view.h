@@ -147,9 +147,6 @@ private:
 	XmlNode*		theList;			// container of all <item>s
 	XmlNode*		currentFeed;		// must be a subitem of theRoot/theList
 	
-	// Buffer for communication
-	char*			buf;
-	
 	// List for Output
 	BObjectList<FStringItem>* tlist;
 	
@@ -160,14 +157,6 @@ private:
 	WindowMode_t	currentWindowMode;
 	
 	BMessenger*		messenger;
-	
-	// Semaphore
-	sem_id			mutex_loader;
-	
-	// ZETA specific
-	#ifdef __ZETA__
-	BLanguageNotifier fNotify;			// we need this for Zeta's Locale Kit
-	#endif
 	
 	BString			strDebug;
 };

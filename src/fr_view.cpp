@@ -29,10 +29,6 @@ FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
 	
 	screen = NULL;
 	
-	if ((mutex_loader = create_sem(1, "MutexLoader")) < B_OK) {
-		puts("Error: Could not create semaphore");
-	}
-	
 	/* Nun noch den Dragger einbauen.
 	 * B_ORIGIN scheint unten rechts zu sein, also noch entsprechend
 	 * die linke obere Ecke setzen (ich wusste vorher auch nicht, dass
@@ -58,11 +54,6 @@ FrissView::FrissView(BMessage *archive) :
 	// 
 	screen = NULL;
 
-
-	if ((mutex_loader = create_sem(1, "MutexLoader")) < B_OK) {
-		puts("Error: Could not create semaphore");
-	}
-	
 	BMessage msg;
 	archive->FindMessage("frissconfig", &msg);
 	
@@ -86,7 +77,6 @@ FrissView::FrissView(BMessage *archive) :
 
 FrissView::~FrissView()
 {
-	free(buf);		buf = NULL;
 	delete tlist;	tlist = NULL;
 	delete screen;	screen = NULL;
 	
@@ -175,7 +165,6 @@ FrissView::AllAttached()
 	currentFeed = NULL;
 	
 	// "Global" Buffer for data and items:
-	buf = (char*)calloc(BUFSIZE,1);
 	tlist = new BObjectList<FStringItem>();
 	
 	// Feedloader loads files from disk and net
@@ -587,13 +576,10 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 	//printf("Loading %d / %d\n", config.index, config.anz);
 
 	// Get some mem
-	int bufsize = BUFSIZE;
-	
 	BString title(fi->Attribute("text"));
 	BString url(fi->Attribute("xmlURL"));
 	
 	SetLabel(title.String());
-
 
 	// run external program
 	if (url.Compare("run://", 6)==0) {
@@ -605,9 +591,8 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 		
 		url.Remove(0,6);
 		
-		memset( buf, 0, bufsize );
-			
-		if ( LoadFile(buf, bufsize, url.String()) > 0 )
+		char buf[BUFSIZE];
+		if ( LoadFile(buf, BUFSIZE, url.String()) > 0 )
 			tvTextView->SetText( buf );
 		else {
 			BString text(_T("Error: Could not execute program."));
@@ -646,24 +631,15 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 
 		// Liste leeren:
 		int anz = listview->CountItems();
-		for (int i = 0; i < anz; i++ ) {
-			delete listview->RemoveItem(0L);
+		for (int i = anz - 1; i > 0; i-- ) {
+			delete listview->RemoveItem(i);
 		}
 		
 		pulsing = false;
 
-		memset( buf, 0, bufsize );
-		
-		if (acquire_sem(mutex_loader) == B_NO_ERROR) {
-			feedloader->sUrl = url;
-			//feedloader->PostMessage('LOAD');
-			BMessenger(feedloader).SendMessage('LOAD');
-			
-			release_sem(mutex_loader);
-		}
-		else {
-			puts("Error: could not enter mutex!");
-		}
+		BMessage message('LOAD');
+		message.AddString("url", url);
+		BMessenger(feedloader).SendMessage(&message);
 		
 		Invalidate();
 		tvTextView->Invalidate();

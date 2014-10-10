@@ -22,7 +22,7 @@ FrFeedLoader::MessageReceived(BMessage *msg)
 {
 	switch (msg->what) {
 		case 'LOAD':
-			Load();
+			Load(msg->FindString("url"));
 			break;
 		default:
 			BLooper::MessageReceived(msg);
@@ -36,7 +36,7 @@ FrFeedLoader::Busy()
 }
 
 void
-FrFeedLoader::Load()
+FrFeedLoader::Load(BString url)
 {
 	if (stateLoading) {
 		FPRINT(("FL: still busy\n"));
@@ -47,7 +47,7 @@ FrFeedLoader::Load()
 	FPRINT(("FL: getting busy\n"));
 	
 	size_t bufsize;
-	char* buf = LoadFeedNet(sUrl.String(),bufsize);
+	char* buf = LoadFeedNet(url.String(),bufsize);
 		
 	FPRINT(("FL: loading done: %i\n", n));
 	
