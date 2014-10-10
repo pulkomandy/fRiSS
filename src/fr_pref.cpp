@@ -247,7 +247,7 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 {
 	int selected;
 	XmlNode *item;
-			
+
 	switch(msg->what) {
 	
 		case MSG_P_ITEM_UPDATED:
@@ -373,6 +373,19 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 			break;
 			
 		case B_SAVE_REQUESTED:
+			{
+				entry_ref ref;
+				BString name;
+				msg->FindRef("directory", &ref);
+				msg->FindString("name", &name);
+
+				BDirectory dir(&ref);
+				BEntry file(&dir, name.String());
+				file.GetRef(&ref);
+
+				Export(theList->Parent()->Parent(), &ref);
+			}
+			break;
 		case B_REFS_RECEIVED:
 			{
 				//printf("\nPrefWin: REFS RECEIVED\n");
@@ -387,8 +400,9 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 				entry_ref	ref;
 				
 				msg->GetInfo( "refs", &type, &count );
-				if ( type != B_REF_TYPE)
+				if ( type != B_REF_TYPE) {
 					return;
+				}
 				
 				//printf("There are %d refs to import!\n", count);
 				
@@ -625,7 +639,7 @@ FrissPrefWin::ItemPopup(XmlNode* node, BPoint point)
 	else {
 		folder = true;
 		popup->AddItem( miAddItem = new BMenuItem( _T("Add new Item..."), NULL ) );
-		popup->AddItem( miAddSubfolder = new BMenuItem( _T("Add new Folder..."), NULL ) );
+		//popup->AddItem( miAddSubfolder = new BMenuItem( _T("Add new Folder..."), NULL ) );
 	}
 	
 	if (folder) {
@@ -754,39 +768,39 @@ void
 FrissPrefWin::ReLabel()
 {
 	// Window
-		SetTitle(	_T("Preferences") );
-	
+	SetTitle(	_T("Preferences") );
+
 	// Tabs
-		tabFeeds->SetLabel(	_T("Feeds") );
-		tabColor->SetLabel(	_T("Colours") );
-		tabMisc->SetLabel(	_T("Misc" ));
-	
+	tabFeeds->SetLabel(	_T("Feeds") );
+	tabColor->SetLabel(	_T("Colours") );
+	tabMisc->SetLabel(	_T("Misc" ));
+
 	// tabFeeds
-		bAdd->SetLabel(	_T("New Item...") );
-		bEdi->SetLabel(	_T("Edit") );
-		bRem->SetLabel(	_T("Remove") );
-	
+	bAdd->SetLabel(	_T("New Item...") );
+	bEdi->SetLabel(	_T("Edit") );
+	bRem->SetLabel(	_T("Remove") );
+
 	// tabColor
-		bBack->SetLabel(			_T("Background") );
-		cColTransparent->SetLabel(	_T("Transparent background") );
-		cColDesktop->SetLabel(		_T("Adapt to Desktop background colour") );
-		cColCustom->SetLabel(		_T("Custom background colour:") );
-		bFore->SetLabel(			_T("Text Colour"));
-		cColForeAdapt->SetLabel(	_T("Adapt colour to background")  );//(black on bright/white on dark)") );
-		cColForeCustom->SetLabel(	_T("Custom text colour:") );
-	
+	bBack->SetLabel(			_T("Background") );
+	cColTransparent->SetLabel(	_T("Transparent background") );
+	cColDesktop->SetLabel(		_T("Adapt to Desktop background colour") );
+	cColCustom->SetLabel(		_T("Custom background colour:") );
+	bFore->SetLabel(			_T("Text Colour"));
+	cColForeAdapt->SetLabel(	_T("Adapt colour to background")  );//(black on bright/white on dark)") );
+	cColForeCustom->SetLabel(	_T("Custom text colour:") );
+
 	// tabMisc
-		tRefrAdv->SetLabel(		_T("Load next feed instead of current") );
-		tRefresh->SetLabel(		_T("Refresh interval (min)") );
-		mfScrollbar->SetLabel(	_T("Show scrollbar") );
-		miAu->SetLabel(			_T("Automatic") );
-		miOn->SetLabel(			_T("Show always") );
-		miOf->SetLabel(			_T("Hide always") );
-		
-		boxBrowser->SetLabel(		_T("Browser") );
-		cBrowserCustom->SetLabel(	_T("Custom") );
-		tBrowserMime->SetLabel(		_T("Browser MIME-Type") );	
-		
+	tRefrAdv->SetLabel(		_T("Load next feed instead of current") );
+	tRefresh->SetLabel(		_T("Refresh interval (min)") );
+	mfScrollbar->SetLabel(	_T("Show scrollbar") );
+	miAu->SetLabel(			_T("Automatic") );
+	miOn->SetLabel(			_T("Show always") );
+	miOf->SetLabel(			_T("Hide always") );
+
+	boxBrowser->SetLabel(		_T("Browser") );
+	cBrowserCustom->SetLabel(	_T("Custom") );
+	tBrowserMime->SetLabel(		_T("Browser MIME-Type") );	
+
 	// Force Redraw:
 	tabView->Invalidate();
 	UpdateIfNeeded();
