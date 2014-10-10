@@ -7,13 +7,13 @@
 
 #include "frissconfig.h"
 #include "fr_pref.h"
-#include "fr_feedloader.h"
 #include "fr_flistview.h"
 #include "fr_fstringitem.h"
 #include "xmlnode.h"
 
 extern const char *app_signature;
 class FTextView;
+class FeedLoadListener;
 
 class FrissView : public BBox
 {
@@ -122,10 +122,6 @@ private:
 	bool			sb_hidden;
 	FListView*		listview;
 	BScrollView*	listScroll;
-	
-	FrFeedLoader*	feedloader;
-	thread_id		feedid;
-	
 
 	// we just store a pointer to the config struct because
 	// FrissMasterView likes to have it on Shutdown in order to
@@ -149,6 +145,8 @@ private:
 	
 	// List for Output
 	BObjectList<FStringItem>* tlist;
+
+	FeedLoadListener* fLoadListener;
 	
 	// Running as replicant?
 	bool replicant;

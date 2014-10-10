@@ -6,7 +6,6 @@ C++FLAGS = $(C++FLAGS) -g ;
 Main friss :
 	frissconfig.cpp
 	
-	fr_feedloader.cpp
 	load_fortune.cpp
 	load_net.cpp
 	

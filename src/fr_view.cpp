@@ -9,6 +9,8 @@
 
 #include <InterfaceDefs.h>
 #include <StorageKit.h>
+#include <UrlProtocolAsynchronousListener.h>
+#include <UrlRequest.h>
 
 // Helper window informs us about workspaces changes etc:
 #ifdef OPTIONS_USE_HELPERWINDOW
@@ -79,9 +81,6 @@ FrissView::~FrissView()
 {
 	delete tlist;	tlist = NULL;
 	delete screen;	screen = NULL;
-	
-	//Window()->PostMessage(B_QUIT_REQUESTED, feedloader);
-	BMessenger(feedloader).SendMessage(B_QUIT_REQUESTED);
 }
 
 
@@ -134,12 +133,55 @@ FrissView::Instantiate(BMessage *data)
 }
 
 
+class FeedLoadListener: public BUrlProtocolAsynchronousListener
+{
+	public:
+					FeedLoadListener(BView* view)
+						: BUrlProtocolAsynchronousListener(true) {
+			fView = view;
+			fCurrentRequest = NULL;
+		}
+
+		virtual		~FeedLoadListener() {};
+
+		void		ConnectionOpened(BUrlRequest* request) {
+			if (fCurrentRequest)
+				fCurrentRequest->Stop();
+			fCurrentRequest = request;
+			result.SetSize(0);
+		}
+
+		void		DataReceived(BUrlRequest* request, const char* data, off_t position,
+						ssize_t size) {
+			if (request != fCurrentRequest) {
+				delete request;
+			}
+			result.WriteAt(position, data, size);
+		}
+
+		void		RequestCompleted(BUrlRequest* request, bool success) {
+			if (request != fCurrentRequest)
+				return;
+			BMessage* msg = new BMessage(success ? MSG_LOAD_DONE : MSG_LOAD_FAIL);
+			msg->AddPointer("data", result.Buffer());
+			fView->Looper()->PostMessage(msg, fView);
+
+			fCurrentRequest = NULL;
+			delete request;
+		}
+
+		BUrlRequest* fCurrentRequest;
+		BView* fView;
+		BMallocIO result;
+};
+
+
 void
 FrissView::AllAttached()
 {
 	BBox::AllAttached();
-	
-	
+
+	fLoadListener = new FeedLoadListener(this);
 
 	status_t stat;
 	messenger = new BMessenger(this, NULL, &stat);
@@ -167,10 +209,6 @@ FrissView::AllAttached()
 	// "Global" Buffer for data and items:
 	tlist = new BObjectList<FStringItem>();
 	
-	// Feedloader loads files from disk and net
-	feedloader = new FrFeedLoader(this);
-	feedid = feedloader->Run();
-
 	// Views:
 	pop = NULL;
 	
@@ -378,7 +416,6 @@ FrissView::MessageReceived(BMessage *msg)
 			void* data = NULL;
 			msg->FindPointer("data", &data);
 			LoadDone((char*)data);
-			free(data);
 			break;
 		}
 			
@@ -614,11 +651,6 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 	
 	// load from net
 	if (url.Compare("http://", 7)==0 || url.Compare("file://", 7)==0) {
-		if (feedloader->Busy()) {
-			Error(_T("Warning: FeedLoader is still busy..."));
-			return;
-		}
-		
 		currentFeed = fi;
 
 		if (!listview->IsHidden())
@@ -637,12 +669,8 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 		
 		pulsing = false;
 
-		BMessage message('LOAD');
-		message.AddString("url", url);
-		BMessenger(feedloader).SendMessage(&message);
-		
-		Invalidate();
-		tvTextView->Invalidate();
+		LoadFeedNet(url, fLoadListener->SynchronousListener());
+
 		return;
 	}
 	
