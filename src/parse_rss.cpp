@@ -102,7 +102,7 @@ int Parse_rss( XmlNode* root, BObjectList<FStringItem>* list, BString& status, b
 				// fi could check if the node it owns is a root, and delete it
 				// if so.
 
-			if(html->Children() <= 1) {
+			if(html->Children() == 0 || (html->Children() == 1 && html->ItemAt(0)->Children() <= 1)) {
 				// Not enough markup, assume textmode feed
 				delete html;
 				html = new XmlNode(NULL, "p");
