@@ -4,6 +4,8 @@
 #include <stdlib.h>
 
 #include <FilePanel.h>
+#include <GroupLayoutBuilder.h>
+#include <GroupView.h>
 #include <Entry.h>
 #include <Path.h>
 
@@ -14,7 +16,7 @@
 FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 		BRect frame, const char* Title)
 	: BWindow(frame, Title, B_MODAL_WINDOW,
-		B_NOT_RESIZABLE | B_WILL_DRAW | B_FRAME_EVENTS)
+		B_FRAME_EVENTS | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	SetLook(B_TITLED_WINDOW_LOOK);
 	SetFeel(B_MODAL_APP_WINDOW_FEEL);
@@ -25,12 +27,8 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 	
 	// selected item for editing:
 	editi = -1;
-	
-	int width = 400, height = 350;
-	MoveTo(1024/2-width/2,768/2-height/2);
-	ResizeTo(width,height);
 
-	BRect r;
+	CenterOnScreen();
 	
 	m_pFileOpenPanel = m_pFileSavePanel = NULL;
 	m_pCurrentNode = NULL;
@@ -39,33 +37,27 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 	mess = new BMessenger(this);
 	
 	// Background...
-	r = Bounds();
-	BView* bvx = new BView(r, "", B_FOLLOW_ALL_SIDES, B_WILL_DRAW);
-	bvx->SetViewColor(216,216,216);
+	SetLayout(new BGroupLayout(B_VERTICAL));
+	BGroupView* bvx = new BGroupView(B_VERTICAL);
+	bvx->GroupLayout()->SetInsets(B_USE_WINDOW_INSETS);
+	bvx->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(bvx);
 	
 	// TabView
-	r = Bounds();
-	r.InsetBy(5,5);
-	tabView = new BTabView( r, "tabView", B_WIDTH_AS_USUAL, B_FOLLOW_ALL_SIDES );
-	tabView->SetViewColor(216,216,216,0);
+	tabView = new BTabView("tabView", B_WIDTH_AS_USUAL);
 	
-	r = tabView->Bounds();
-	//r.InsetBy(5,5);
-	r.bottom -= tabView->TabHeight();
-	
-	BBox *bbFeeds, *bbColor, *bbMisc;
+	BGroupView *bbFeeds, *bbColor, *bbMisc;
 	
 	tabFeeds = new BTab();
-	tabView->AddTab( bbFeeds = new BBox( r, "bbFeeds", 0, B_WILL_DRAW, B_NO_BORDER ), tabFeeds );
+	tabView->AddTab( bbFeeds = new BGroupView("bbFeeds", B_VERTICAL), tabFeeds );
 	tabFeeds->SetLabel(_T("Feeds"));
 	
 	tabColor = new BTab();
-	tabView->AddTab( bbColor = new BBox( r, "bbColor", 0, B_WILL_DRAW, B_NO_BORDER ), tabColor );
+	tabView->AddTab( bbColor = new BGroupView("bbColor", B_VERTICAL), tabColor );
 	tabColor->SetLabel(_T("Colours"));
 	
 	tabMisc = new BTab();
-	tabView->AddTab( bbMisc = new BBox( r, "bbMisc", 0, B_WILL_DRAW, B_NO_BORDER ), tabMisc );
+	tabView->AddTab( bbMisc = new BGroupView("bbMisc", B_VERTICAL), tabMisc );
 	tabMisc->SetLabel(_T("Misc"));
 		
 	bvx->AddChild(tabView);
@@ -73,75 +65,43 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 	
 	/* ------ Feeds ------ */
 	{
-		//bbFeeds->AddChild( bEdi = new BButton(br,"BEdi",_T("Edit"),new BMessage(CMD_EDIT_ITEM)) );
-			
-		const int buttonsize = 60;
-		
-		BRect wr = bbFeeds->Bounds();
-		wr.InsetBy(5,5); wr.top += 5;
-		BRect br(5, wr.bottom-30, 0, 0/*wr.bottom-10*/);
-		br.right = br.left + buttonsize;
-		
-		bbFeeds->AddChild( bAdd = new BButton(br,"BAdd",_T("New Item..."),
-			new BMessage(CMD_ADD_ITEM) ) );
-		bAdd->ResizeToPreferred();
-		
-		br.OffsetBy(bAdd->Bounds().Width()+10,0);
-		bbFeeds->AddChild( bEdi = new BButton(br,"BEdi",_T("Edit"),
-			new BMessage(CMD_EDIT_ITEM)) );
-		bEdi->ResizeToPreferred();
-		
-		br.OffsetBy(bEdi->Bounds().Width()+10,0);
-		bbFeeds->AddChild( bRem = new BButton(br,"BRem",_T("Remove"),
-			new BMessage(CMD_REMOVE_ITEM)) );
-		bRem->ResizeToPreferred();
+		bv = new PrefListView(theList, "feedlist", B_SINGLE_SELECTION_LIST);
+		bv->BuildView(theList);
+	
+		BScrollView *sv = new BScrollView("scrollview",bv,B_FRAME_EVENTS,false,true);
+		BGroupLayoutBuilder(bbFeeds)
+			.SetInsets(5, 5, 5, 5)
+			.Add(sv)
+			.AddGroup(B_HORIZONTAL)
+				.Add( bAdd = new BButton("BAdd",_T("New Item..."),
+					new BMessage(CMD_ADD_ITEM) ) )
+				.Add( bEdi = new BButton("BEdi",_T("Edit"),
+					new BMessage(CMD_EDIT_ITEM)) )
+				.Add( bRem = new BButton("BRem",_T("Remove"),
+					new BMessage(CMD_REMOVE_ITEM)) );
 		
 		// Remove and Edit have to be enabled by selecting an entry
 		bAdd->SetEnabled(true);
 		bEdi->SetEnabled(false);
 		bRem->SetEnabled(false);
-		
-		wr.bottom = br.top - 5;
-		
-		BRect fr = wr;
-		fr.InsetBy(5,5);
-		fr.right -= B_V_SCROLL_BAR_WIDTH;
-		
-		bv = new PrefListView(theList, fr, "feedlist", B_SINGLE_SELECTION_LIST);
-		bv->BuildView(theList);
-	
-		BScrollView *sv = new BScrollView("scrollview",bv,B_FOLLOW_RIGHT|B_FOLLOW_TOP|B_FOLLOW_BOTTOM,B_FRAME_EVENTS,false,true);
-		//sv->Scrollbar(B_HORIZONTAL)->SetRange(
-		bbFeeds->AddChild(sv);
-
 	}
 	
 	/* ----- Colour ----- */
 	{
-		BRect ccb = bbColor->Bounds();
-		ccb.InsetBy(5,5);
-		
-		const float backsize = 160.0f;
-		
-		BRect b = ccb;
-		bBack = new BBox(BRect(b.left,b.top,b.right,backsize));
+		bBack = new BBox("background");
 		bBack->SetLabel(_T("Background"));
-		bbColor->AddChild(bBack);
-		
-		b = bBack->Bounds();		
-		b.InsetBy(5,5);
-		b.top += 10;
-		b.bottom = b.top + 20;		
-		bBack->AddChild( cColTransparent = new BRadioButton( b, "CBTransp", _T("Transparent background"/*" (replicants only)"*/), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 20;
-		bBack->AddChild( cColDesktop = new BRadioButton( b, "CBDesktop", _T("Adapt to Desktop background colour"), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 20;
-		bBack->AddChild( cColDefault = new BRadioButton( b, "CBDefault", _T("Use default colour"), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 20;
-		bBack->AddChild( cColCustom = new BRadioButton( b, "CBTransp", _T("Custom background colour:"), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 20;
-		BPoint p(5,b.top);
-		bBack->AddChild( cColor = new BColorControl(p, B_CELLS_32x8, 7.0f, "colorpicker", new BMessage( MSG_COL_CHANGED ), true) );
+
+		BGroupView* group = new BGroupView(B_VERTICAL);
+		bBack->AddChild(group);
+
+		BGroupLayoutBuilder(group)
+			.SetInsets(5, 5, 5, 5)
+			.Add( cColTransparent = new BRadioButton("CBTransp", _T("Transparent background"/*" (replicants only)"*/), new BMessage( MSG_COL_CHANGED ) ) )
+			.Add( cColDesktop = new BRadioButton("CBDesktop", _T("Adapt to Desktop background colour"), new BMessage( MSG_COL_CHANGED ) ) )
+			.Add( cColDefault = new BRadioButton("CBDefault", _T("Use default colour"), new BMessage( MSG_COL_CHANGED ) ) )
+			.Add( cColCustom = new BRadioButton("CBTransp", _T("Custom background colour:"), new BMessage( MSG_COL_CHANGED ) ) )
+			.Add( cColor = new BColorControl(B_ORIGIN, B_CELLS_32x8, 7.0f, "colorpicker", new BMessage( MSG_COL_CHANGED ), true) );
+
 		cColor->SetValue( conf->col );
 		
 		switch (conf->ColBackMode) {
@@ -166,22 +126,18 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 #endif
 		
 		/* ---- TEXT COLOR ---- */
-		b = ccb;
-		bFore = new BBox(BRect(b.left,backsize+10.0f,b.right,b.bottom));
+		bFore = new BBox("foreground");
 		bFore->SetLabel(_T("Text Colour"));
-		bbColor->AddChild(bFore);
-		
-		b = bFore->Bounds();
-		b.InsetBy(5,5);
-		b.top += 10;
-		b.bottom = b.top + 20;
 
-		bFore->AddChild( cColForeAdapt = new BRadioButton( b, "CFAdapt", _T("Adapt colour to background" /* "(black on bright/white on dark)"*/), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 30;
-		bFore->AddChild( cColForeCustom = new BRadioButton( b, "CFCustom", _T("Custom text colour:"), new BMessage( MSG_COL_CHANGED ) ) );
-		b.top += 20;
-		BPoint p2(5,b.top);
-		bFore->AddChild( cColorHigh = new BColorControl(p2, B_CELLS_32x8, 7.0f, "colorpicker_high", new BMessage( MSG_COL_CHANGED ), true) );
+		group = new BGroupView(B_VERTICAL);
+		bFore->AddChild(group);
+		
+		BGroupLayoutBuilder(group)
+			.SetInsets(5, 5, 5, 5)
+			.Add( cColForeAdapt = new BRadioButton("CFAdapt", _T("Adapt colour to background" /* "(black on bright/white on dark)"*/), new BMessage( MSG_COL_CHANGED ) ) )
+			.Add( cColForeCustom = new BRadioButton("CFCustom", _T("Custom text colour:"), new BMessage( MSG_COL_CHANGED ) ) )
+			.Add( cColorHigh = new BColorControl(B_ORIGIN, B_CELLS_32x8, 7.0f, "colorpicker_high", new BMessage( MSG_COL_CHANGED ), true) );
+
 		cColorHigh->SetValue( conf->high );
 		
 		switch(conf->ColForeMode) {
@@ -191,29 +147,27 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 		default:
 			cColForeCustom->SetValue(B_CONTROL_ON);
 		}
+
+		BGroupLayoutBuilder(bbColor)
+			.SetInsets(5, 5, 5, 5)
+			.Add(bBack)
+			.Add(bFore)
+			.AddGlue();
 	}
 	
 	/* ----- Misc ----- */
 	{
-		BRect br = bbMisc->Bounds();
-		br.InsetBy(5,5); br.top += 5;
-		
-		br.bottom = br.top + 20;
-		bbMisc->AddChild( tRefrAdv = new BCheckBox(br, "tRefresh", _T("Load next feed instead of current"), NULL) );
-		br.OffsetBy(0,30);
+		bbMisc->GroupLayout()->SetInsets(5, 5, 5, 5);
+		bbMisc->AddChild( tRefrAdv = new BCheckBox("tRefresh", _T("Load next feed instead of current"), NULL) );
 		
 		BString dummy;
 		dummy << (int)(conf->RefreshRate / 120);
-		bbMisc->AddChild( tRefresh = new BTextControl(br, "tRefresh", _T("Refresh interval (min)"), dummy.String(), NULL) );
+		bbMisc->AddChild( tRefresh = new BTextControl("tRefresh", _T("Refresh interval (min)"), dummy.String(), NULL) );
 		
 		if (config->RefreshAdvances == 1)
 			tRefrAdv->SetValue(B_CONTROL_ON);
 
-		br.OffsetBy(0,80);
-		
 		/* --- */
-		br.OffsetBy(0,30);
-		
 #ifdef	OPTIONS_WINDOW_MODE
 
 		BPopUpMenu* men = new BPopUpMenu(_T("WindowMode"));
@@ -225,7 +179,7 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 		//men->AddItem( miFull = new BMenuItem( _T("Full"),
 		//	new BMessage( MSG_SB_CHANGED ) ) );
 		
-		bbMisc->AddChild( mfWindowMode=new BMenuField( br, "WindowMode",
+		bbMisc->AddChild( mfWindowMode=new BMenuField("WindowMode",
 			_T("Window mode"), men ) );
 		
 		/*
@@ -242,28 +196,26 @@ FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
 		/* --- */
 		
 		
-		BRect bBbox = bbMisc->Bounds();
-		bBbox.InsetBy(5,5);
-		bBbox.top = bBbox.bottom-110;
-		
-		boxBrowser = new BBox( bBbox );
+		boxBrowser = new BBox("browser");
 		boxBrowser->SetLabel(_T("Browser"));
-		bbMisc->AddChild(boxBrowser);
-		
-		br = boxBrowser->Bounds();
-		br.top += 10; br.InsetBy(5,5);
-		br.bottom = 20;
-		boxBrowser->AddChild( cBrowserNetP = new BRadioButton(br,
-			"cBrowserNetP", _T("WebPositive"), NULL) );
-		br.OffsetBy(0,20);
-		boxBrowser->AddChild( cBrowserFox = new BRadioButton(br,
-			"cBrowserFox", _T("Mozilla Firefox"), NULL) );
-		br.OffsetBy(0,30);
-		boxBrowser->AddChild( cBrowserCustom = new BRadioButton(br,
-			"cBrowserCustom", _T("Custom"), NULL) );
-		br.OffsetBy(0,20);
-		boxBrowser->AddChild( tBrowserMime = new BTextControl(br, "tBrowser",
-			_T("Browser MIME-Type"), config->BrowserMime.String(), NULL) );	
+		BGroupView* group = new BGroupView(B_VERTICAL);
+
+		boxBrowser->AddChild(group);
+
+		BGroupLayoutBuilder(group)
+			.SetInsets(5, 5, 5, 5)
+			.Add( cBrowserNetP = new BRadioButton(
+				"cBrowserNetP", _T("WebPositive"), NULL) )
+			.Add( cBrowserFox = new BRadioButton(
+				"cBrowserFox", _T("Mozilla Firefox"), NULL) )
+			.Add( cBrowserCustom = new BRadioButton(
+				"cBrowserCustom", _T("Custom"), NULL) )
+			.Add( tBrowserMime = new BTextControl("tBrowser",
+				_T("Browser MIME-Type"), config->BrowserMime.String(), NULL) );
+
+		BGroupLayoutBuilder(bbMisc)
+			.Add(boxBrowser)
+			.AddGlue();
 		
 		switch (config->BrowserType) {
 			case BrowserCustom:
