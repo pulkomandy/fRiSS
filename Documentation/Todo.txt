@@ -11,8 +11,6 @@ CRITICAL / IN PROGRESS:
 		- SortX(XmlNode* a, XmlNode* b)
 	PREFERENCES:
 		- (IMPROVE) drag and drop
-		- resize
-		- Import, Export
 		- Folders: Rename
 MEDIUM:
 	- obey to channels <TTL>
