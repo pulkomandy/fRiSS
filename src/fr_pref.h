@@ -25,7 +25,7 @@
 class FrissPrefWin : public BWindow
 {
 public:
-	FrissPrefWin(BView* thefv,FrissConfig* conf,XmlNode* xList, BRect frame, const char* Title); 
+	FrissPrefWin(BView* thefv,FrissConfig* conf,XmlNode* xList, const char* Title); 
 	virtual ~FrissPrefWin();
 	virtual	void MessageReceived(BMessage *msg);
 	virtual bool QuitRequested();

@@ -9,11 +9,14 @@ bool FTextView::isInit = false;
 text_run_array FTextView::linkStyle;
 text_run_array FTextView::titleStyle;
 
-FTextView::FTextView(FrissView& parentView, BRect br) :
-	BTextView(br, "Feed item text view", BRect(0, 0,
-			br.Width() - B_V_SCROLL_BAR_WIDTH - 10, br.Height() - 1),
-		B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS)
-	, parent(parentView)
+FTextView::FTextView() :
+	BTextView("Feed item text view", B_WILL_DRAW | B_FRAME_EVENTS)
+{
+}
+
+
+FTextView::FTextView(BMessage* message)
+	: BTextView(message)
 {
 }
 
@@ -78,6 +81,7 @@ FTextView::MouseDown(BPoint point)
 {
 	BPoint	cursor;
 	ulong	m_buttons;
+	FrissView* parent = (FrissView*)Parent();
 	
 	GetMouse(&cursor,&m_buttons);
 
@@ -86,17 +90,17 @@ FTextView::MouseDown(BPoint point)
 		BPoint m_point = point;
 		ConvertToScreen(&m_point);
 		
-		parent.StartPopup( m_point );
+		parent->StartPopup( m_point );
 	}
 	else if (m_buttons & 0x4) {
-		parent.LoadNext();
+		parent->LoadNext();
 	}		
 	else {
 		// See if we hit one of the links
 		tLink* aLink = GetLinkAt(point);
 
 		if (aLink)
-			parent.OpenURL(aLink->target);
+			parent->OpenURL(aLink->target);
 		else
 			BTextView::MouseDown(point);
 	}
@@ -278,4 +282,22 @@ void FTextView::SetContents(const BString& title, const XmlNode& body,
 	textStyle.runs[0].color = make_color(0,0,0);
 
 	Render(&body, textStyle);
+}
+
+
+status_t
+FTextView::Archive(BMessage* archive, bool deep) const
+{
+	status_t result = BTextView::Archive(archive, deep);
+	archive->AddString("class", "FTextView");
+	return result;
+}
+
+
+/*static*/ BArchivable*
+FTextView::Instantiate(BMessage* archive)
+{
+	if (!validate_instantiation(archive, "FTextView"))
+		return NULL;
+	return new FTextView(archive);
 }

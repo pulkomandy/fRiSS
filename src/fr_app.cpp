@@ -5,6 +5,7 @@
 
 #include <AppFileInfo.h>
 #include <FindDirectory.h>
+#include <GroupView.h>
 #include <Path.h>
 #include <unistd.h>
 
@@ -37,29 +38,31 @@ void FrissWindow::MessageReceived(BMessage* message)
 
 FrissWindow::FrissWindow(FrissConfig* config, XmlNode* theList, BRect frame,
 	const char* Title) : 
-	BWindow(frame, Title, B_TITLED_WINDOW, B_FRAME_EVENTS)
+	BWindow(frame, Title, B_TITLED_WINDOW,
+		B_FRAME_EVENTS | B_AUTO_UPDATE_SIZE_LIMITS)
 {	
-	BRect brect = Bounds();
-
-	BView* background = new BView(brect, "background",
-			B_FOLLOW_ALL_SIDES, B_WILL_DRAW);
+	SetLayout(new BGroupLayout(B_VERTICAL));
+	BGridView* background = new BGridView("background");
+	background->GridLayout()->SetInsets(7, 7, 0, 0);
+	background->GridLayout()->SetSpacing(0, 0);
 	background->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(background);
 
-	brect.left += 150;
-	brect.top += 5;
-	myf = new FrissView(config, theList, brect);
-	background->AddChild(myf);
+	feedList = new BListView("feedlist", B_SINGLE_SELECTION_LIST);
+	background->GridLayout()->AddView(new BScrollView("scroll", feedList,
+		0, false, true), 0, 0);
 
-	brect = Bounds();
-	brect.InsetBy(5, 5);
-	brect.right = brect.left + 150 - 5 - B_V_SCROLL_BAR_WIDTH;
+	myf = new FrissView(config, theList);
+	background->GridLayout()->AddView(myf,1,0);
 
-	feedList = new BListView(brect, "feedlist", B_SINGLE_SELECTION_LIST,
-		B_FOLLOW_ALL_SIDES);
-
-	background->AddChild(new BScrollView("scroll", feedList,
-		B_FOLLOW_LEFT | B_FOLLOW_TOP_BOTTOM, 0, false, true));
+	/* Nun noch den Dragger einbauen.
+	 * B_ORIGIN scheint unten rechts zu sein, also noch entsprechend
+	 * die linke obere Ecke setzen (ich wusste vorher auch nicht, dass
+	 * der Dragger 7x7 Pixel groß ist :-)
+	 */
+	BDragger* myd = new BDragger(myf, B_WILL_DRAW );
+	myd->SetExplicitMaxSize(BSize(7, 7));
+	background->GridLayout()->AddView(myd, 2, 1);
 
 	BMessage* m = new BMessage(msg_SelFeed);
 	feedList->SetSelectionMessage(m);
@@ -191,7 +194,7 @@ class MyApplication : public BApplication
 			root->CreateChild("opml/body");
 		}
 
-		const char* version() {
+		BString version() {
 			app_info appInfo;
 			BFile file;
 			BAppFileInfo appFileInfo;
@@ -220,7 +223,7 @@ class MyApplication : public BApplication
 				version << info.internal;
 			}
 
-			return version.String();
+			return version;
 		}	
 
 	private:

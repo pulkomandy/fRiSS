@@ -14,8 +14,8 @@
 
 
 FrissPrefWin::FrissPrefWin(BView* thefv,FrissConfig* conf, XmlNode* xList,
-		BRect frame, const char* Title)
-	: BWindow(frame, Title, B_MODAL_WINDOW,
+		const char* Title)
+	: BWindow(BRect(0, 0, 100, 100), Title, B_MODAL_WINDOW,
 		B_FRAME_EVENTS | B_AUTO_UPDATE_SIZE_LIMITS)
 {
 	SetLook(B_TITLED_WINDOW_LOOK);

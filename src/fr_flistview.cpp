@@ -1,15 +1,18 @@
 #include "fr_flistview.h"
 #include "fr_view.h"
 
-FListView::FListView(BView* thefv, BRect f, const char *name,
-	list_view_type type, uint32 resizingMode, uint32 flags) :
-	BListView(f, name, type, resizingMode, flags)
+FListView::FListView(const char *name,
+	list_view_type type, uint32 flags) :
+	BListView(name, type, flags)
 {
-	fv = thefv;
 	transparent = false;	
+}
 
-	f.left = f.right - 8;
-	f.top = f.bottom - 8;
+
+FListView::FListView(BMessage* archive)
+	: BListView(archive)
+{
+	transparent = false;
 }
 
 
@@ -17,6 +20,7 @@ void
 FListView::SelectionChanged()
 {
 	BListView::SelectionChanged();
+	FrissView* fv = (FrissView*)Parent()->Parent();
 	
 	if (m_buttons == 0x1) {
 		int32 idx = CurrentSelection();
@@ -24,7 +28,7 @@ FListView::SelectionChanged()
 		if (idx!=B_ERROR) {
 			FStringItem *fi = (FStringItem*) ItemAt( idx );
 			if (fi) {
-				((FrissView*)fv)->ItemSelected( fi );
+				fv->ItemSelected( fi );
 			}
 		}
 	}
@@ -37,6 +41,7 @@ FListView::MouseDown(BPoint point)
 {
 	BPoint cursor;
 	GetMouse(&cursor,&m_buttons);
+	FrissView* fv = (FrissView*)Parent()->Parent();
 
 	if ((m_buttons & 0x1) == 0x1)
 		BListView::MouseDown(point);
@@ -45,9 +50,27 @@ FListView::MouseDown(BPoint point)
 		BPoint m_point = point;
 		ConvertToScreen(&m_point);
 		
-		((FrissView*)fv)->StartPopup( m_point );
+		fv->StartPopup( m_point );
 	}
 	else if ((m_buttons & 0x4) == 0x4) {
-		((FrissView*)fv)->LoadNext();
+		fv->LoadNext();
 	}
+}
+
+
+status_t
+FListView::Archive(BMessage* archive, bool deep) const
+{
+	status_t result = BListView::Archive(archive, deep);
+	archive->AddString("class", "FListView");
+	return result;
+}
+
+
+/*static*/ BArchivable*
+FListView::Instantiate(BMessage* archive)
+{
+	if (!validate_instantiation(archive, "FListView"))
+		return NULL;
+	return new FListView(archive);
 }

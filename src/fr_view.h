@@ -3,7 +3,8 @@
 
 #include "fr_def.h"
 
-#include <be/support/String.h>
+#include <GridView.h>
+#include <String.h>
 
 #include "frissconfig.h"
 #include "fr_pref.h"
@@ -15,10 +16,10 @@ extern const char *app_signature;
 class FTextView;
 class FeedLoadListener;
 
-class FrissView : public BBox
+class FrissView : public BGridView
 {
 public:
-	FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame);
+	FrissView(FrissConfig* newconf, XmlNode* x_root);
 	FrissView(BMessage* msg);
 	~FrissView();
 	
@@ -27,8 +28,6 @@ public:
 
 	// Initialise this object
 	virtual void AllAttached();
-	
-	virtual void	AttachedToWindow();
 	
 	virtual void Pulse();
 	
@@ -52,8 +51,6 @@ public:
 	void Launch(FStringItem* fi);
 	// TODO move this method to somewhere where it makes more sense
 	void OpenURL(BString url);
-	
-	virtual void Draw(BRect frame);
 	
 	virtual void FrameResized(float width, float height);
 
@@ -121,13 +118,11 @@ private:
 	
 	bool			sb_hidden;
 	FListView*		listview;
-	BScrollView*	listScroll;
 
 	// we just store a pointer to the config struct because
 	// FrissMasterView likes to have it on Shutdown in order to
 	// properly save it to disk/archive
 	FrissConfig*	config;
-	//BView*		parent;
 	
 	// do some time measurement for refreshes
 	bool			pulsing;

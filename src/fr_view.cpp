@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <time.h>
 
+#include <GroupLayout.h>
 #include <InterfaceDefs.h>
 #include <StorageKit.h>
 #include <UrlProtocolAsynchronousListener.h>
@@ -21,27 +22,29 @@
 #include <stdlib.h>
 
 
-FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
-	BBox(frame, "fRiSS", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED | B_FRAME_EVENTS, B_NO_BORDER)
+FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root) :
+	BGridView("fRiSS")
 {
 	// Important
 	config = newconf;
 	theRoot = x_root;
 	theList = theRoot->FindChild("body", NULL, true);
-	
+
 	screen = NULL;
 	
-	/* Nun noch den Dragger einbauen.
-	 * B_ORIGIN scheint unten rechts zu sein, also noch entsprechend
-	 * die linke obere Ecke setzen (ich wusste vorher auch nicht, dass
-	 * der Dragger 7x7 Pixel groß ist :-)
-	 */
-	BRect r = Bounds();
-	r.OffsetTo(B_ORIGIN);
-	r.top = r.bottom-7;
-	r.left = r.right - 7;		
-	BDragger* myd = new BDragger( r, this, B_FOLLOW_RIGHT | B_FOLLOW_BOTTOM, B_WILL_DRAW );
-	AddChild(myd);
+	GridLayout()->SetInsets(7, 0, 0, 0);
+
+	listview = new FListView("listview", B_SINGLE_SELECTION_LIST);
+	GridLayout()->AddView(new BScrollView("scroll", listview,
+    	0, false, true), 0, 0);
+	listview->Hide();
+	
+	tvTextView = new FTextView();
+	tvTextView->MakeSelectable(false);
+	
+	sbTextView = new BScrollView("sbTextView", tvTextView, B_WILL_DRAW | B_FRAME_EVENTS, false, true, B_PLAIN_BORDER);
+	GridLayout()->AddView(sbTextView, 0, 1);
+	sbTextView->Hide();
 	
 	// Only transparency for replicants:
 	replicant = false;	
@@ -49,11 +52,10 @@ FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root, BRect frame) :
 
 
 FrissView::FrissView(BMessage *archive) :
-	BBox(archive)
+	BGridView(archive)
 {
+	archive->PrintToStream();
 	replicant = true;
-	
-	// 
 	screen = NULL;
 
 	BMessage msg;
@@ -61,20 +63,15 @@ FrissView::FrissView(BMessage *archive) :
 	
 	config = new FrissConfig(&msg);
 
+	listview = dynamic_cast<FListView*>(FindView("listview"));
+	sbTextView = dynamic_cast<BScrollView*>(FindView("sbTextView"));
+	tvTextView = dynamic_cast<FTextView*>(FindView("Feed item text view"));
 
 	// Reassemble feed list:	
 	BMessage list;
 	archive->FindMessage("feeds", &list);
 	theRoot = new XmlNode(&list);
 	theList = theRoot->FindChild("body", NULL, true);
-	
-	// don't resize any more (this sucks in Shelfer)
-	SetResizingMode(ResizingMode() & !B_FOLLOW_RIGHT & !B_FOLLOW_BOTTOM);	
-	
-	BRect r = Bounds();
-	r.OffsetTo(B_ORIGIN);
-	r.top = r.bottom-7;
-	r.left = r.right - 7;		
 }
 
 FrissView::~FrissView()
@@ -88,20 +85,15 @@ void Notify(const char* msg)
 {
 	BAlert *alert = new BAlert( "Vorsicht!", msg, "Mist!" );
 	alert->SetShortcut(0, B_ESCAPE);
-	alert->ResizeTo(400,300);
 	alert->Go();
 }
 
 status_t
 FrissView::Archive(BMessage *data, bool deep) const
 {
-	BView::Archive(data, false);
-	data->AddString("add_on", app_signature);
+	BGridView::Archive(data, deep);
 	
 	if (deep) {
-		// manually add the dragger
-		
-	
 		// save configuration
 		BMessage msg;
 		if (config->Archive(&msg, deep) == B_OK)
@@ -120,6 +112,10 @@ FrissView::Archive(BMessage *data, bool deep) const
 			return B_ERROR;			
 		}
 	}
+
+	data->AddString("add_on", app_signature);
+
+data->PrintToStream();
 		
 	return B_OK;
 }
@@ -127,6 +123,7 @@ FrissView::Archive(BMessage *data, bool deep) const
 BArchivable *
 FrissView::Instantiate(BMessage *data)
 {
+	puts("instanciate");
 	if (!validate_instantiation(data, "FrissView"))
 		return NULL;
 	return new FrissView(data);
@@ -179,7 +176,7 @@ class FeedLoadListener: public BUrlProtocolAsynchronousListener
 void
 FrissView::AllAttached()
 {
-	BBox::AllAttached();
+	BGridView::AllAttached();
 
 	fLoadListener = new FeedLoadListener(this);
 
@@ -195,8 +192,6 @@ FrissView::AllAttached()
 	
 	// Screen is useful for getting workspace color etc.	
 	screen = new BScreen(B_MAIN_SCREEN_ID);
-	if (replicant) {
-	}
 
 	// Pulse/Reload timer:
 	last_reload = 0;
@@ -211,30 +206,6 @@ FrissView::AllAttached()
 	
 	// Views:
 	pop = NULL;
-	
-	
-	BRect br = Bounds();
-	br.InsetBy(3,5);
-	br.bottom = br.top + 100;
-
-	listview = new FListView(this, br, "listview", B_SINGLE_SELECTION_LIST,
-		B_FOLLOW_ALL_SIDES);
-
-	AddChild(listScroll = new BScrollView("scroll", listview,
-    	B_FOLLOW_LEFT | B_FOLLOW_TOP, 0, false, true));
-	
-	listview->Hide();
-	
-	br.top = br.bottom;
-	br.bottom = Bounds().bottom;
-
-	tvTextView = new FTextView(*this, br);
-	tvTextView->MakeSelectable(false);
-	
-	sbTextView = new BScrollView("sbTextView", tvTextView, B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS, false, true, B_PLAIN_BORDER);
-	AddChild(sbTextView);
-	
-	sbTextView->Hide();
 	
 	Load(config->Index());
 	
@@ -297,15 +268,6 @@ FrissView::AllAttached()
 	UpdateColors();
 	currentWindowMode = WindowMode_NONE;
 	UpdateWindowMode();
-}
-
-void
-FrissView::AttachedToWindow()
-{
-	BBox::AttachedToWindow();
-	#ifdef __ZETA__
-		//fNotify.SetTo((BView*)this);
-	#endif
 }
 
 void
@@ -510,7 +472,7 @@ FrissView::MessageReceived(BMessage *msg)
 			break;
 		
 		default:
-			BBox::MessageReceived(msg);
+			BGridView::MessageReceived(msg);
 	}
 }
 
@@ -610,13 +572,11 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 	
 	config->SetIndex(idx);
 	
-	//printf("Loading %d / %d\n", config.index, config.anz);
-
 	// Get some mem
 	BString title(fi->Attribute("text"));
 	BString url(fi->Attribute("xmlURL"));
 	
-	SetLabel(title.String());
+	// FIXME SetLabel(title.String());
 
 	// run external program
 	if (url.Compare("run://", 6)==0) {
@@ -783,7 +743,7 @@ FrissView::LoadDone(char* buf)
 		if (localtm->tm_min<10) title << "0";
 		title << localtm->tm_min << ")";
 		
-		SetLabel( title.String() );	
+		// FIXME SetLabel( title.String() );	
 	}	
 	
 	tvTextView->SetText("");
@@ -946,7 +906,7 @@ FrissView::StartPopup(BPoint point)
 	else if (mi == miOpts) {
 		inv = false;
 		pulsing = false;
-		FrissPrefWin* pf = new FrissPrefWin(this, config, theList, BRect(0,0,0,0), _T("Preferences"));
+		FrissPrefWin* pf = new FrissPrefWin(this, config, theList, _T("Preferences"));
 		pf->Show();
 		// now we're "blocked" until the pref window sends 'PREF' to us
 	}
@@ -1073,30 +1033,9 @@ FrissView::Error(const char* err)
 }
 
 void
-FrissView::Draw(BRect frame)
-{
-	//puts("Draw()");
-
-#ifdef ALLOW_TRANSP
-	if (replicant && config.ColBackMode == ColBackTransparent) {
-		//SetDrawingMode(B_OP_ALPHA);
-		if (bitmap)
-			DrawBitmap(bitmap, Bounds());
-		
-		BBox::Draw(frame);
-	}
-	else
-#endif	
-	{
-		// Ganz normal:
-		BBox::Draw(frame);
-	}	
-}
-
-void
 FrissView::FrameResized(float width, float height)
 {
-	BBox::FrameResized(width,height);
+	BGridView::FrameResized(width,height);
 	
 	UpdateWindowMode();
 }
@@ -1106,53 +1045,16 @@ void
 FrissView::UpdateWindowMode()
 {
 #ifdef OPTIONS_WINDOW_MODE
-	BRect br = Bounds();
-	
-	sbTextView->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-	listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT );
-
 	if (config->WindowMode == WindowModePreview) {
-		// max visible area:
-		br.InsetBy(10,4);
-		br.top += 10;
-		br.right += 5;
-
-		float height = br.Height() / 3 - 5;
-		sbTextView->MoveTo(br.left, br.top+height+10);
-		sbTextView->ResizeTo(br.Width(), br.bottom - (br.top + height + 10));
-		
 		ShowPreviewArea(true);
-		
-		listScroll->MoveTo(br.left,br.top);
-		listScroll->ResizeTo(br.Width(), height);
-		
 		currentWindowMode = WindowModePreview;
-		
-		sbTextView->SetResizingMode( B_FOLLOW_BOTTOM | B_FOLLOW_LEFT_RIGHT );
-		listScroll->SetResizingMode( B_FOLLOW_TOP | B_FOLLOW_LEFT_RIGHT );
-		
 		return;
 	}
 	
 	// else: SimpleMode
 	{
 		ShowPreviewArea(false);
-		
-		br.InsetBy(10,10);
-		br.top += 5;
-		br.right -= 1; //B_V_SCROLL_BAR_WIDTH;
-		
-		sbTextView->MoveTo(br.left,br.top);
-		sbTextView->ResizeTo(br.Width(), br.Height() );
-				
-		
-		listScroll->MoveTo(br.left,br.top);
-		listScroll->ResizeTo(br.Width(), br.Height() );
-		
 		currentWindowMode = WindowModeSimple;
-		
-		sbTextView->SetResizingMode( B_FOLLOW_ALL_SIDES );
-		listScroll->SetResizingMode( B_FOLLOW_ALL_SIDES );
 		return;	
 	}
 

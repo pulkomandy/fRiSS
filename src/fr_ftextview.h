@@ -8,7 +8,8 @@
 class FTextView : public BTextView
 {
 public:
-	FTextView(FrissView& parentView, BRect br);
+	FTextView();
+	FTextView(BMessage* archive);
 	~FTextView();
 	
 	void AttachedToWindow();
@@ -17,6 +18,9 @@ public:
 	void MouseMoved(BPoint point, uint32 transit, const BMessage* message);
 	void SetContents(const BString& title, const XmlNode& contents,
 		const BString& link);
+
+	status_t Archive(BMessage* archive, bool deep = true) const;
+	static BArchivable* Instantiate(BMessage* archive);
 	
 private:
 	struct tLink {
@@ -38,9 +42,6 @@ private:
 	void RenderLi(text_run_array& textStyle);
 
 	tLink* GetLinkAt(BPoint point);
-
-	FrissView& parent;
-
 
 	BList links;
 	int itemNumber; // for <ol> enumerations

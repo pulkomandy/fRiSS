@@ -6,19 +6,21 @@
 class FListView : public BListView
 {
 public:
-	FListView(BView* thefv, BRect frame, const char *name,
+	FListView(const char *name,
 		list_view_type type = B_SINGLE_SELECTION_LIST,
-		uint32 resizingMode = B_FOLLOW_LEFT | B_FOLLOW_TOP,
 		uint32 flags = B_WILL_DRAW | B_NAVIGABLE | B_FRAME_EVENTS | B_FULL_UPDATE_ON_RESIZE);
+	FListView(BMessage* archive);
 	
-	virtual void SelectionChanged();
-	virtual void MouseDown(BPoint point);
+	void SelectionChanged();
+	void MouseDown(BPoint point);
 	
+	status_t Archive(BMessage* archive, bool deep = true) const;
+	static BArchivable* Instantiate(BMessage* archive);
+
 	// Transparency:
 	bool		transparent;
 
 private:
-	BView*		fv;
 	unsigned long		m_buttons;
 };
 
