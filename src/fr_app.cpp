@@ -5,7 +5,8 @@
 
 #include <AppFileInfo.h>
 #include <FindDirectory.h>
-#include <GroupView.h>
+#include <GridLayoutBuilder.h>
+#include <GroupLayout.h>
 #include <Path.h>
 #include <unistd.h>
 
@@ -43,17 +44,12 @@ FrissWindow::FrissWindow(FrissConfig* config, XmlNode* theList, BRect frame,
 {	
 	SetLayout(new BGroupLayout(B_VERTICAL));
 	BGridView* background = new BGridView("background");
-	background->GridLayout()->SetInsets(7, 7, 0, 0);
 	background->GridLayout()->SetSpacing(0, 0);
 	background->SetViewColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 	AddChild(background);
 
 	feedList = new BListView("feedlist", B_SINGLE_SELECTION_LIST);
-	background->GridLayout()->AddView(new BScrollView("scroll", feedList,
-		0, false, true), 0, 0);
-
 	myf = new FrissView(config, theList);
-	background->GridLayout()->AddView(myf,1,0);
 
 	/* Nun noch den Dragger einbauen.
 	 * B_ORIGIN scheint unten rechts zu sein, also noch entsprechend
@@ -62,7 +58,15 @@ FrissWindow::FrissWindow(FrissConfig* config, XmlNode* theList, BRect frame,
 	 */
 	BDragger* myd = new BDragger(myf, B_WILL_DRAW );
 	myd->SetExplicitMaxSize(BSize(7, 7));
-	background->GridLayout()->AddView(myd, 2, 1);
+
+	BGridLayoutBuilder(background)
+		.SetInsets(7, 7, 0, 0)
+		.Add(new BScrollView("scroll", feedList, 0, false, true), 0, 0)
+		.Add(myf, 1, 0)
+		.Add(myd, 2, 1);
+
+	background->GridLayout()->SetColumnWeight(0, 0.4);
+	background->GridLayout()->SetMaxColumnWidth(0, 200);
 
 	BMessage* m = new BMessage(msg_SelFeed);
 	feedList->SetSelectionMessage(m);
