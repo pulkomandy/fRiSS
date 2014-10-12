@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <time.h>
 
-#include <GroupLayout.h>
+#include <GridLayoutBuilder.h>
 #include <InterfaceDefs.h>
 #include <StorageKit.h>
 #include <UrlProtocolAsynchronousListener.h>
@@ -22,29 +22,26 @@
 #include <stdlib.h>
 
 
-FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root) :
-	BGridView("fRiSS")
+FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root)
+	: BGridView("fRiSS")
+	, pop(NULL)
+	, miGo(NULL)
+	, tvTextView(new FTextView())
+	, sbTextView(new BScrollView("sbTextView", tvTextView,
+		B_WILL_DRAW | B_FRAME_EVENTS, false, true, B_PLAIN_BORDER))
+	, listview(new FListView("listview", B_SINGLE_SELECTION_LIST))
+	, config(newconf)
+	, theRoot(x_root)
+	, theList(theRoot->FindChild("body", NULL, true))
 {
-	// Important
-	config = newconf;
-	theRoot = x_root;
-	theList = theRoot->FindChild("body", NULL, true);
-
-	screen = NULL;
-	
-	GridLayout()->SetInsets(7, 0, 0, 0);
-
-	listview = new FListView("listview", B_SINGLE_SELECTION_LIST);
-	GridLayout()->AddView(new BScrollView("scroll", listview,
-    	0, false, true), 0, 0);
 	listview->Hide();
-	
-	tvTextView = new FTextView();
-	tvTextView->MakeSelectable(false);
-	
-	sbTextView = new BScrollView("sbTextView", tvTextView, B_WILL_DRAW | B_FRAME_EVENTS, false, true, B_PLAIN_BORDER);
-	GridLayout()->AddView(sbTextView, 0, 1);
 	sbTextView->Hide();
+	tvTextView->MakeSelectable(false);
+
+	BGridLayoutBuilder(this)
+		.SetInsets(7, 0, 0, 0)
+		.Add(new BScrollView("scroll", listview, 0, false, true), 0, 0)
+		.Add(sbTextView, 0, 1);
 	
 	// Only transparency for replicants:
 	replicant = false;	
@@ -54,9 +51,7 @@ FrissView::FrissView(FrissConfig* newconf, XmlNode* x_root) :
 FrissView::FrissView(BMessage *archive) :
 	BGridView(archive)
 {
-	archive->PrintToStream();
 	replicant = true;
-	screen = NULL;
 
 	BMessage msg;
 	archive->FindMessage("frissconfig", &msg);
@@ -77,7 +72,6 @@ FrissView::FrissView(BMessage *archive) :
 FrissView::~FrissView()
 {
 	delete tlist;	tlist = NULL;
-	delete screen;	screen = NULL;
 }
 
 
@@ -115,15 +109,12 @@ FrissView::Archive(BMessage *data, bool deep) const
 
 	data->AddString("add_on", app_signature);
 
-data->PrintToStream();
-		
 	return B_OK;
 }
 
 BArchivable *
 FrissView::Instantiate(BMessage *data)
 {
-	puts("instanciate");
 	if (!validate_instantiation(data, "FrissView"))
 		return NULL;
 	return new FrissView(data);
@@ -186,13 +177,8 @@ FrissView::AllAttached()
 	BEntry entry("/boot/home/config/settings/NetPositive/History");
 	node_ref nref;
 	entry.GetNodeRef(&nref);
-	
 	watch_node(&nref, B_WATCH_ALL, *messenger);
 	
-	
-	// Screen is useful for getting workspace color etc.	
-	screen = new BScreen(B_MAIN_SCREEN_ID);
-
 	// Pulse/Reload timer:
 	last_reload = 0;
 	pulses = 0;	
@@ -205,14 +191,7 @@ FrissView::AllAttached()
 	tlist = new BObjectList<FStringItem>();
 	
 	// Views:
-	pop = NULL;
-	
 	Load(config->Index());
-	
-	#ifdef OPTIONS_USE_NLANG
-		if (config->Lang.Length() != 0)
-			no_locale.LoadFileID(config->Lang.String());
-	#endif
 	
 	BString ts;	
 	
@@ -220,7 +199,7 @@ FrissView::AllAttached()
 	
 	pop->AddItem( miGo = new BMenuItem( _T("Go"), NULL ) );	
 	
-	ts << _T("Information") << "...";
+	ts << _T("Information") << B_UTF8_ELLIPSIS;
 	pop->AddItem( miInfo = new BMenuItem( ts.String(), NULL ) );
 	//miInfo->SetShortcut('I', B_COMMAND_KEY);
 	miInfo->SetEnabled(false);
@@ -236,32 +215,17 @@ FrissView::AllAttached()
 	pop->AddItem( mList = new BMenu( _T("Select Feed") ) );
 	pop->AddSeparatorItem();
 	
-	ts = _T("Preferences"); ts << "...";
+	ts = _T("Preferences"); ts << B_UTF8_ELLIPSIS;
 	pop->AddItem( miOpts = new BMenuItem( ts.String(), NULL /*,'P', B_CONTROL_KEY*/ ) );
-	#ifdef OPTIONS_USE_NLANG
-		pop->AddItem( mLang = new BMenu( _T("Language") ) );
-		no_locale.BuildLangMenu(mLang, config->Lang.String());
-	#endif	
 	pop->AddSeparatorItem();
 	pop->AddItem(miAbout = new BMenuItem(_T("About fRiSS" B_UTF8_ELLIPSIS),
 		NULL /*,'A', B_CONTROL_KEY*/ ) );
-#ifdef N3S_DEBUG
-	if (replicant) {
-		pop->AddSeparatorItem();
-		pop->AddItem( miDebug = new BMenuItem( _T("Debug: Remove Replicant"), NULL /*,'Q', B_CONTROL_KEY*/ ) );
-	}
-	else {
-		pop->AddSeparatorItem();
-		pop->AddItem( miDebug = new BMenuItem( _T("Debug: Nuthing"), NULL /*,'Q', B_CONTROL_KEY*/ ) );
-	}
-#else
 	if (replicant) {
 		pop->AddSeparatorItem();
 		pop->AddItem( miDebug = new BMenuItem( _T("Debug: Remove Replicant"), NULL /*,'Q', B_CONTROL_KEY*/ ) );
 	}
 	else
 		miDebug = NULL;
-#endif
 
 	config->m_iAnz = BuildPopup(theList, mList);
 	
@@ -292,6 +256,8 @@ void
 FrissView::UpdateColors()
 {	
 	rgb_color colback, collow, colfore;
+	rgb_color desktopColor = BScreen(B_MAIN_SCREEN_ID).DesktopColor();
+
 	
 	if (replicant && config->ColBackMode == ColBackTransparent) {
 		listview->transparent = true;	
@@ -299,10 +265,10 @@ FrissView::UpdateColors()
 		//colback.alpha = 255
 		
 		colback = B_TRANSPARENT_COLOR;
-		collow = screen->DesktopColor();
+		collow = desktopColor;
 	}
 	else if (config->ColBackMode == ColBackDesktop) {
-		colback = screen->DesktopColor();
+		colback = desktopColor;
 		collow = colback;
 	} else if (config->ColBackMode == ColBackCustom) {
 		colback = config->col;
@@ -938,23 +904,10 @@ FrissView::StartPopup(BPoint point)
 					Load( idx, node );
 				}
 			}
-			else {
-				#ifdef OPTIONS_USE_NLANG
-				BString file;
-				if (msg->FindString("filename", &file) == B_OK) {
-					printf("Trying to load language file '%s'\n", file.String());
-					no_locale.LoadFile(file.String());
-					file.Remove(0,file.Length()-4);
-					config->Lang = file.String();
-					DeletePopup(mLang);
-					no_locale.BuildLangMenu(mLang, file.String());
-					BMessenger(this).SendMessage(B_LANGUAGE_CHANGED);
-				}		
-				#endif
-			}
 		}
 	}
 }
+
 
 void
 FrissView::ItemSelected(FStringItem* fi)

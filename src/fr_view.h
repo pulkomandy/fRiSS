@@ -54,8 +54,6 @@ public:
 	
 	virtual void FrameResized(float width, float height);
 
-	BScreen*		screen;
-
 	// return our config to parent:	
 	FrissConfig*	Config();
 	XmlNode*		GetFeedTree();
@@ -108,10 +106,6 @@ private:
 	BMenuItem*		miDebug;		// debug item
 	
 	BMenuItem*		miActiveFeed;	// Workaround since FindMarked is not recursive :-/
-	
-	#ifdef OPTIONS_USE_NLANG
-	BMenu*			mLang;			// "Select Language" (R5 only)
-	#endif
 	
 	FTextView*		tvTextView;
 	BScrollView*	sbTextView;

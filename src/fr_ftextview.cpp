@@ -81,7 +81,7 @@ FTextView::MouseDown(BPoint point)
 {
 	BPoint	cursor;
 	ulong	m_buttons;
-	FrissView* parent = (FrissView*)Parent();
+	FrissView* parent = dynamic_cast<FrissView*>(Parent()->Parent());
 	
 	GetMouse(&cursor,&m_buttons);
 
