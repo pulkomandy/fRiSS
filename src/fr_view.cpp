@@ -222,7 +222,7 @@ FrissView::AllAttached()
 		NULL /*,'A', B_CONTROL_KEY*/ ) );
 	if (replicant) {
 		pop->AddSeparatorItem();
-		pop->AddItem( miDebug = new BMenuItem( _T("Debug: Remove Replicant"), NULL /*,'Q', B_CONTROL_KEY*/ ) );
+		pop->AddItem( miDebug = new BMenuItem( _T("Remove Replicant"), NULL /*,'Q', B_CONTROL_KEY*/ ) );
 	}
 	else
 		miDebug = NULL;
@@ -336,7 +336,8 @@ FrissView::MessageReceived(BMessage *msg)
 			UpdateColors();
 			ReBuildPopup(theList, mList);
 
-			((FrissWindow*)Window())->PopulateFeeds(theRoot);
+			if (!replicant)
+				((FrissWindow*)Window())->PopulateFeeds(theRoot);
 			break;
 			
 		case MSG_LOAD_DONE:
