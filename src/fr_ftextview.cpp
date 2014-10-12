@@ -289,7 +289,7 @@ status_t
 FTextView::Archive(BMessage* archive, bool deep) const
 {
 	status_t result = BTextView::Archive(archive, deep);
-	archive->AddString("class", "FTextView");
+	archive->AddString("add_on", app_signature);
 	return result;
 }
 

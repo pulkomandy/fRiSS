@@ -62,7 +62,7 @@ status_t
 FListView::Archive(BMessage* archive, bool deep) const
 {
 	status_t result = BListView::Archive(archive, deep);
-	archive->AddString("class", "FListView");
+	archive->AddString("add_on", app_signature);
 	return result;
 }
 
