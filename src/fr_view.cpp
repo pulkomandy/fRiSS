@@ -11,6 +11,7 @@
 #include <InterfaceDefs.h>
 #include <StorageKit.h>
 #include <UrlProtocolAsynchronousListener.h>
+#include <UrlProtocolRoster.h>
 #include <UrlRequest.h>
 
 // Helper window informs us about workspaces changes etc:
@@ -577,38 +578,38 @@ FrissView::Load(uint32 idx, XmlNode* direct)
 	}
 	
 	// load from net
-	if (url.Compare("http://", 7)==0 || url.Compare("file://", 7)==0) {
-		currentFeed = fi;
+	currentFeed = fi;
 
-		if (!listview->IsHidden())
-			listview->Hide();
-		
-		if (config->WindowMode == WindowModeSimple)
-			ShowPreviewArea(true);
-		
-		tvTextView->SetText(_T("Loading..."));
+	if (!listview->IsHidden())
+		listview->Hide();
 
-		// Liste leeren:
-		int anz = listview->CountItems();
-		for (int i = anz - 1; i > 0; i-- ) {
-			delete listview->RemoveItem(i);
-		}
-		
-		pulsing = false;
+	if (config->WindowMode == WindowModeSimple)
+		ShowPreviewArea(true);
 
-		LoadFeedNet(url, fLoadListener->SynchronousListener());
+	tvTextView->SetText(_T("Loading..."));
 
+	// Clear the previous items
+	int anz = listview->CountItems();
+	for (int i = anz - 1; i > 0; i-- )
+		delete listview->RemoveItem(i);
+	
+	pulsing = false;
+
+	BUrl urlReq(url);
+	BUrlRequest* request = BUrlProtocolRoster::MakeRequest(urlReq,
+		fLoadListener->SynchronousListener());
+	if (request == NULL) {
+		// unsupported protocol
+		BString errf;
+		errf = "Unsupported protocol: ";
+		errf << url.String();
+		errf << "\n\nValid protocols are:\n\thttp://\n\tfile://\n\trun://\n" ;
+
+		Error( errf.String() );
 		return;
 	}
-	
-	// unsupported protocol
-	BString errf;
-	errf = "Unsupported protocol: ";
-	errf << url.String();
-	errf << "\n\nValid protocols are:\n\thttp://\n\tfile://\n\trun://\n" ;
 
-	puts( errf.String() );
-	Error( errf.String() );
+	request->Run();
 }
 
 void

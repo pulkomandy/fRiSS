@@ -7,7 +7,6 @@ Main friss :
 	frissconfig.cpp
 	
 	load_fortune.cpp
-	load_net.cpp
 	
 	nlang.cpp
 	
