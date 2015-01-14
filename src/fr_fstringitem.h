@@ -34,6 +34,4 @@ private:
 	BString		sDate;
 };
 
-int compare_func(const BListItem* firstArg, const BListItem* secondArg);
-
 #endif

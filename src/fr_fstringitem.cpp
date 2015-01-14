@@ -120,11 +120,3 @@ FStringItem::SetTitleHtml(BString title)
 	} while (startMarkup >= 0 && endMarkup >= 0);
 	SetText(title);	
 }
-
-int compare_func(const BListItem* firstArg, const BListItem* secondArg)
-{
-	FStringItem *a = (FStringItem*) firstArg;
-	FStringItem *b = (FStringItem*) secondArg;	
-	
-	return strcmp(a->Text(), b->Text());
-}

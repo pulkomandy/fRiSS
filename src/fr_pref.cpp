@@ -260,18 +260,15 @@ FrissPrefWin::MessageReceived(BMessage *msg)
 			break;
 		
 		case CMD_ADD_ITEM:
-			// Changed behaviour: Add new XmlNode and open Edit for it
+			// Add new XmlNode and open Edit for it
 			{
 				XmlNode* newItem = new XmlNode(theList, "outline");
 				EditItem(newItem);
 				bv->AddItem(new BStringItem(newItem->Name()));
 				theList->AddChild(newItem);
-				bv->FullListSortItems(&compare_func);
 				break;
 			}
 			
-			//Falltrough : edit the item we just added
-
 		case CMD_EDIT_ITEM:
 			{
 				if (editi == bv->CurrentSelection()) {
