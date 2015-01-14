@@ -216,17 +216,13 @@ FrissConfig::Defaults()
 	m_iIndex		= 0;
 	m_iAnz			= 1;
 	
-	entry_ref ref; 
-	if ( B_OK == be_roster->FindApp(APP_SIGNATURE, &ref) ) {
-		BPath path(&ref);
-		path.GetParent(&path);
-		//path.Append("Language/Dictionaries");
-		
+	BPath path;
+	if (find_directory(B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
 		Feedlist	= path.Path();
-		Feedlist	<< "/feeds.opml";		
+		Feedlist	<< "/fRiSS/feeds.opml";		
 	}
 	else	
-		Feedlist	= "./feeds.opml";
+		Feedlist	= "/boot/home/config/settings/fRiSS/feeds.opml";
 
 	// Appearance ===============================================================
 	m_rWindow.Set(50,50,300,200);

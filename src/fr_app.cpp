@@ -104,7 +104,7 @@ void FrissWindow::Save(FrissConfig* conf, XmlNode* root)
 	BPath	path;		
 
 	if (find_directory (B_USER_SETTINGS_DIRECTORY, &path, true) == B_OK) {
-		path.Append("friss_settings.xml");
+		path.Append("fRiSS/settings.xml");
 
 		conf->SetWindowRect( Frame() );
 		conf->Save( path.Path() );
@@ -129,7 +129,7 @@ class MyApplication : public BApplication
 			bool		ok = false;
 
 			if (find_directory (B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
-				path.Append("friss_settings.xml");
+				path.Append("fRiSS/settings.xml");
 
 				ok = config->Load( path.Path() );
 			}
