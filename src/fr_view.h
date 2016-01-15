@@ -134,6 +134,7 @@ private:
 
 	// List for Output
 	BObjectList<FStringItem>* tlist;
+	BObjectList<FStringItem>* loadList;
 
 	FeedLoadListener* fLoadListener;
 

@@ -870,7 +870,7 @@ XmlNode::Parse(const char* buf)
 void
 XmlNode::Display() const
 {
-	Display(0);
+	Display(stderr, 0);
 }
 
 
@@ -963,61 +963,61 @@ XmlNode::ParseAttributes(const char* buf)
 
 
 void
-XmlNode::Display(int level) const
+XmlNode::Display(FILE* file, int level) const
 {
 	for (int i=0;i<level;i++)
-		printf("\t");
+		fprintf(file, "\t");
 
 	switch(mType)
 	{
 		case XML_TYPE_NODE:
 		{
 			if (Attributes()==0)
-				printf("<%s>\n", mName.String() );
+				fprintf(file, "<%s>\n", mName.String() );
 			else {
-				printf("<%s\n", mName.String() );
+				fprintf(file, "<%s\n", mName.String() );
 
 				for (int32 i=0, a=Attributes();i<a;i++) {
 					for (int ti=0;ti<level+1;ti++)
-						printf("\t");
+						fprintf(file, "\t");
 
 					XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
-					printf("%s = %s\n", n->Name(), n->Value().String());
+					fprintf(file, "%s = %s\n", n->Name(), n->Value().String());
 				}
 				for (int ti=0;ti<level;ti++) printf("\t");
-				printf(">\n");
+				fprintf(file, ">\n");
 			}
 
 
 			for (int32 i=0, a=Children();i<a;i++)
-				ItemAt(i)->Display(level+1);
+				ItemAt(i)->Display(file, level+1);
 
 			for (int i=0;i<level;i++)
-				printf("\t");
-			printf("</%s>\n", mName.String() );
+				fprintf(file, "\t");
+			fprintf(file, "</%s>\n", mName.String() );
 
 			break;
 		}
 		case XML_TYPE_SINGLE:
 		{
 			if (Attributes()==0)
-				printf("<%s", mName.String() );
+				fprintf(file, "<%s", mName.String() );
 			else {
-				printf("<%s\n", mName.String() );
+				fprintf(file, "<%s\n", mName.String() );
 
 				for (int32 i=0, a=Attributes();i<a;i++) {
-					for (int ti=0;ti<level+1;ti++) printf("\t");
+					for (int ti=0;ti<level+1;ti++) fprintf(file, "\t");
 
 					XmlNode* n = (XmlNode*)mAttribute.ItemAt(i);
-					printf("%s = %s\n", n->Name(), n->Value().String());
+					fprintf(file, "%s = %s\n", n->Name(), n->Value().String());
 				}
-				for (int ti=0;ti<level;ti++) printf("\t");
+				for (int ti=0;ti<level;ti++) fprintf(file, "\t");
 			}
 
 			if (mData.Length()>0)
-				printf(">%s</%s>\n", mData.String(), mName.String() );
+				fprintf(file, ">%s</%s>\n", mData.String(), mName.String() );
 			else
-				printf("/>\n");
+				fprintf(file, "/>\n");
 
 			break;
 		}
@@ -1026,7 +1026,7 @@ XmlNode::Display(int level) const
 			puts(mData.String());
 			break;
 		case XML_TYPE_COMMENT:
-			printf("<!--|%s|-->\n", mData.String() );
+			fprintf(file, "<!--|%s|-->\n", mData.String() );
 			break;
 	}
 }
@@ -1035,94 +1035,19 @@ XmlNode::Display(int level) const
 bool
 XmlNode::SaveToFile(const char* filename) const
 {
-	int ref = creat(filename, 0666);
-	if (ref < 0) {
-		perror("open");
-		return false;
-	}
+	//TODO: Rewrite saving to use a BFile object
 
-	BString dummy("<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n\n");
-	write(ref, dummy.String(), dummy.Length());
+	FILE* file;
+	file = fopen(filename, "w");
 
-	int c = Children();
-	for (int i=0; i<c; i++) {
-		ItemAt(i)->SaveNode(ref, 0);
-	}
+	fprintf(file, "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n\n");
+	Display(file, 0);
 
-	//dummy = "</xml>\n";
-	//write(ref, dummy.String(), dummy.Length());
-
-	close(ref);
+	fclose(file);
 	return true;
 }
 
 #define TabS( depth ) s.Prepend( '\t', depth )
-
-bool
-XmlNode::SaveNode(int ref, int depth) const
-{
-	BString s; 			// s is reused later!
-	TabS(depth);
-
-	if (mType == XML_TYPE_COMMENT) {
-		s << "<!-- " << mData.String() << " -->\n";
-		write(ref, s.String(), s.Length());
-
-		return true;
-	}
-
-	// Name
-	s << "<" << Name();
-	write(ref, s.String(), s.Length());
-
-	// attributes
-	int a = Attributes();
-	if (a>0) {
-		for (int i=0; i<a; i++) {
-			XmlNode *aa = (XmlNode*)mAttribute.ItemAt(i);
-			s = " ";
-			s << aa->Name() << "=\"" << aa->Value() << "\"";
-			write(ref, s.String(), s.Length());
-		}
-	}
-
-	// Traverse children
-	if (mType == XML_TYPE_NODE) {
-
-		int c = Children();
-		if (c==0) {
-			s = " />\n";
-			write(ref, s.String(), s.Length());
-		}
-		else {
-			s = ">\n";
-			write(ref, s.String(), s.Length());
-
-			for (int i=0; i<c; i++) {
-				ItemAt(i)->SaveNode(ref, depth+1);
-			}
-
-			// closing tag:
-			s.SetTo("");
-			TabS(depth);
-			s << "</" << Name() << ">\n";
-			write(ref, s.String(), s.Length());
-		}
-	}
-	else if (mType == XML_TYPE_SINGLE) {
-		if (mData.Length()==0) {
-			s = " />\n";
-			write(ref, s.String(), s.Length());
-		}
-		else {
-			s = ">";
-			s << mData.String() << "</" << mName.String() << ">\n";
-			write(ref, s.String(), s.Length());
-		}
-	}
-
-	return true;
-}
 
 bool
 XmlNode::LoadFile(const char* filename)

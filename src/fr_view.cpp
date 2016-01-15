@@ -3,12 +3,17 @@
 #include "parser.h"
 #include "frissWindow.h"
 #include "fr_ftextview.h"
+#include "fr_fstringitem.h"
 
 #include <assert.h>
 #include <time.h>
 
+#include <Directory.h>
+#include <File.h>
+#include <FindDirectory.h>
 #include <GridLayoutBuilder.h>
 #include <InterfaceDefs.h>
+#include <Path.h>
 #include <StorageKit.h>
 #include <UrlProtocolAsynchronousListener.h>
 #include <UrlProtocolRoster.h>
@@ -190,6 +195,7 @@ FrissView::AllAttached()
 
 	// "Global" Buffer for data and items:
 	tlist = new BObjectList<FStringItem>();
+	loadList = new BObjectList<FStringItem>();
 
 	// Views:
 	Load(config->Index());
@@ -716,10 +722,111 @@ FrissView::LoadDone(char* buf)
 
 	tvTextView->SetText("");
 
+	const char* feed_title = currentFeed->Attribute("text");
+	const char* feed_url = currentFeed->Attribute("xmlUrl");
+
+	BPath friss_path;
+	find_directory(B_USER_SETTINGS_DIRECTORY, &friss_path, true);
+	friss_path.Append("fRiSS");
+
+	BPath feed_path(friss_path.Path());
+	feed_path.Append(feed_title);
+
+	BDirectory current_dir(friss_path.Path());
+	BDirectory feed_dir(feed_path.Path());
+
 	listview->MakeEmpty();
+	if (feed_dir.InitCheck() != B_OK) {
+		current_dir.CreateDirectory(feed_title, &feed_dir );
+		feed_dir.WriteAttr("url", B_STRING_TYPE, 0, feed_url,
+			strlen(feed_url));
+	} else {
+		entry_ref ref;
+		while (1) {
+			status_t status = feed_dir.GetNextRef(&ref);
+
+			if (status != B_OK) {
+				if (status == B_ENTRY_NOT_FOUND)
+					break;
+				else
+					continue;
+			}
+
+			BString loaded_title("");
+			BString loaded_url("");
+			BString loaded_date("");
+			BString file_status;
+			BString file_contents;
+
+			BFile file(&ref, B_READ_ONLY);
+			off_t size = 0;
+			file.GetSize(&size);
+
+			char* buf = file_contents.LockBuffer(size);
+			file.Read(buf, size);
+			file_contents.UnlockBuffer(size);
+
+			file.ReadAttrString("title", &loaded_title);
+			file.ReadAttrString("url", &loaded_url);
+			file.ReadAttrString("date", &loaded_date);
+
+			BPath filename(feed_path.Path());
+			filename.Append(loaded_title.String());
+
+			FStringItem* loaded_article = new FStringItem(
+				loaded_title.String(),
+				loaded_url.String());
+			loaded_article->SetDate(loaded_date.String());
+
+			XmlNode* root = new XmlNode(file_contents, NULL);
+			root->LoadFile(filename.Path());
+			loaded_article->SetDesc(root);
+
+			listview->AddItem(dynamic_cast<BListItem*>(loaded_article));
+		}
+	}
+
 	int a = tlist->CountItems();
+	int listview_size = listview->CountItems();
 	for (int i=0;i<a;i++) {
-		listview->AddItem( dynamic_cast<BListItem*>(tlist->ItemAt(i)));
+		FStringItem* current_item = tlist->ItemAt(i);
+		const char* title = current_item->Title();
+		const char* url = current_item->Url();
+		const char* date = current_item->Date();
+
+		bool addItem = true;
+		for (int list_index=0;list_index<listview_size;list_index++)
+		{
+			FStringItem* current_list_item =
+				dynamic_cast<FStringItem*>(listview->ItemAt(list_index));
+			const char* list_title = current_list_item->Title();
+			const char* list_url = current_list_item->Url();
+
+			if ((strcmp(title, list_title) == 0) &&
+				(strcmp(url, list_url) == 0)) {
+				addItem = false;
+			}
+		}
+
+		if (addItem) {
+			int *defaultValue = 0;
+
+			listview->AddItem(dynamic_cast<BListItem*>(current_item));
+
+			BString file_name(feed_path.Path());
+			file_name.Append("/");
+			file_name.Append(title);
+			current_item->Desc()->SaveToFile(file_name);
+
+			BFile file;
+			file.SetTo(file_name, B_READ_WRITE);
+
+			file.WriteAttr("title", B_STRING_TYPE, 0, title, strlen(title));
+			file.WriteAttr("read", B_BOOL_TYPE, 0, defaultValue,
+				sizeof(defaultValue));
+			file.WriteAttr("url", B_STRING_TYPE, 0, url, strlen(url));
+			file.WriteAttr("date", B_STRING_TYPE, 0, date, strlen(date));
+		}
 	}
 
 	// set visited:
