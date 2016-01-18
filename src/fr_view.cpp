@@ -180,11 +180,6 @@ FrissView::AllAttached()
 	status_t stat;
 	messenger = new BMessenger(this, NULL, &stat);
 
-	BEntry entry("/boot/home/config/settings/NetPositive/History");
-	node_ref nref;
-	entry.GetNodeRef(&nref);
-	watch_node(&nref, B_WATCH_ALL, *messenger);
-
 	// Pulse/Reload timer:
 	last_reload = 0;
 	pulses = 0;
@@ -325,11 +320,6 @@ FrissView::UpdateColors()
 void
 FrissView::MessageReceived(BMessage *msg)
 {
-	int32		opcode;
-	//dev_t		device;
-	//ino_t		directory;
-	//ino_t		node;
-	const char*	name;
 	entry_ref	ref;
 
 	switch(msg->what) {
@@ -396,43 +386,6 @@ FrissView::MessageReceived(BMessage *msg)
 				pop->ItemAt(9)->SetLabel( _T("Language") );
 				#endif
 				miAbout->SetLabel(_T("About fRiSS"B_UTF8_ELLIPSIS));
-			}
-			break;
-
-		case B_NODE_MONITOR:
-			if (msg->FindInt32("opcode", &opcode) == B_OK) {
-				switch(opcode) {
-				case B_ENTRY_CREATED:
-					{
-						//puts("Create");
-						msg->FindInt32("device", &ref.device);
-						msg->FindInt64("directory", &ref.directory);
-						//msg->FindInt64("node", &node);
-						msg->FindString("name", &name);
-						ref.set_name(name);
-
-						VisitRef(&ref);
-					}
-					break;
-
-				case B_ENTRY_MOVED:
-					{
-						//puts("Moved");
-						msg->FindInt32("device", &ref.device);
-						msg->FindInt64("to directory", &ref.directory);
-						//msg->FindInt64("node", &node);
-						msg->FindString("name", &name);
-						ref.set_name(name);
-
-						VisitRef(&ref);
-					}
-					break;
-
-				default:
-					// andere Nachricht
-					//puts("Else");
-					break;
-				}
 			}
 			break;
 
