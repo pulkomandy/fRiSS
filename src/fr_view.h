@@ -58,10 +58,6 @@ public:
 	FrissConfig*	Config();
 	XmlNode*		GetFeedTree();
 
-	void			UpdateVisitedLink(const char* url);
-	bool			InitialVisitedLink(const char* pfad);
-	void			VisitRef(entry_ref* ref);
-
 	void			NodeViewInformation(FStringItem* node);
 
 private:

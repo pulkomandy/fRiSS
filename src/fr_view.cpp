@@ -762,7 +762,7 @@ FrissView::LoadDone(char* buf)
 		}
 
 		if (addItem) {
-			int *defaultValue = 0;
+			int* defaultValue = 0;
 
 			listview->AddItem(dynamic_cast<BListItem*>(current_item));
 
@@ -781,9 +781,6 @@ FrissView::LoadDone(char* buf)
 			file.WriteAttr("date", B_STRING_TYPE, 0, date, strlen(date));
 		}
 	}
-
-	// set visited:
-	InitialVisitedLink("/boot/home/config/settings/NetPositive/History");
 
 	if (config->WindowMode == WindowModeSimple)
 		ShowPreviewArea(false);
@@ -981,6 +978,30 @@ FrissView::ItemSelected(FStringItem* fi)
 		Launch(fi);
 	else {
 		NodeViewInformation(fi);
+
+		BString url(fi->Url());
+		int list_size = listview->CountItems();
+		for (int i=0; i<list_size; i++) {
+			FStringItem* fi = (FStringItem*) listview->ItemAt(i);
+			if (strcmp(url.String(), fi->Url())==0) {
+				fi->SetVisited();
+
+				const char* feed_title = currentFeed->Attribute("text");
+				int* selected_link = new int(1);
+
+				BPath file_path;
+				find_directory(B_USER_SETTINGS_DIRECTORY, &file_path, true);
+				file_path.Append("fRiSS");
+				file_path.Append(feed_title);
+				file_path.Append(fi->Title());
+
+				BFile file(file_path.Path(), B_READ_WRITE);
+				file.WriteAttr("read", B_BOOL_TYPE, 0, selected_link,
+					sizeof(selected_link));
+
+				break;
+			}
+		}
 	}
 }
 
@@ -1087,68 +1108,6 @@ FrissView::GetFeedTree()
 {
 	return theRoot;
 }
-
-
-void
-FrissView::UpdateVisitedLink(const char* url)
-{
-	// find url in listview
-	//printf("Update url: %s\n", url);
-
-	int anz = listview->CountItems();
-
-	for (int i=0; i<anz; i++) {
-		FStringItem* fi = (FStringItem*) listview->ItemAt(i);
-		if (strcmp(url, fi->Url())==0) {
-			//puts("found! :-D");
-			fi->SetVisited();
-
-			listview->Invalidate();
-			return;
-		}
-	}
-
-	//puts("not in list... maybe that wasn't invoked by us :-/");
-}
-
-bool
-FrissView::InitialVisitedLink(const char* pfad)
-{
-	BDirectory dir(pfad);
-	if (dir.InitCheck() != B_OK) {
-		return false;
-	}
-
-	//printf("Searching '%s'\n", pfad);
-
-	BEntry entry;
-	entry_ref ref;
-
-	while (dir.GetNextEntry(&entry) == B_OK) {
-		BPath path(&entry);
-
-		if ( !InitialVisitedLink(path.Path()) ) {
-			entry.GetRef(&ref);
-			VisitRef(&ref);
-		}
-	}
-
-	return true;
-}
-
-void
-FrissView::VisitRef(entry_ref* ref)
-{
-	BNode bn(ref);
-	if (bn.InitCheck() == B_OK) {
-		char *url = (char*)calloc(URL_BUFSIZE, 1);
-		bn.ReadAttr("META:url", B_STRING_TYPE, 0, url, URL_BUFSIZE);
-
-		UpdateVisitedLink(url);
-		free(url);
-	}
-}
-
 
 void
 FrissView::OnWorkspaceChanged()
