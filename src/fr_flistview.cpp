@@ -5,7 +5,7 @@ FListView::FListView(const char *name,
 	list_view_type type, uint32 flags) :
 	BListView(name, type, flags)
 {
-	transparent = false;	
+	transparent = false;
 }
 
 
@@ -21,10 +21,10 @@ FListView::SelectionChanged()
 {
 	BListView::SelectionChanged();
 	FrissView* fv = (FrissView*)Parent()->Parent();
-	
+
 	if (m_buttons == 0x1) {
 		int32 idx = CurrentSelection();
-	
+
 		if (idx!=B_ERROR) {
 			FStringItem *fi = (FStringItem*) ItemAt( idx );
 			if (fi) {
@@ -33,6 +33,12 @@ FListView::SelectionChanged()
 		}
 	}
 
+}
+
+
+int
+FListView::compare(const void* a, const void* b) {
+	return ((FStringItem*)a)->Date() < ((FStringItem*)b)->Date();
 }
 
 
@@ -49,7 +55,7 @@ FListView::MouseDown(BPoint point)
 		// right mouse button is for popup only :-)
 		BPoint m_point = point;
 		ConvertToScreen(&m_point);
-		
+
 		fv->StartPopup( m_point );
 	}
 	else if ((m_buttons & 0x4) == 0x4) {
