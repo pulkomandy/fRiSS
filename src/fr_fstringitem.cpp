@@ -24,13 +24,24 @@ FStringItem::FStringItem(const char *text, const char *url, uint32 level,
 	bAddDesc = addDescFlag;
 }
 
-FStringItem::FStringItem(FStringItem& fi) : 
+FStringItem::FStringItem(FStringItem& fi) :
 	BStringItem( fi.Text(), 0, true ),
 	sUrl(fi.Url()),
 	sDesc(fi.Desc())
 {
 	visited = fi.visited;
 	bAddDesc = fi.bAddDesc;
+}
+
+void
+FStringItem::DrawItem(BView* owner, BRect frame, bool complete)
+{
+	if (!visited)
+		owner->SetFont(be_bold_font);
+	else
+		owner->SetFont(be_plain_font);
+
+	BStringItem::DrawItem(owner, frame, complete);
 }
 
 const char*
@@ -118,5 +129,5 @@ FStringItem::SetTitleHtml(BString title)
 			title = title.Remove(endMarkup, 1);
 		}
 	} while (startMarkup >= 0 && endMarkup >= 0);
-	SetText(title);	
+	SetText(title);
 }

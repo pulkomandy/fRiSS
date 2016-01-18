@@ -999,6 +999,8 @@ FrissView::ItemSelected(FStringItem* fi)
 				file.WriteAttr("read", B_BOOL_TYPE, 0, selected_link,
 					sizeof(selected_link));
 
+				Invalidate();
+
 				break;
 			}
 		}
