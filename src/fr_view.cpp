@@ -710,6 +710,7 @@ FrissView::LoadDone(char* buf)
 			BString loaded_date("");
 			BString file_status;
 			BString file_contents;
+			bool isRead = false;
 
 			BFile file(&ref, B_READ_ONLY);
 			off_t size = 0;
@@ -722,6 +723,7 @@ FrissView::LoadDone(char* buf)
 			file.ReadAttrString("title", &loaded_title);
 			file.ReadAttrString("url", &loaded_url);
 			file.ReadAttrString("date", &loaded_date);
+			file.ReadAttr("read", B_BOOL_TYPE, 0, &isRead, sizeof(isRead));
 
 			BPath filename(feed_path.Path());
 			filename.Append(loaded_title.String());
@@ -730,6 +732,7 @@ FrissView::LoadDone(char* buf)
 				loaded_title.String(),
 				loaded_url.String());
 			loaded_article->SetDate(loaded_date.String());
+			loaded_article->SetVisited(isRead);
 
 			XmlNode* root = new XmlNode(file_contents, NULL);
 			root->LoadFile(filename.Path());
@@ -762,7 +765,9 @@ FrissView::LoadDone(char* buf)
 		}
 
 		if (addItem) {
-			int* defaultValue = 0;
+			printf("SAVING ITEM...\n");
+
+			int defaultValue = 0;
 
 			listview->AddItem(dynamic_cast<BListItem*>(current_item));
 
@@ -775,7 +780,7 @@ FrissView::LoadDone(char* buf)
 			file.SetTo(file_name, B_READ_WRITE);
 
 			file.WriteAttr("title", B_STRING_TYPE, 0, title, strlen(title));
-			file.WriteAttr("read", B_BOOL_TYPE, 0, defaultValue,
+			file.WriteAttr("read", B_BOOL_TYPE, 0, &defaultValue,
 				sizeof(defaultValue));
 			file.WriteAttr("url", B_STRING_TYPE, 0, url, strlen(url));
 			file.WriteAttr("date", B_STRING_TYPE, 0, date, strlen(date));
@@ -987,7 +992,7 @@ FrissView::ItemSelected(FStringItem* fi)
 				fi->SetVisited();
 
 				const char* feed_title = currentFeed->Attribute("text");
-				int* selected_link = new int(1);
+				int selected_link = 1;
 
 				BPath file_path;
 				find_directory(B_USER_SETTINGS_DIRECTORY, &file_path, true);
@@ -996,10 +1001,8 @@ FrissView::ItemSelected(FStringItem* fi)
 				file_path.Append(fi->Title());
 
 				BFile file(file_path.Path(), B_READ_WRITE);
-				file.WriteAttr("read", B_BOOL_TYPE, 0, selected_link,
+				file.WriteAttr("read", B_BOOL_TYPE, 0, &selected_link,
 					sizeof(selected_link));
-
-				Invalidate();
 
 				break;
 			}
