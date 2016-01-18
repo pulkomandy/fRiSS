@@ -62,10 +62,10 @@ FStringItem::Desc() const
 	return sDesc;
 }
 
-const char*
+time_t
 FStringItem::Date() const
 {
-	return sDate.String();
+	return sDate;
 }
 
 bool
@@ -87,7 +87,7 @@ FStringItem::SetDesc(const XmlNode* const desc)
 }
 
 void
-FStringItem::SetDate(const char* date)
+FStringItem::SetDate(time_t date)
 {
 	sDate = date;
 }

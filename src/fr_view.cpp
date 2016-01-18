@@ -707,7 +707,6 @@ FrissView::LoadDone(char* buf)
 
 			BString loaded_title("");
 			BString loaded_url("");
-			BString loaded_date("");
 			BString file_status;
 			BString file_contents;
 			bool isRead = false;
@@ -722,8 +721,10 @@ FrissView::LoadDone(char* buf)
 
 			file.ReadAttrString("title", &loaded_title);
 			file.ReadAttrString("url", &loaded_url);
-			file.ReadAttrString("date", &loaded_date);
 			file.ReadAttr("read", B_BOOL_TYPE, 0, &isRead, sizeof(isRead));
+
+			time_t mod_time;
+			file.GetModificationTime(&mod_time);
 
 			BPath filename(feed_path.Path());
 			filename.Append(loaded_title.String());
@@ -731,7 +732,7 @@ FrissView::LoadDone(char* buf)
 			FStringItem* loaded_article = new FStringItem(
 				loaded_title.String(),
 				loaded_url.String());
-			loaded_article->SetDate(loaded_date.String());
+			loaded_article->SetDate(mod_time);
 			loaded_article->SetVisited(isRead);
 
 			XmlNode* root = new XmlNode(file_contents, NULL);
@@ -748,7 +749,7 @@ FrissView::LoadDone(char* buf)
 		FStringItem* current_item = tlist->ItemAt(i);
 		const char* title = current_item->Title();
 		const char* url = current_item->Url();
-		const char* date = current_item->Date();
+		//const char* date = current_item->Date();
 
 		bool addItem = true;
 		for (int list_index=0;list_index<listview_size;list_index++)
@@ -783,7 +784,7 @@ FrissView::LoadDone(char* buf)
 			file.WriteAttr("read", B_BOOL_TYPE, 0, &defaultValue,
 				sizeof(defaultValue));
 			file.WriteAttr("url", B_STRING_TYPE, 0, url, strlen(url));
-			file.WriteAttr("date", B_STRING_TYPE, 0, date, strlen(date));
+			//file.WriteAttr("date", B_STRING_TYPE, 0, date, strlen(date));
 		}
 	}
 

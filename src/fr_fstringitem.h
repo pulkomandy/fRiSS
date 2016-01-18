@@ -13,13 +13,13 @@ public:
 	const char* Title() const;
 	const char* Url() const;
 	const XmlNode* const Desc() const;
-	const char*	Date() const;
+	time_t		Date() const;
 	bool		Visited() const;
 	bool		IsAddDesc() const;
 
 	void		SetUrl(const char* url);
 	void		SetDesc(const XmlNode* const node);
-	void		SetDate(const char* date);
+	void		SetDate(time_t date);
 	void		SetAddDesc(bool add=true);
 	void 		SetVisited(bool vis = true);
 
@@ -33,7 +33,7 @@ private:
 
 	BString		sUrl;
 	const XmlNode*	sDesc;
-	BString		sDate;
+	time_t		sDate;
 };
 
 #endif
