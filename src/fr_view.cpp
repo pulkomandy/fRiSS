@@ -774,7 +774,7 @@ FrissView::LoadDone(char* buf)
 
 			BString file_name(feed_path.Path());
 			file_name.Append("/");
-			file_name.Append(title);
+			file_name.Append(BString(title).ReplaceAll('/','_'));
 			current_item->Desc()->SaveToFile(file_name);
 
 			BFile file;
