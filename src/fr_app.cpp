@@ -161,12 +161,12 @@ class MyApplication : public BApplication
 
 		void AboutRequested()
 		{
-			// FIXME use BAboutBox
+			// FIXME use BAboutWindow
 			BString text("FRiSS Version ");
 			text << version();
 			text <<	"\n";
 
-			text << "\xC2\xA9""2010-2013 Adrien Destugues (PulkoMandy)\n";
+			text << "\xC2\xA9""2010-2017 Adrien Destugues (PulkoMandy)\n";
 			text << "\tpulkomandy@pulkomandy.tk\n\n";
 
 			text << "\xC2\xA9""2004 Andreas Herzig (N3S)\n";
