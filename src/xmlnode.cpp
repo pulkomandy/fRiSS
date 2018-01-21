@@ -3,6 +3,7 @@
 #include "xmlnode.h"
 
 #include <assert.h>
+#include <libgen.h>
 #include <stdlib.h>
 
 #include <File.h>
@@ -1035,10 +1036,18 @@ XmlNode::Display(FILE* file, int level) const
 bool
 XmlNode::SaveToFile(const char* filename) const
 {
+	char* tmp = strdup(filename);
+	char* parent = dirname(tmp);
+	if (parent)
+		mkdir(parent, 0777);
+	free(tmp);
 	//TODO: Rewrite saving to use a BFile object
 
 	FILE* file;
 	file = fopen(filename, "w");
+
+	if (file == NULL)
+		return false;
 
 	fprintf(file, "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n\n");
 	Display(file, 0);
